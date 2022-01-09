@@ -1,0 +1,10 @@
+
+if ((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"))
+  include("${CMAKE_CURRENT_LIST_DIR}/gcc_clang_flags.cmake")
+  include("${CMAKE_CURRENT_LIST_DIR}/clang_flags.cmake")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  include("${CMAKE_CURRENT_LIST_DIR}/gcc_clang_flags.cmake")
+  include("${CMAKE_CURRENT_LIST_DIR}/gcc_flags.cmake")  
+else()
+  message(FATAL_ERROR "Can not determine compiler flags to use for ${CMAKE_CXX_COMPILER_ID}")
+endif()

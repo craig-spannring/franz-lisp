@@ -1,2 +1,2 @@
 
-message(FATAL_ERROR "need stuff here")
+message("need stuff here")

@@ -1,5 +1,6 @@
 # Common
 *~
+build*
 
 # CMake out-of-source build directories
 build*/
