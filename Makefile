@@ -39,6 +39,8 @@
 DESTDIR =
 .DEFAULT: all
 
+CFLAGS = -std=c90
+CC = cc 
 # the following lines are modifed by './lispconf', so don't modify it by hand!
 #ifdef vax
 #Mach = vax
@@ -51,6 +53,8 @@ Mach = tahoe
 #endif
 
 RootDir = /usr/src/local/franz
+RootDir = /tmp/franz
+
 #ifdef ucbstd
 #LibDir = ${DESTDIR}/usr/lib/lisp
 #ObjDir = ${DESTDIR}/usr/ucb
@@ -101,7 +105,7 @@ old-all:
 	(cd ${LisztD} ; make Lisp=${CcodeDir}/nlisp nliszt)
 	(cd liszt     ; make Liszt=${Mach}/nliszt lxref)
 
-	
+
 copylibrary: 
 #ifdef ucbstd
 	(cd lisplib ; make CopyTo=${LibDir} copysource)
@@ -112,7 +116,7 @@ copylibrary:
 
 fast:
 	date
-	(cd utils ; make LibDir=${LibDir} all)
+	(cd utils ; make CC=$(CC) CFLAGS=$(CFLAGS) LibDir=${LibDir} all)
 	(cd ${LibDir}; make as nld tackon)
 	(cd ${FranzD}; make Lisp=${Lisp} Liszt=${Liszt} LibDir=${LibDir}\
 			        ObjDir=${ObjDir} donlisp)

@@ -1,6 +1,17 @@
 #include <stdio.h>
 #include "lconf.h"
 #include "config.h"
+
+#if 1
+int main()
+{
+    fprintf(stderr, "do we need to implemtn this?");
+    return 1;
+}
+
+#else
+
+
 #if ! os_unisoft
 #include <sys/types.h>
 #include <a.out.h>
@@ -13,6 +24,7 @@
  * someone should write one for system 5.
  *
  */
+
 
 FILE *map;
 int aout;
@@ -112,3 +124,4 @@ usage:
 	exit(0);
 #endif
 }
+#endif
