@@ -95,7 +95,7 @@ pall: ${Append}
 	make TROFF=${TROFF} O=${O} `${Append} .p ${RootGenSrc}` pindex
 
 troff: pall
-      
+
 qall: ${Append}
 	make NROFF=${NROFF} O=${O} `${Append} .q ${RootGenSrc}` index.t
 
