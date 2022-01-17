@@ -25,9 +25,13 @@ extern char *stabf;
 extern int fvirgin;
 extern int keywait;
 extern sigstruck, sigdelay;
-initial()
+
+static void makenv();
+
+void initial()
 {
-	int sigalrmh(), sigfpeh(),  sginth();
+  int sigalrmh(), sigfpeh();
+  int sginth(int);
 	lispval Isstatus(),Istsrch();
 	extern int hashtop;
 
@@ -78,8 +82,7 @@ initial()
 
 }
 
-static
-makenv()
+static void makenv()
 {
 	register lispval env, temp;
 	register char *p, *q;
