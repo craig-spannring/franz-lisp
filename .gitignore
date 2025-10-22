@@ -1,2 +1,4 @@
 # editor backup files
 *~
+build/
+xcbuild/
