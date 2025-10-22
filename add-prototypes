@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+from subprocess import check_output 
+from argparse import ArgumentParser, ArgumentTypeError
+from hashlib import md5
+
+op = os.path
+
+
+def _parse(args):
+    def _ends_with_dot_c(name):
+        if not name.endswith(".c"): raise ArgumentTypeError("Not a C source file.")
+        return name
+
+    def _valid_directory(path):
+        if not op.isdir(path): raise ArgumentTypeError(f"Invalid path {path}.")
+        return path
+
+    p = ArgumentParser(description="ANSI-fy old K&R C source.",
+                       epilog="TODO Need to write detailed description.")
+    p.add_argument("files", nargs='+', type=_ends_with_dot_c,
+                   help="Name of the C source file(s) to protoize")
+    p.add_argument("-I", dest="include_dir", nargs='?', type=_valid_directory,
+                   default=op.abspath(op.curdir),
+                   help="Directory for the header files. ")
+    p.add_argument("--clobber", "-c", action="store_true")
+
+    return p.parse_args(args)
+
+def _header_name(h_dir, f):
+    return op.join(h_dir,
+                   op.splitext(os.path.basename(f))[0]+'.h')
+
+def _main(args):
+    okay = True
+    for f in args.files:
+        h = _header_name(args.include_dir, f)
+        if os.path.exists(h):
+            okay = okay and args.clobber 
+            print(f"Error: File {h} already exists. ", file=sys.stderr)
+        if okay:
+            h_contents = check_output(["cproto",
+                                       "-I", "/Users/cts/franz/franz-lisp/franz/h",
+                                       "-q",
+                                       "-a",
+                                       "-e",
+                                       f],
+                                      encoding="utf-8" )
+            guard_id = (f"INC_{op.splitext(op.basename(h))[0]}"
+                        + f"_{md5((h.encode('utf-8'))).hexdigest()}_h")
+
+            with open(h, "w") as out:
+                out.write(f"#ifndef {guard_id}\n#define {guard_id}\n\n{h_contents}\n\n#endif")
+
+    return 0 if okay else 0
+
+
+if __name__ == "__main__":
+    sys.exit(_main(_parse(sys.argv[1:])))
