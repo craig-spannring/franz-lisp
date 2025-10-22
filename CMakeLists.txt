@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(franzlisp)
 
-set(CMAKE_C_STANDARD 89)
+set(CMAKE_C_STANDARD 99)
 
 ### Require out-of-source builds
 file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
@@ -13,8 +13,8 @@ if(EXISTS "${LOC_PATH}")
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/common.cmake")
 
   
+add_subdirectory(utils)
 add_subdirectory(franz)
-# add_subdirectory(utils)
 
 
 file(CREATE_LINK

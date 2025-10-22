@@ -4,9 +4,17 @@ add_executable(fl)
 target_compile_options(fl PRIVATE ${fl_cc_flags})
 target_include_directories(fl PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/./h
-  )
+)
 # target_link_libraries(fl PRIVATE )
+
+target_compile_definitions(fl PRIVATE
+  HOLE=2097152
+  PORTABLE=1
+)
+
 target_sources(fl PRIVATE
+  portable/shims.c
+  
   # MipObj2     =
   alloc.c
   data.c
