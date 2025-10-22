@@ -1,0 +1,42 @@
+BasedOnStyle: None
+
+DisableFormat:                         false
+
+AlignTrailingComments:                 
+   Kind:                               Always
+   OverEmptyLines:                     0
+AlignConsecutiveAssignments:
+   Enabled:                            true
+   AcrossEmptyLines:                   false
+   AcrossComments:                     false
+AlignConsecutiveDeclarations:
+  Enabled:                             true
+  AcrossEmptyLines:                    false
+  AcrossComments:                      false
+AlignConsecutiveShortCaseStatements:
+  Enabled:                             true
+  AcrossEmptyLines:                    false
+  AcrossComments:                      true
+  AlignCaseColons:                     false
+AlignEscapedNewlines:                  LeftWithLastLine
+AlignOperands:                         Align
+AllowShortCaseLabelsOnASingleLine:     true
+AllowShortFunctionsOnASingleLine:      Inline
+AllowShortIfStatementsOnASingleLine:   AllIfsAndElse
+BinPackParameters:                     OnePerLine
+BreakBeforeBinaryOperators:            All
+BreakBeforeTernaryOperators:           false
+BreakBeforeBraces:                     Allman
+ColumnLimit:                           132
+FixNamespaceComments:                  false
+IndentCaseLabels:                      true
+IndentWidth:                           2
+KeepEmptyLinesAtTheStartOfBlocks:      false
+NamespaceIndentation:                  All
+ObjCSpaceAfterProperty:                true
+ObjCSpaceBeforeProtocolList:           true
+PointerBindsToType:                    false
+SpacesBeforeTrailingComments:          1
+TabWidth:                              8
+UseTab:                                Never
+WrapNamespaceBodyWithEmptyLines:       Leave
