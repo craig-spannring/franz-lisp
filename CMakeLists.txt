@@ -14,4 +14,12 @@ include("${CMAKE_CURRENT_LIST_DIR}/cmake/common.cmake")
 
   
 add_subdirectory(franz)
-add_subdirectory(utils)
+# add_subdirectory(utils)
+
+
+file(CREATE_LINK
+  ${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json 
+  ${CMAKE_CURRENT_LIST_DIR}/compile_commands.json 
+  SYMBOLIC
+)
+file(TOUCH_NOCREATE ${CMAKE_CURRENT_LIST_DIR}/compile_commands.json)
