@@ -18,7 +18,10 @@ function(add_util name)
 endfunction()
 
 add_util(append)
-add_util(tackon)
 add_util(divide)
+add_util(tackon)
+target_compile_definitions(tackon PRIVATE
+  NO_A_OUT=1
+)
 
   
