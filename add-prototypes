@@ -43,6 +43,7 @@ def _main(args):
         if okay:
             h_contents = check_output(["cproto",
                                        "-I", "/Users/cts/franz/franz-lisp/franz/h",
+                                       "-D", "FILE=int",
                                        "-q",
                                        "-a",
                                        "-e",

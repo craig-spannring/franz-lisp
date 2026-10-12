@@ -12,7 +12,53 @@ if(EXISTS "${LOC_PATH}")
 
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/common.cmake")
 
+add_compile_definitions(
+  HOLE=2097152
+  PORTABLE=1
+  SPISFP=1
   
+  os_unix=1
+  os_unix_ts=1
+  OS="unix"
+  # OS="vms"
+  
+  OFFSET=0x0                  
+  
+  #OFFSET=0x8000               # on sun_4_2beta || sun_4_2 || sun_4_1c 
+  #OFFSET=0x40000              # on sun_unisoft 
+  #OFFSET=0x800000             # on dual_unisoft 
+  #OFFSET=0x20000              # pixel_unisoft 
+  #OFFSET=0x20000              # lisa_unisys3 
+  #OFFSET=0x0                  # mc500_2_0  
+  #OFFSET=0x0                  # m_vax || m_tahoe 
+
+  RTPORTS=1 
+  #define NILIS0	 1        /* m_tahoe */
+  #define NILIS0	 1        /* m_vax */
+  #define RTPORTS 1        /* os_4_3 this O.S. allocates FILE *'s at run-time */
+  
+  MACHINE="portable"
+  #define MACHINE "68k"
+  #define MACHINE "vax"
+  #define MACHINE "tahoe"
+  
+  SPISFP=1                       # sun_4_2beta 
+  
+  #SPISFP=1       /* sun_4_2beta */ 
+  #NPINREG=1       /* m_vax || m_tahoe */ 
+  
+  DOMAIN="nowhere"
+  #define DOMAIN  "ucb"
+  
+  SITE="unknown-site"
+  #define SITE    "unknown-site"
+  
+  TTSIZE=10216  
+  #define TTSIZE 10216  /* sun_4_2 || sun_4_2beta || HOLE */
+  #define TTSIZE 6120
+)
+  
+# add_subdirectory(tests)
 add_subdirectory(utils)
 add_subdirectory(franz)
 
