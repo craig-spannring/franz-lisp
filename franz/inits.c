@@ -28,10 +28,11 @@ extern int fvirgin;
 extern int keywait;
 extern sigstruck, sigdelay;
 
-static void makenv();
-static re_enable(int signo, int (*handler)(int));
+static void makenv (void);
+static re_enable (int signo, int (*handler)(int));
 
-void initial()
+void
+initial (void)
 {
 	int sigalrmh(), sigfpeh();
 	int sginth(int);
