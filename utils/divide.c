@@ -2,6 +2,13 @@
    line (as split does)
  */
 #include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+
+static void process(char *name);
+static int  fillbuf(char *buffer, int filenum, int size);
 
 #define DEFCHARS 199000
 
@@ -10,9 +17,8 @@ int linemode = 0;	/* always break on line boundaries */
 int chars = DEFCHARS;	/* number of chars per output file */
 
 int d1 = 0, d2 = 0;
-main(argc,argv)
-int argc;
-char **argv;
+int 
+main (int argc, char **argv)
 {
     int n, next, nbytes, outfile, S ;
     char filename[30];
@@ -69,8 +75,8 @@ char **argv;
     exit(0);
 }
 
-process(name)
-char *name;
+static void
+process (char *name)
 {
     int infile, outfile, nbytes, retval;
     char filename[100];
@@ -128,12 +134,10 @@ char *name;
 	exit(-1);
     }
     free(coreloc);	/* give back space */
-
 }
 
-fillbuf(buffer,filenum,size)
-char *buffer;
-int filenum,size;
+static int 
+fillbuf (char *buffer, int filenum, int size)
 {
     int grab,got;
     char *ptr;

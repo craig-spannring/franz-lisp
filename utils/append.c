@@ -26,17 +26,16 @@ static char *rcsid =
  * 
 */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "lconf.h"
 #include "config.h"
-#if os_unix_ts || os_masscomp
-#define rindex strrchr
-#endif
+
 
 char buffer[2000];	/* nice and big */
-char *rindex();
 
- main(argc,argv)
- char **argv;
+ int 
+main (int argc, char **argv)
  {
      int i, base;
      int prepend = 0,
@@ -75,7 +74,7 @@ char *rindex();
 	 if(append)
 	 {
 	    strcpy(buffer,argv[i]);
-	    if(strip && (chp = rindex(buffer,stripchar)))
+	    if(strip && (chp = strrchr(buffer,stripchar)))
 	    {
 		*chp = '\0';
 	    }

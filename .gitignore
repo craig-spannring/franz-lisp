@@ -1,0 +1,8 @@
+# editor backup files
+*~
+
+# Build artifacts
+build/
+xcbuild/
+compile_commands.json
+.cache
