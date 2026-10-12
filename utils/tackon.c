@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "lconf.h"
 #include "config.h"
 
@@ -11,6 +12,9 @@ int main()
 
 #else
 
+#if NO_A_OUT
+int main() {exit(0);}
+#else 
 
 #if ! os_unisoft
 #include <sys/types.h>
@@ -32,9 +36,11 @@ int aout;
 char newstrb[NEWSIZ];
 
 #endif
-main(argc, argv)
-int argc;
-char *argv[];
+
+
+
+int 
+main (int argc, char *argv[])
 {
 #if ! os_unisoft
 	char sym[50], svalue[50];

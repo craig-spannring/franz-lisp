@@ -1,6 +1,5 @@
-# Common
+# editor backup files
 *~
-build*
 
 # CMake out-of-source build directories
 build*/
@@ -26,3 +25,10 @@ ipch/
 *.psess
 *.vsp
 *.vspx
+
+# Build artifacts
+build/
+xcbuild/
+compile_commands.json
+.cache
+
