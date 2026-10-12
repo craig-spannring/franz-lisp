@@ -15,6 +15,8 @@ static char *rcsid =
 # include "structs.h"
 # include "chars.h"
 # include "chkrtab.h"
+#include "franz/inits.h"
+
 /*
  * (flatc 'thing ['max]) returns the smaller of max and the number of chars
  * required to print thing linearly.

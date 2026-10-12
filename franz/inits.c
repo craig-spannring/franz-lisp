@@ -10,10 +10,12 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "franz/inits.h"
 
 #include "global.h"
 #include <signal.h>
 #include "frame.h"
+#include "franz/shims.h"
 
 /* initial
  * initializes the parts of the system that cannot be automatically
@@ -27,11 +29,13 @@ extern int keywait;
 extern sigstruck, sigdelay;
 
 static void makenv();
+static re_enable(int signo, int (*handler)(int));
 
 void initial()
 {
-  int sigalrmh(), sigfpeh();
-  int sginth(int);
+	int sigalrmh(), sigfpeh();
+	int sginth(int);
+
 	lispval Isstatus(),Istsrch();
 	extern int hashtop;
 
@@ -82,7 +86,7 @@ void initial()
 
 }
 
-static void makenv()
+static void makenv (void)
 {
 	register lispval env, temp;
 	register char *p, *q;
@@ -112,7 +116,7 @@ static void makenv()
 	np--;
 }
 
-sginth(signo){
+void sginth(int signo){
 	re_enable(signo,sginth);
 	sigstruck |= (1 << signo);
 	/* handle SIGINT differently since it is the only
@@ -128,7 +132,7 @@ sginth(signo){
 	       /*putchar('A');*/
 	       fflush(stdout);
 	       sigstruck &= ~(1 << signo);
-	       return;
+	       return 0;
 	    }
 	    else if (sigintcnt == 2)
 	    {  /* the setting of  exception was ignored, we better
@@ -150,9 +154,10 @@ sginth(signo){
 	}
 
 	sigcall(signo);
+        return 0; 
 }
-sigcall(which)
-register which;
+void 
+sigcall (int which)
 {
 	extern lispval Lfuncal();
 	Savestack(1);
@@ -180,12 +185,14 @@ register which;
 	sigstruck &= ~ (1<<which);
 	Restorestack();
 }
-delayoff(){
+int 
+delayoff (void){
 	sigdelay = FALSE;
 	if(sigstruck)
 		dosig();
 }
-dosig()
+int 
+dosig (void)
 {
 	register int i; int which;
 	if(!sigdelay) 
@@ -195,7 +202,9 @@ dosig()
 				sigcall(which);
 		}
 }
-badmr(number)
+
+void
+badmr (int number)
 {
 	signal(number,badmr);
 	fflush(stdout);
@@ -203,9 +212,7 @@ badmr(number)
 }
 
 #define	mask(s)	(1 << ((s)-1))
-static
-re_enable(signo,handler)
-int (*handler)();
+static void re_enable (int signo, int (*handler)(int))
 {
 #if (os_4_2| os_4_3)
 	sigsetmask(sigblock(0) &~ mask(signo));

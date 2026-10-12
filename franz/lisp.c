@@ -12,6 +12,7 @@ static char *rcsid =
 
 #include	"global.h"
 #include	"frame.h"
+#include        "franz/inits.h"
 
 /* main *****************************************************************/
 /* Execution of the lisp system begins here.  This is the top level	*/
