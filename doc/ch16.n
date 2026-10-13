@@ -527,7 +527,7 @@ changed by the command.
 \fI??  \fP prints the entries on undolst.  The entries are listed most
 recent entry first.
 .Fe
-.sh 2 \Commands\ that\ Evaluate
+.sh 2 Commands\ that\ Evaluate
 .Fb
 .fi
 \fIEVALUATION COMMAND SUMMARY\fP
