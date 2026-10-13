@@ -131,7 +131,7 @@ spall: ${Append}
 
 .n.sp:
 	spell $*.n > $*.sp
-	
+
 install: 
 	make O=${O} rall
 	cp `${Append} .r ${RootGenSrc}` helpindex ${LibDir}/manual
@@ -143,6 +143,7 @@ clean:
 	-rm -f *.t 
 	-rm -f *.q 
 	-rm -f *.x
+	-rm -f index indexx
 
 
 findex:  ${Append}
@@ -158,7 +159,6 @@ index.t:
 	sort +3 -o index index `${Append} .x ${RootGenSrc}`
 	sed -f indexsed index > indexx
 	${TROFF} -me -t lmacs indexx > index.t
-	#${TROFF} -me -x -t lmacs indexx > index.t
 
 pindex: ${Append}
 	make `${Append} .x ${RootGenSrc}`
@@ -186,9 +186,7 @@ C-database: ${CcodeDir}/sysat.c
 	rm -f mks mks.fixed
 
 doc-database: 
-	awk -f extrnames.awk `${Append} .n ${RootGenSrc}`\
- 	   | sed -f fixmks.sed > doc-database
-
+	awk -f extrnames.awk `${Append} .n ${RootGenSrc}` | sed -f fixmks.sed > doc-database
 
 bigxref: C-database doc-database
 	${Append} -p ${LibDir}/ `(cd ${LibDir} ; make echorequired)` | \
