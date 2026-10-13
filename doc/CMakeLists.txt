@@ -37,10 +37,13 @@ set(UM_SRC
   ${UM_APPENDIX_SRC_LST}
 )
 
+set(SM_SRC ${CMAKE_CURRENT_SOURCE_DIR}/franz.n)
+
 list(JOIN UM_SRC " " UM_SRC) 
 list(JOIN UM_CHAPTER_SRC_LST " " UM_CHAPTER_SRC_STR)
 
 # Define the output file names for User's Manual
+set(SM_PDF "${CMAKE_CURRENT_BINARY_DIR}/FRANZ_LISP_Internals.pdf")
 set(UM_PDF "${CMAKE_CURRENT_BINARY_DIR}/FRANZ_LISP_Manual.pdf")
 set(UM_IDX "${CMAKE_CURRENT_BINARY_DIR}/um_idx.tmp")
 
@@ -76,16 +79,37 @@ add_custom_command(
 )
 
 # Create the user's manual
-add_custom_target(pdf
+add_custom_target(user-manual
   DEPENDS "${UM_PDF}"
   COMMENT "Creating the manual PDF."
 )
 
-# Install the generated PDF into ${DOCS_OUTPUT_DIR}
+# Build the system internals manual PDF
+add_custom_command(
+  OUTPUT "${SM_PDF}"
+
+  COMMAND  /bin/sh -c "${GROFF_EXECUTABLE} -C -Tpdf -t -me ${CMAKE_CURRENT_SOURCE_DIR}/lmacs ${SM_SRC}" > ${SM_PDF} 2> ${CMAKE_CURRENT_BINARY_DIR}/sm_errors.txt
+  # COMMAND  /bin/sh -c "grep -v -E \"^\.I\" ${CMAKE_CURRENT_BINARY_DIR}/sm_errors.txt && true"
+  COMMAND  cat ${CMAKE_CURRENT_BINARY_DIR}/sm_errors.txt
+
+  DEPENDS ${SM_SRC} 
+  WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+  COMMENT "Building PDF internals manual."
+  VERBATIM
+)
+
+# Create the user's manual
+add_custom_target(internals-manual
+  DEPENDS "${SM_PDF}"
+  COMMENT "Creating the internals manual PDF."
+)
+
+# Install the generated PDFs into ${DOCS_OUTPUT_DIR}
 add_custom_target(install-manual
-  DEPENDS "${UM_PDF}"
+  DEPENDS "${UM_PDF}" "${SM_PDF}"
   COMMAND ${CMAKE_COMMAND} -E make_directory "${DOCS_OUTPUT_DIR}"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${UM_PDF}" "${DOCS_OUTPUT_DIR}/FRANZ_LISP_Manual.pdf"
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SM_PDF}" "${DOCS_OUTPUT_DIR}/FRANZ_LISP_Internals.pdf"
   COMMENT "Install manual.pdf to ${DOCS_OUTPUT_DIR}"
 )
 
