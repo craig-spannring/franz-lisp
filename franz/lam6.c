@@ -17,6 +17,8 @@ static char *rcsid =
 #include <sys/times.h>
 #include "chkrtab.h"
 #include "chars.h"
+#include "franz/shims.h"
+#include "franz/inits.h"
 
 
 lispval

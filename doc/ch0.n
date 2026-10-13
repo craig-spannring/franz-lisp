@@ -2,7 +2,7 @@
 .pp
 \ \ 
 .sp 2i
-.tl ''\s14The\ \s16F\s14RANZ\ \s16L\s14ISP\ \s14Manual''
+.tl ''\s(14The\ \s(16F\s(14RANZ\ \s(16L\s(14ISP\ \s(14Manual''
 .ps 10
 .sp 1v
 .tl ''by''

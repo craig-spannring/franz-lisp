@@ -1,0 +1,56 @@
+#ifndef INC_alloc_1638a37275f212b33510b493976eef27_h
+#define INC_alloc_1638a37275f212b33510b493976eef27_h
+
+/* alloc.c */
+extern int get_more_space(struct types *type_struct, int purep);
+extern lispval next_one(struct types *type_struct);
+extern int space_warn(int g);
+extern lispval next_pure_one(struct types *type_struct);
+extern lispval newint(void);
+extern lispval pnewint(void);
+extern lispval newdot(void);
+extern lispval pnewdot(void);
+extern lispval newdoub(void);
+extern lispval pnewdb(void);
+extern lispval newsdot(void);
+extern lispval pnewsdot(void);
+extern struct atom *newatom(int pure);
+extern char *newstr(int purep);
+extern char *inewstr(char *s);
+extern char *pinewstr(char *s);
+extern lispval newarray(void);
+extern lispval newfunct(void);
+extern lispval newval(void);
+extern lispval pnewval(void);
+extern lispval newhunk(int hunknum);
+extern lispval pnewhunk(int hunknum);
+extern lispval inewval(lispval arg);
+extern lispval newvec(int size);
+extern lispval pnewvec(int size);
+extern lispval nveci(int size);
+extern lispval pnveci(int size);
+extern lispval getvec(int size, register struct types *typestr, int purep);
+extern lispval Ipurep(lispval element);
+extern int pruneb(lispval bignum);
+extern lispval Badcall(void);
+extern lispval Ngc(void);
+extern lispval gc(struct types *type_struct);
+extern int gc1(void);
+extern lispval alloc(lispval tname, long npages);
+extern lispval csegment(int typecode, int nitems, int useholeflag);
+extern int csizeof(lispval tname);
+extern int typenum(lispval tname);
+extern char *gethspace(int segsiz, int type);
+extern int gcrebear(void);
+extern int markit(lispval *p);
+extern int markdp(register lispval p);
+extern char *xsbrk(int n);
+extern char *ysbrk(int pages, int type);
+extern lispval getatom(int purep);
+extern lispval inewatom(register char *name);
+extern int hashfcn(register char *symb);
+extern lispval LImemory(void);
+extern int myhook(void);
+
+
+#endif

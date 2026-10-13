@@ -48,10 +48,12 @@
 # make install will install the nroff versions of the manual in the
 # directory (LibDir/manual) where the auxfns0.l help command can find them.
 #
-LibDir = /usr/lib/lisp
+LibDir = /tmp/usr/lib/lisp
 CcodeDir = ../franz
 CopyTo = /dev/null
-TROFF=	/usr/ucb/vtroff
+# TROFF=	/usr/ucb/vtroff
+TROFF=	troff
+# TROFF=	groff
 NROFF=  nroff
 O =
 Append = ${LibDir}/append
@@ -129,7 +131,7 @@ spall: ${Append}
 
 .n.sp:
 	spell $*.n > $*.sp
-	
+
 install: 
 	make O=${O} rall
 	cp `${Append} .r ${RootGenSrc}` helpindex ${LibDir}/manual
@@ -141,6 +143,7 @@ clean:
 	-rm -f *.t 
 	-rm -f *.q 
 	-rm -f *.x
+	-rm -f index indexx
 
 
 findex:  ${Append}
@@ -155,7 +158,7 @@ index.t:
 	echo ".Ib" > index
 	sort +3 -o index index `${Append} .x ${RootGenSrc}`
 	sed -f indexsed index > indexx
-	${TROFF} -me -x -t lmacs indexx > index.t
+	${TROFF} -me -t lmacs indexx > index.t
 
 pindex: ${Append}
 	make `${Append} .x ${RootGenSrc}`
@@ -183,9 +186,7 @@ C-database: ${CcodeDir}/sysat.c
 	rm -f mks mks.fixed
 
 doc-database: 
-	awk -f extrnames.awk `${Append} .n ${RootGenSrc}`\
- 	   | sed -f fixmks.sed > doc-database
-
+	awk -f extrnames.awk `${Append} .n ${RootGenSrc}` | sed -f fixmks.sed > doc-database
 
 bigxref: C-database doc-database
 	${Append} -p ${LibDir}/ `(cd ${LibDir} ; make echorequired)` | \

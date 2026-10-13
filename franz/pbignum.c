@@ -12,9 +12,9 @@ static char *rcsid =
 
 #include "global.h"
 
-pbignum(current, useport)
-register lispval current;
-register FILE *useport;
+
+void
+pbignum(lispval current, FILE *useport)
 {
 	long  *top, *bot, *work, negflag = 0;
 	char *alloca();
@@ -22,7 +22,7 @@ register FILE *useport;
 	Keepxs();
 
 	/* copy bignum onto stack */
-	top = (sp()) - 1;
+	top = (sp()) - 1;g
 	do {
 		stack(current->s.I);
 	} while(current = current->s.CDR);

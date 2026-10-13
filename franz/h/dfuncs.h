@@ -6,15 +6,15 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
- 
-char *brk();
+
+#include <unistd.h>
+
 char *getsp();
 char *pinewstr();
 char *inewstr();
 char *mkmsg();
 char *newstr();
 char *rstore();
-char *sbrk();
 char *xsbrk();
 char *ysbrk();
 int csizeof();

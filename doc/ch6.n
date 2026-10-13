@@ -622,7 +622,7 @@ to be created.
 .Re
 a string which is the current lisp version name.
 .Ex
-\fI(status version)\fP = "Franz Lisp, Opus 38.61"
+\fI(status version)\fP = "Franz Lisp, Opus 38.93b"
 .Lf syscall "'x_index ['xst_arg1 ...]"
 .Re
 the result of issuing the UNIX system call number x_index with arguments

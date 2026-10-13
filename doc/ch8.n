@@ -40,25 +40,25 @@ compiled	binary with discipline	8.3
 macro	\fIeq\fP to macro
 _
 foreign	binary with discipline	8.5
-subroutine	of \*(lqsubroutine\*(rq\*[\(dg\*]
+subroutine	of \*(lqsubroutine\*(rq\(dg
 _
 foreign	binary with discipline	8.5
-function	of \*(lqfunction\*(rq\*[\(dg\*]
+function	of \*(lqfunction\*(rq\(dg
 _
 foreign	binary with discipline	8.5
-integer function	of \*(lqinteger-function\*(rq\*[\(dg\*]
+integer function	of \*(lqinteger-function\*(rq\(dg
 _
 foreign	binary with discipline	8.5
-real function	of \*(lqreal-function\*(rq\*[\(dg\*]
+real function	of \*(lqreal-function\*(rq\(dg
 _
 foreign	binary with discipline	8.5
-C function	of \*(lqc-function\*(rq\*[\(dg\*]
+C function	of \*(lqc-function\*(rq\(dg
 _
 foreign	binary with discipline	8.5
-double function	of \*(lqdouble-c-function\*(rq\*[\(dg\*]
+double function	of \*(lqdouble-c-function\*(rq\(dg
 _
 foreign	binary with discipline	8.5
-structure function	of \*(lqvector-c-function\*(rq\*[\(dg\*]
+structure function	of \*(lqvector-c-function\*(rq\(dg
 _
 array	array object	9
 .TE
@@ -420,7 +420,7 @@ Fclosures are related to closures in this way:
 .sz -2
 .hl
 % \fBlisp\fP
-Franz Lisp, Opus 38.60
+Franz Lisp, Opus 38.93b
 \->\fB(defun code (me count)
   (print (list 'in x))
   (setq x (+ 1 x))
@@ -696,7 +696,7 @@ struct listoffixnumscell *d;
     printf("a: %d, b[0]: %f, b[1]: %f\n", *a, b[0], b[1]);
     printf(" c (first): %d   c (second): %d\n",
 	       *c[0],*c[1]);
-    printf(" ( %d %d ... )\n ", *(d->fixnum), *(d->cdr->fixnum));
+    printf("  ( %d %d ... ) \n \\n", *(d->fixnum), *(d->cdr->fixnum));
     b[1] = 3.1415926;
     return(3);
 }
@@ -756,7 +756,7 @@ end ;
 3.0u 1.7s 0:37 12% 27+32k 53+32io 143pf+0w
 .sp 2v
 % \fBlisp\fP
-Franz Lisp, Opus 38.60
+Franz Lisp, Opus 38.93b
 .ft I
 .fi
 First the files are loaded and we set up one foreign function binary.
@@ -871,7 +871,7 @@ ch8auxf.f:
    ffoo:
 0.9u 1.8s 0:12 22% 20+22k 54+48io 158pf+0w
 % \fBlisp\fP
-Franz Lisp, Opus 38.60
+Franz Lisp, Opus 38.93b
 \-> \fB(cfasl 'ch8auxf.o '_ffoo_ 'ffoo "real-function" "-lF77 -lI77")\fP
 /usr/lib/lisp/nld -N -A /usr/local/lisp -T 63000 ch8auxf.o -e _ffoo_ 
 -o /tmp/Li11066.0 -lF77 -lI77 -lc

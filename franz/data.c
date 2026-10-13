@@ -18,7 +18,8 @@ static char *rcsid =
 #include	"frame.h"
 #include	<stdio.h>
 
-/*char firstalloc[NBPG] = { 'x' };	/* first thing allocated in file */
+// ??? 
+// char firstalloc[NBPG] = { 'x' };	/* first thing allocated in file */
 lispval lispsys[SIGNIF];	/* lisp data used by system */
 
 lispval gftab[GFTABLEN];	/* global function table for interpreter */

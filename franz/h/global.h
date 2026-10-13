@@ -109,18 +109,28 @@ extern struct atom nilatom, eofatom;
 #define NOTNIL(a)	(nil!=a)
 #define ISNIL(a)	(nil==a)
 
-#ifdef SPISFP
-extern long *xsp, xstack[];
-#define sp() xsp
-#define stack(z) (xsp > xstack ? (*--xsp = z): xserr())
-#define unstack() (*xsp++)
-#define Keepxs() long *oxsp = xsp;
-#define Freexs() xsp = oxsp;
-#else
-extern long *sp(), stack(), unstack();
+
+extern long *sp();
+extern long stack();
+extern long unstack();
 #define Keepxs() /* */
 #define Freexs() /* */
-#endif
+
+
+/* #ifdef SPISFP */
+/* extern long *xsp, xstack[]; */
+/* #define sp() xsp */
+/* #define stack(z) (xsp > xstack ? (*--xsp = z): xserr()) */
+/* #define unstack() (*xsp++) */
+/* #define Keepxs() long *oxsp = xsp; */
+/* #define Freexs() xsp = oxsp; */
+/* #else */
+/* extern long *sp(); */
+/* extern long stack(); */
+/* extern long unstack(); */
+/* #define Keepxs() /\* *\/ */
+/* #define Freexs() /\* *\/ */
+/* #endif */
 
 extern char typetable[];  /*  the table with types for each page  */
 #define ATOX(a1)	((((int)(a1)) - OFFSET) >> 9)
@@ -231,28 +241,30 @@ union lispobj {
 	struct Vectorl vl;
 };
 
-#ifdef lint
-extern lispval Inewint();
-#define inewint(p) Inewint((long)(p))
-#else
 extern lispval inewint();
-#endif
 
 
 #include "sigtab.h"   /* table of all pointers to lisp data */
 
+
+
 /* Port definitions *****************************************************/
-extern FILE	*piport,		/* standard input port		*/
-	*poport,		/* standard output port		*/
-	*errport,		/* port for error messages	*/
-	*rdrport;		/* temporary port for readr	*/
+
+extern FILE*	piport;			/* standard input port		*/
+
+extern FILE*	poport;			/* standard output port		*/
+
+extern FILE*	errport;		/* port for error messages	*/
+
+extern FILE*	rdrport;		/* temporary port for readr	*/
+
 
 #ifndef RTPORTS
 extern FILE *xports[];		/* page of file *'s for lisp	*/
 #define P(p)		((lispval) (xports +((p)-_iob)))
 #define PN(p)		((int) ((p)-_iob))
 #else
-extern lispval P();
+extern lispval P(void);
 extern FILE **xports;
 #define PN(p) (((FILE **)P(p))-xports)
 #endif

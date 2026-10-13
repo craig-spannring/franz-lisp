@@ -158,8 +158,8 @@ struct types *gcableptr[] = {
  *  If no space is available, returns positive number.
  *  If purep is TRUE, then pure space is allocated.
  */
-get_more_space(type_struct,purep)                                 
-struct types *type_struct;
+int 
+get_more_space (struct types *type_struct, int purep)
 {
 	int cntr;
 	char *start;
@@ -232,9 +232,8 @@ struct types *type_struct;
  *  get_more_space
  */
 
-lispval
-next_one(type_struct)
-struct types *type_struct;
+lispval 
+next_one (struct types *type_struct)
 {
 
 	register char *temp;
@@ -273,7 +272,8 @@ struct types *type_struct;
  * Warn about exhaustion of space,
  * shared with next_pure_free().
  */
-space_warn(g)
+int 
+space_warn (int g)
 {
 	if( g==1 ) {
 	    plimit->i += NUMSPACES; /*  allow a few more pages  */
@@ -287,9 +287,8 @@ space_warn(g)
 /* allocate an element of a pure structure.  Pure structures will
  * be ignored by the garbage collector.
  */
-lispval
-next_pure_one(type_struct)
-struct types *type_struct;
+lispval 
+next_pure_one (struct types *type_struct)
 {
 
 	register char *temp;
@@ -306,20 +305,20 @@ struct types *type_struct;
 	return((lispval) temp);
 }
 
-lispval
-newint()
+lispval 
+newint (void)
 {
 	return(next_one(&int_str));
 }
 
-lispval
-pnewint()
+lispval 
+pnewint (void)
 {
 	return(next_pure_one(&int_str));
 }
 
-lispval
-newdot()
+lispval 
+newdot (void)
 {
 	lispval temp;
 
@@ -328,8 +327,8 @@ newdot()
 	return(temp);
 }
 
-lispval
-pnewdot()
+lispval 
+pnewdot (void)
 {
 	lispval temp;
 
@@ -338,20 +337,20 @@ pnewdot()
 	return(temp);
 }
 
-lispval
-newdoub()
+lispval 
+newdoub (void)
 {
 	return(next_one(&doub_str));
 }
 
-lispval
-pnewdb()
+lispval 
+pnewdb (void)
 {
 	return(next_pure_one(&doub_str));
 }
 
-lispval
-newsdot()
+lispval 
+newsdot (void)
 {
 	register lispval temp;
 	temp = next_one(&sdot_str);
@@ -359,8 +358,8 @@ newsdot()
 	return(temp);
 }
 
-lispval
-pnewsdot()
+lispval 
+pnewsdot (void)
 {
 	register lispval temp;
 	temp = next_pure_one(&sdot_str);
@@ -369,7 +368,7 @@ pnewsdot()
 }
 
 struct atom *
-newatom(pure) {
+newatom (int pure) {
 	struct atom *save; char *mypname;
 
 	mypname = newstr(pure);
@@ -383,7 +382,7 @@ newatom(pure) {
 }
 
 char *
-newstr(purep) {
+newstr (int purep) {
 	char *save, *strcpy();
 	int atmlen;
 	register struct str_x *p = str_current + purep;
@@ -408,7 +407,8 @@ newstr(purep) {
 	return(save);
 }
 
-static char * Iinewstr(s,purep) char *s;
+static char *
+Iinewstr (char *s, int purep)
 {
 	int len = strlen(s);
 	while(len > (endstrb - strbuf - 1)) atomtoolong(strbuf);
@@ -417,18 +417,20 @@ static char * Iinewstr(s,purep) char *s;
 }
 
 
-char *inewstr(s) char *s;
+char *
+inewstr (char *s)
 {
 	Iinewstr(s,0);
 }
 
-char *pinewstr(s) char *s;
+char *
+pinewstr (char *s)
 {
 	Iinewstr(s,1);
 }
 
-lispval
-newarray()
+lispval 
+newarray (void)
 	{
 	register lispval temp;
 
@@ -441,8 +443,8 @@ newarray()
 	return(temp);
 	}
 
-lispval
-newfunct()
+lispval 
+newfunct (void)
 	{
 	register lispval temp;
 	lispval Badcall();
@@ -452,8 +454,8 @@ newfunct()
 	return(temp);
 	}
 
-lispval
-newval()
+lispval 
+newval (void)
 	{
 	register lispval temp;
 	temp = next_one(&val_str);
@@ -461,8 +463,8 @@ newval()
 	return(temp);
 	}
 
-lispval
-pnewval()
+lispval 
+pnewval (void)
 	{
 	register lispval temp;
 	temp = next_pure_one(&val_str);
@@ -470,9 +472,8 @@ pnewval()
 	return(temp);
 	}
 
-lispval
-newhunk(hunknum)
-int hunknum;
+lispval 
+newhunk (int hunknum)
 	{
 	register lispval temp;
 
@@ -480,9 +481,8 @@ int hunknum;
 	return(temp);
 	}
 
-lispval
-pnewhunk(hunknum)
-int hunknum;
+lispval 
+pnewhunk (int hunknum)
 	{
 	register lispval temp;
 
@@ -490,8 +490,8 @@ int hunknum;
 	return(temp);
 	}
 
-lispval
-inewval(arg) lispval arg;
+lispval 
+inewval (lispval arg)
 	{
 	lispval temp;
 	temp = next_one(&val_str);
@@ -509,26 +509,26 @@ inewval(arg) lispval arg;
  */
 lispval getvec();
 
-lispval
-newvec(size)
+lispval 
+newvec (int size)
 {
     return(getvec(size,&vect_str,FALSE));
 }
 
-lispval
-pnewvec(size)
+lispval 
+pnewvec (int size)
 {
     return(getvec(size,&vect_str,TRUE));
 }
 
-lispval
-nveci(size)
+lispval 
+nveci (int size)
 {
     return(getvec(size,&vecti_str,FALSE));
 }
 
-lispval
-pnveci(size)
+lispval 
+pnveci (int size)
 {
     return(getvec(size,&vecti_str,TRUE));
 }
@@ -542,9 +542,8 @@ pnveci(size)
  * and vl.vectorl[-1] is the size field.   In other code,
  * v.vector[-1] is the prop field, and vl.vectorl[-2] is the size.
  */
-lispval
-getvec(size,typestr,purep)
-register struct types *typestr;
+lispval 
+getvec (int size, register struct types *typestr, int purep)
 {
     register lispval back, current;
     int sizewant, bytes, thissize, pages, pindex, triedgc = FALSE;
@@ -649,8 +648,7 @@ register struct types *typestr;
  *
  */
 lispval 
-Ipurep(element)
-lispval element;
+Ipurep (lispval element)
 {
     if(purepage[ATOX(element)]) return(tatom) ; else return(nil);
 }
@@ -666,8 +664,8 @@ lispval element;
  *  dtprs.    The dtpr list is linked by car instead of cdr so when we
  *  put it in the free list, we have to change the links.
  */
-pruneb(bignum)
-lispval bignum;
+int 
+pruneb (lispval bignum)
 {
 	register lispval temp = bignum;
 
@@ -691,8 +689,8 @@ lispval bignum;
 	    dtpr_str.next_free = (char *) temp;
 	}
 }
-lispval
-Badcall()
+lispval 
+Badcall (void)
 	{ error("BAD FUNCTION DESCRIPTOR USED IN CALL",FALSE); }
 
 
@@ -703,8 +701,8 @@ Badcall()
  *
  */
 
-lispval
-Ngc()
+lispval 
+Ngc (void)
 {
     return(gc((struct types *)CNIL));
 }
@@ -719,9 +717,8 @@ Ngc()
  * garbage collection
  */
 int printall = 0;
-lispval
-gc(type_struct)
-	struct types *type_struct;
+lispval 
+gc (struct types *type_struct)
 	{
 	lispval save;
 	struct tms begin, finish;
@@ -768,7 +765,8 @@ gc(type_struct)
 /*									*/
 /*  Mark-and-sweep phase						*/
 
-gc1()
+int 
+gc1 (void)
 {
 	int j, k;
 	register int *start,bvalue,type_len; 
@@ -1136,9 +1134,8 @@ gc1()
  *  
  */
 
-lispval
-alloc(tname,npages)
-lispval tname; long npages;
+lispval 
+alloc (lispval tname, long npages)
 {
 	long ii, jj;
 	struct types *typeptr;
@@ -1171,8 +1168,8 @@ lispval tname; long npages;
  * allocate in the hole if there is room.  This routine doesn't look
  * in the free lists, it always allocates space.
  */	
-lispval
-csegment(typecode,nitems,useholeflag)
+lispval 
+csegment (int typecode, int nitems, int useholeflag)
 {
 	register int ii, jj;
 	register char *charadd;
@@ -1217,12 +1214,14 @@ csegment(typecode,nitems,useholeflag)
 	return((lispval)charadd);
 }
 
-int csizeof(tname) lispval tname;
+int 
+csizeof (lispval tname)
 	{
 	return( spaces[typenum(tname)]->type_len * 4 );
 	}
 
-int typenum(tname) lispval tname;
+int 
+typenum (lispval tname)
 	{
 	int ii;
 
@@ -1238,7 +1237,7 @@ chek:	for(ii=0; ii<NUMSPACES; ++ii)
 	
 	}
 char *
-gethspace(segsiz,type)
+gethspace (int segsiz, int type)
 {
 	extern usehole; extern char holend[]; extern char *curhbeg;
 	register char *value;
@@ -1260,7 +1259,8 @@ gethspace(segsiz,type)
 	datalim = (lispval)(value + segsiz);
 	return(value);
 }
-gcrebear()
+int 
+gcrebear (void)
 {
 #ifdef HOLE
         register int i; register struct types *p;
@@ -1284,7 +1284,8 @@ gcrebear()
 /** markit(p) ***********************************************************/
 /*  just calls markdp							*/
 
-markit(p) lispval *p; { markdp(*p); }
+int 
+markit (lispval *p) { markdp(*p); }
 
 /*
  * markdp(p)
@@ -1294,7 +1295,8 @@ markit(p) lispval *p; { markdp(*p); }
  *  An iterative method is used to mark list structure, to avoid
  *  excessive recursion.
  */
-markdp(p) register lispval p;
+void
+markdp (register lispval p)
 	{
 #ifdef tahoe
 	register int r, s;	/* (goes with non-asm readbit, oksetbit) */
@@ -1455,7 +1457,7 @@ ptr_loop:
  */
 
 char *
-xsbrk(n)
+xsbrk (int n)
 	{
 	static char *xx;	/*  pointer to next available blank page  */
 	extern int xcycle;	/*  number of blank pages available  */
@@ -1481,7 +1483,8 @@ xsbrk(n)
 	return(xx);
 	}
 
-char *ysbrk(pages,type) int pages, type;
+char *
+ysbrk (int pages, int type)
 	{
 	char *xx;	/*  will point to block of storage  */
 	int i;
@@ -1507,8 +1510,8 @@ char *ysbrk(pages,type) int pages, type;
  * if the atom does not already exist, regurgitates a new one and 
  * returns it.
  */
-lispval
-getatom(purep)
+lispval 
+getatom (int purep)
 {   register lispval aptr;
     register char *name, *endname;
     register int hash;
@@ -1567,9 +1570,8 @@ getatom(purep)
  * to be used as the print name.  It doesn't do the automagic
  * creation of things of the form c[ad]*r.
  */
-lispval
-inewatom(name)
-register char *name;
+lispval 
+inewatom (register char *name)
 {   register struct atom *aptr;
     register int hash;
     extern struct types atom_str;
@@ -1595,8 +1597,8 @@ register char *name;
 
 /* our hash function */
 
-hashfcn(symb)
-register char *symb;
+int 
+hashfcn (register char *symb)
 {
 	register int i;
 /*	for (i=0 ; *symb ; i += i + *symb++); return(i & (HASHTOP-1)); */
@@ -1604,8 +1606,8 @@ register char *symb;
 	return(i&077777 % HASHTOP);
 }
 
-lispval
-LImemory()
+lispval 
+LImemory (void)
 {
     int nextadr, pagesinuse;
     
@@ -1627,4 +1629,5 @@ LImemory()
 }
 
 extern struct atom *hasht[HASHTOP];
-myhook(){}
+int 
+myhook (void){}

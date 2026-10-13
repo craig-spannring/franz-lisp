@@ -44,7 +44,7 @@ Some parts will be of interest primarily to those maintaining
 .Fr
 at their computer site.
 There is an additional document entitled
-\fIThe Franz Lisp System,\fp
+\fIThe Franz Lisp System,\fP
 by John Foderaro, which partially describes the system implementation.
 .Fr ,
 as delivered by Berkeley, includes all source code
@@ -55,7 +55,7 @@ the "doc" subdirectory.
 This document is divided into four Movements.
 In the first one we will attempt to describe the language of
 .Fr
-precisely and completely as it now stands (Opus 38.69, June 1983).
+precisely and completely as it now stands (Opus 38.93b, June 1983).
 In the second Movement we will look at the reader, function types,
 arrays and exception handling.
 In the third Movement we will look at several large support packages 
@@ -429,7 +429,7 @@ functions written in C.  Such objects are classified as of type
 Foreign functions which call malloc to allocate their own space,
 may also inadvertantly create such objects.
 The garbage collector is supposed to ignore such objects.
-.sh 2 Documentation Conventions.
+.sh 2 Documentation\ Conventions.
 The conventions used in the following chapters were designed to
 give a great deal of information in a brief
 space.
