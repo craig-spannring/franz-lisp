@@ -25,7 +25,7 @@ and compiler, the conventions used within the C coded kernel
 and those within the compiled code.
 This does not duplicate the information found in The Franz Lisp Manual.
 .++ C '\s-2Draft\s+2'\fBThe\ Franz\ Lisp\ System\fP'%'
-.+c Characteristics\ of\ \F\s-2RANZ\ \s0L\s-2ISP\s0
+.+c Characteristics\ of\ F\s-2RANZ\s0\ L\s-2ISP\s0
 .ls 1
 .pp
 There is no formal standard for lisp systems, thus each lisp

@@ -31,7 +31,16 @@ Also, this repository contains no code from AT&T.
 
 The `doc/` directory contains the Franz Lisp manual written in roff. The
 [manual in the PDF format][manual] can be obtained at the [Software
-Preservation Group][spg]'s Web site.
+Preservation Group][spg]'s Web site.  Unfortunately that copy does not 
+include the appendices.  If you want to read the appendices you will have 
+to generate those yourself.
+```
+cd ..
+mkdir build_docs
+cd build_docs
+cmake ../franz-lisp
+make install-manual
+```
 
 The `franz/` directory contains the source code of the interpreter called
 `lisp`. It is mostly written in C but plain old (pre-ANSI) one. There is also
