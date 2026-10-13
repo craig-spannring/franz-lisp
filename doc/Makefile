@@ -157,7 +157,8 @@ index.t:
 	echo ".Ib" > index
 	sort +3 -o index index `${Append} .x ${RootGenSrc}`
 	sed -f indexsed index > indexx
-	${TROFF} -me -x -t lmacs indexx > index.t
+	${TROFF} -me -t lmacs indexx > index.t
+	#${TROFF} -me -x -t lmacs indexx > index.t
 
 pindex: ${Append}
 	make `${Append} .x ${RootGenSrc}`
