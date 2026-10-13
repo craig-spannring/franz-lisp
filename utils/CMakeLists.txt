@@ -1,5 +1,4 @@
 
-message("need stuff here")
 
 function(add_util name)
   # Add utility program
