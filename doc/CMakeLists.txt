@@ -58,7 +58,10 @@ add_custom_command(
   VERBATIM
 )
 
-# Build the user's manual PDF 
+# Build the user's manual PDF
+#
+# Note- The format should roughly match
+#   https://softwarepreservation.computerhistory.org/LISP/franz/Foderaro-The_FRANZ_LISP_Manual-1980.pdf
 add_custom_command(
   OUTPUT "${UM_PDF}"
 

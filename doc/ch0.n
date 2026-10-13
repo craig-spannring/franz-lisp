@@ -166,6 +166,8 @@ A program which permits you to examine and modify evaluation stack
 in order to fix bugs on the fly.
 .CH 16 Lisp\ Editor
 A structure editor for interactive modification of lisp code.
+.CH 17 Hash\ Tables
+A description of lisp functions for manipulating hash tables.
 .ft R
 .sp 2v
 .ps 12
