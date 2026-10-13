@@ -48,10 +48,12 @@
 # make install will install the nroff versions of the manual in the
 # directory (LibDir/manual) where the auxfns0.l help command can find them.
 #
-LibDir = /usr/lib/lisp
+LibDir = /tmp/usr/lib/lisp
 CcodeDir = ../franz
 CopyTo = /dev/null
-TROFF=	/usr/ucb/vtroff
+# TROFF=	/usr/ucb/vtroff
+TROFF=	troff
+# TROFF=	groff
 NROFF=  nroff
 O =
 Append = ${LibDir}/append
