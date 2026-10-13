@@ -3,17 +3,13 @@
 #include "lconf.h"
 #include "config.h"
 
-#if 1
-int main()
-{
-    fprintf(stderr, "do we need to implemtn this?");
-    return 1;
-}
-
-#else
 
 #if NO_A_OUT
-int main() {exit(0);}
+int main()
+{
+  fprintf(stderr, "do we need to implement this?");  
+  exit(1);
+}
 #else 
 
 #if ! os_unisoft
@@ -130,5 +126,4 @@ usage:
 	exit(0);
 #endif
 }
-#endif
 #endif 
