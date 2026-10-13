@@ -65,6 +65,7 @@ add_compile_definitions(
 # add_subdirectory(tests)
 add_subdirectory(utils)
 add_subdirectory(franz)
+add_subdirectory(doc)
 
 
 file(CREATE_LINK
