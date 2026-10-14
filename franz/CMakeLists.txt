@@ -25,17 +25,9 @@ target_compile_definitions(rawlisp PRIVATE
 )
 
 set(BottomSrc "")
-list(JOIN BottomSrc " " BottomSrcStr)
-
-set(MipSrc1 "")
-list(JOIN MipSrc1 " " MipSrc1Str)
-
-set(MipSrc2 "")
-list(JOIN MipSrc2 " " MipSrc2Str)
-
-set(MipSrc3 "")
-list(JOIN MipSrc3 " " MipSrc3Str)
-
+set(MipSrc1   "")
+set(MipSrc2   "")
+set(MipSrc3   "")
 set(MipSrc4
 #  mac          #     tahoe        #     68k              # vax       
 #  ----------------------------------------------------------------------
@@ -73,8 +65,8 @@ set(MipSrc4
    frame.c      #     frame.c      #     frame.c          # frame.c   
    lamgc.c      #     lamgc.c      #     lamgc.c          # lamgc.c   
  )
-list(JOIN MipSrc4 " " MipSrc4Str)
 
+message("MipSrc4:     ${MipSrc4}")
 target_sources(rawlisp PRIVATE
   ${BottomSrc}
   ${MipSrc1}
