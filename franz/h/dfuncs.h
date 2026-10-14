@@ -1,5 +1,5 @@
-/*					-[Sat Jan 29 13:54:30 1983 by jkf]-
- * 	dfuncs.h			$Locker:  $
+/*                                      -[Sat Jan 29 13:54:30 1983 by jkf]-
+ *      dfuncs.h                        $Locker:  $
  * external function declaration
  *
  * $Header: dfuncs.h,v 1.2 84/02/29 17:09:10 sklower Exp $

@@ -1,5 +1,5 @@
-/*					-[Sat Jan 29 13:27:05 1983 by jkf]-
- * 	low.c				$Locker:  $
+/*                                      -[Sat Jan 29 13:27:05 1983 by jkf]-
+ *      low.c                           $Locker:  $
  * low core definition
  *
  * $Header: low.c,v 1.5 85/05/22 07:53:54 sklower Exp $

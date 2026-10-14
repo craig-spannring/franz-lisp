@@ -1,5 +1,5 @@
-/*					-[Thu Mar  3 15:57:51 1983 by jkf]-
- * 	config.h			$Locker:  $
+/*                                      -[Thu Mar  3 15:57:51 1983 by jkf]-
+ *      config.h                        $Locker:  $
  * configuration dependent info
  *
  * $Header: config.h,v 1.16 87/12/14 18:33:31 sklower Exp $
@@ -39,9 +39,9 @@
  * set up the global defines based on the choice above
  * the global names are
  * operating system:
- *		  os_unix
- *		     os_4_1, os_4_1a, os_4_1c, os_4_2, os_unix_ts
- *		  os_vms
+ *                os_unix
+ *                   os_4_1, os_4_1a, os_4_1c, os_4_2, os_unix_ts
+ *                os_vms
  */
 
 /* OFFSET -  this is the offset to the users address space. */
@@ -58,31 +58,31 @@
 #endif
 
 #if sun_4_2beta || sun_4_2 || sun_4_1c
-#define m_68k		1
-#define OFFSET		0x8000
+#define m_68k           1
+#define OFFSET          0x8000
 #endif
 
 #if sun_unisoft
-#define m_68k		1
-#define	OFFSET		0x40000
+#define m_68k           1
+#define OFFSET          0x40000
 #endif
 
 #if dual_unisoft
-#define m_68k		1
-#define m_68k_dual	1
-#define OFFSET		0x800000
+#define m_68k           1
+#define m_68k_dual      1
+#define OFFSET          0x800000
 #endif
 
 #if pixel_unisoft
-#define m_68k		1
-#define OFFSET		0x20000
+#define m_68k           1
+#define OFFSET          0x20000
 #endif
 
 #if lisa_unisys3
-#define m_68k		1
-#define OFFSET		0x20000
-#define unisys3botch	1
-#define os_unix_ts	1
+#define m_68k           1
+#define OFFSET          0x20000
+#define unisys3botch    1
+#define os_unix_ts      1
 #endif
 
 #if mc500_2_0
@@ -93,29 +93,29 @@
 
 /* next the operating system */
 #if vax_4_1 || vax_4_1a || vax_4_1c || vax_4_2 || vax_4_3 || vax_unix_ts || m_68k || tahoe_4_3
-#define os_unix		1
+#define os_unix         1
 #endif
 
 #if vax_4_1
-#define os_4_1		1
+#define os_4_1          1
 #endif
 #if vax_4_1a
-#define os_4_1a		1
+#define os_4_1a         1
 #endif
 #if vax_4_1c || sun_4_1c
-#define os_4_1c 	1
+#define os_4_1c         1
 #endif
 #if vax_4_2 || sun_4_2 || sun_4_2beta
-#define os_4_2	 	1
+#define os_4_2          1
 #endif
 #if vax_4_3 || tahoe_4_3
-#define os_4_3		1
+#define os_4_3          1
 #endif
 #if vax_unix_ts
-#define os_unix_ts 	1
+#define os_unix_ts      1
 #endif
 #if vax_eunice_vms
-#define os_vms		1
+#define os_vms          1
 #endif
 
 #if sun_unisoft || dual_unisoft || pixel_unisoft
@@ -135,24 +135,24 @@
 
 #if m_vax
 #define MACHINE "vax"
-#define NILIS0	1
+#define NILIS0  1
 #endif
 
 #if m_tahoe
 #define MACHINE "tahoe"
-#define NILIS0	1
+#define NILIS0  1
 #endif
 
 /*
 ** NILIS0 -- for any UNIX implementation in which the users
-**	address space starts at 0 (like m_vax, above). 
+**      address space starts at 0 (like m_vax, above). 
 **
 ** NPINREG -- for the verison if lisp that keeps np and lbot in global
-**	registers.  On the 68000, there is a special `hacked' version
-**	of the C compiler that is needed to do this.
+**      registers.  On the 68000, there is a special `hacked' version
+**      of the C compiler that is needed to do this.
 **
-** #define NILIS0		1
-** #define NPINREG		1
+** #define NILIS0               1
+** #define NPINREG              1
 */
 
 /*
@@ -169,8 +169,8 @@
 #endif
 
 #if m_vax || m_tahoe
-#define OFFSET		0x0
-#define NPINREG		1
+#define OFFSET          0x0
+#define NPINREG         1
 #endif
 
 
@@ -181,11 +181,11 @@
 #define OS      "unix"
 #endif
 #if os_vms
-#define OS 	"vms"
+#define OS      "vms"
 #endif
 
 /* DOMAIN - this is put on the (status features) list and
- * 	is the value of (status domain)
+ *      is the value of (status domain)
  */
 #define DOMAIN  "ucb"
 

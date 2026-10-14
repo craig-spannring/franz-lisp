@@ -15,12 +15,12 @@ myfrexp()
 /*
 ** Comment from bigmath.c:
 **
-**	myfrexp (value, exp, hi, lo)
-**		double value;
-**		int *exp, *hi, *lo;
+**      myfrexp (value, exp, hi, lo)
+**              double value;
+**              int *exp, *hi, *lo;
 **
-**	myfrexp returns three values, exp, hi, lo,
-**	Such that value = 2**exp*tmp, where tmp = (hi*2**-23+lo*2**-53)
-**	is uniquely determined subect to .5< abs(tmp) <= 1.0
+**      myfrexp returns three values, exp, hi, lo,
+**      Such that value = 2**exp*tmp, where tmp = (hi*2**-23+lo*2**-53)
+**      is uniquely determined subect to .5< abs(tmp) <= 1.0
 **
 */

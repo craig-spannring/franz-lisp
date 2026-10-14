@@ -4,7 +4,7 @@
  * machine stack frame
  */
 struct machframe {
-struct 	machframe	*fp;
-	lispval	(*pc)();
-	lispval ap[1];
+struct  machframe       *fp;
+        lispval (*pc)();
+        lispval ap[1];
 };

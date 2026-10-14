@@ -3,8 +3,8 @@ static char *rcsid =
    "$Header: lamp.c,v 1.3 83/12/09 16:51:36 sklower Exp $";
 #endif
 
-/*					-[Tue Mar 22 15:17:09 1983 by jkf]-
- * 	lamp.c				$Locker:  $
+/*                                      -[Tue Mar 22 15:17:09 1983 by jkf]-
+ *      lamp.c                          $Locker:  $
  * interface with unix profiling
  *
  * (c) copyright 1982, Regents of the University of California
@@ -25,19 +25,19 @@ int doprof = TRUE;
 lispval
 Lmonitor()
 {
-	extern etext, countbase;
+        extern etext, countbase;
 
-	if (np==lbot) { monitor((int(*)())0); countbase = 0; }
-	else if (TYPE(lbot->val)==INT) 
-	 { monitor((int (*)())2, (int (*)())lbot->val->i, pbuf,
-	 				PBUFSZ*(sizeof(short)), 7000); 
-	   countbase = ((int)pbuf) +12; 
-	}
-	else {
-	   monitor((int (*)())2, (int (*)())sbrk(0), pbuf,
-	   				PBUFSZ*(sizeof(short)), 7000); 
-	   countbase = ((int)pbuf) + 12; }
-	return(tatom);
+        if (np==lbot) { monitor((int(*)())0); countbase = 0; }
+        else if (TYPE(lbot->val)==INT) 
+         { monitor((int (*)())2, (int (*)())lbot->val->i, pbuf,
+                                        PBUFSZ*(sizeof(short)), 7000); 
+           countbase = ((int)pbuf) +12; 
+        }
+        else {
+           monitor((int (*)())2, (int (*)())sbrk(0), pbuf,
+                                        PBUFSZ*(sizeof(short)), 7000); 
+           countbase = ((int)pbuf) + 12; }
+        return(tatom);
 }
 
 
@@ -45,7 +45,7 @@ Lmonitor()
 
 /* if prof is not defined, create a dummy Lmonitor */
 
-short	pbuf[8];
+short   pbuf[8];
 
 /* data space for fasl to put counters */
 int mcnts[1];
@@ -54,7 +54,7 @@ int doprof = FALSE;
 
 Lmonitor()
 {
-	error("Profiling not enabled",FALSE);
+        error("Profiling not enabled",FALSE);
 }
 
 

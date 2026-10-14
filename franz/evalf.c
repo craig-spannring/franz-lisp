@@ -20,45 +20,45 @@ Levalf ()
 
     if (handy == nil)  /* Arg of nil means start at the top */
     {
-	myfp = searchforpdl(errp);	
-	/* 
-	 * myfp may be nil, if *rset t wasn't done. In that case we
-	 * just return nil
-	 */
-	if(myfp == (struct frame *) 0) return(nil);
-	/*
-	 * myfp may point to the call to evalframe, in which case we
-	 * want to go to the next frame down.  myfp will not point
-	 * to the call to evalframe if for example the translink tables
-	 * are turned on and the call came from compiled code
-	 */
-	if(    ((myfp->class == F_EVAL) 
-	             && TYPE(myfp->larg1) == DTPR
-	             && myfp->larg1->d.car == Vevalframe)
-	    || ((myfp->class == F_FUNCALL)
-		     && (myfp->larg1 = Vevalframe)))
-	    
-	   myfp = searchforpdl(myfp->olderrp);	/* advance to next frame */
+        myfp = searchforpdl(errp);      
+        /* 
+         * myfp may be nil, if *rset t wasn't done. In that case we
+         * just return nil
+         */
+        if(myfp == (struct frame *) 0) return(nil);
+        /*
+         * myfp may point to the call to evalframe, in which case we
+         * want to go to the next frame down.  myfp will not point
+         * to the call to evalframe if for example the translink tables
+         * are turned on and the call came from compiled code
+         */
+        if(    ((myfp->class == F_EVAL) 
+                     && TYPE(myfp->larg1) == DTPR
+                     && myfp->larg1->d.car == Vevalframe)
+            || ((myfp->class == F_FUNCALL)
+                     && (myfp->larg1 = Vevalframe)))
+            
+           myfp = searchforpdl(myfp->olderrp);  /* advance to next frame */
     } 
     else 
     {
-	if( TYPE(handy) != INT ) 
-	    error("Arg to evalframe must be integer",TRUE);
-	    /* 
-	     * Interesting artifact: A pdl pointer will be an INT, but if
-	     * read in, the Franz reader produces a bignum, thus giving some
-	     * protection from being hacked. 
-	     */
-	    
-	myfp = (struct frame *)(handy->i);
-	vfypdlp(myfp);	/* make sure we are given valid pointer */
-	myfp = searchforpdl(myfp);
-        if (myfp == (struct frame *) 0 ) return(nil);	/* end of frames */
-	myfp = searchforpdl(myfp->olderrp);	/* advance to next one */
+        if( TYPE(handy) != INT ) 
+            error("Arg to evalframe must be integer",TRUE);
+            /* 
+             * Interesting artifact: A pdl pointer will be an INT, but if
+             * read in, the Franz reader produces a bignum, thus giving some
+             * protection from being hacked. 
+             */
+            
+        myfp = (struct frame *)(handy->i);
+        vfypdlp(myfp);  /* make sure we are given valid pointer */
+        myfp = searchforpdl(myfp);
+        if (myfp == (struct frame *) 0 ) return(nil);   /* end of frames */
+        myfp = searchforpdl(myfp->olderrp);     /* advance to next one */
     };
 
 
-    if (myfp == (struct frame *) 0 ) return(nil);	/* end of frames */
+    if (myfp == (struct frame *) 0 ) return(nil);       /* end of frames */
 
     if(myfp->class == F_EVAL) evaltype = TRUE; else evaltype = FALSE;
 
@@ -74,39 +74,39 @@ Levalf ()
     handy->d.cdr = newdot();
     handy = handy->d.cdr;
     if (evaltype)
-	handy->d.car = myfp->larg1;  /* eval type - simply the arg to eval */
+        handy->d.car = myfp->larg1;  /* eval type - simply the arg to eval */
     else 
     {  /*  
         * apply type ; must build argument list. The form will look like
-	*
- 	*	  (<function> (<evaled arg1> <evaled arg2> ....))
-	*   i.e. the function name followed by a list of evaluated args 
-	*/
-	lispval form, arglist;
-	struct argent *pntr;
-	(form = newdot())->d.car = myfp->larg1;
-	handy->d.car = form;			/* link in to save from gc */
-	(form->d.cdr = newdot())->d.cdr = nil;
-	for (arglist = nil, pntr = myfp->svlbot; pntr < myfp->svnp;  pntr++) 
-	{
-	    if(arglist == nil) 
-	    {
-		protect(arglist = newdot());
-		form->d.cdr->d.car = arglist;	/* save from gc */
-	    }
-	    else arglist = (arglist->d.cdr = newdot());
-	    arglist->d.car = pntr->val;
-	};
+        *
+        *         (<function> (<evaled arg1> <evaled arg2> ....))
+        *   i.e. the function name followed by a list of evaluated args 
+        */
+        lispval form, arglist;
+        struct argent *pntr;
+        (form = newdot())->d.car = myfp->larg1;
+        handy->d.car = form;                    /* link in to save from gc */
+        (form->d.cdr = newdot())->d.cdr = nil;
+        for (arglist = nil, pntr = myfp->svlbot; pntr < myfp->svnp;  pntr++) 
+        {
+            if(arglist == nil) 
+            {
+                protect(arglist = newdot());
+                form->d.cdr->d.car = arglist;   /* save from gc */
+            }
+            else arglist = (arglist->d.cdr = newdot());
+            arglist->d.car = pntr->val;
+        };
     };
     handy->d.cdr = newdot();
     handy = handy->d.cdr;
-	/* Next is index into bindstack lisp pseudo-array, for maximum
-	    usefulness */
+        /* Next is index into bindstack lisp pseudo-array, for maximum
+            usefulness */
     handy->d.car = inewint( myfp->svbnp - orgbnp); 
     handy->d.cdr = newdot();
     handy = handy->d.cdr;
-	
-    handy->d.car = inewint(myfp->svnp - orgnp);	/* index of np in namestack*/
+        
+    handy->d.car = inewint(myfp->svnp - orgnp); /* index of np in namestack*/
     handy->d.cdr = newdot();
     handy = handy->d.cdr;
     handy->d.car = inewint(myfp->svlbot - orgnp);/* index of lbot in namestack*/
@@ -125,8 +125,8 @@ struct frame *myfp;
     vfypdlp(myfp);
     for(  ; myfp != (struct frame *)0 ; myfp= myfp->olderrp)
     {
-	if((myfp->class == F_EVAL) || (myfp->class == F_FUNCALL))
-	    return(myfp);
+        if((myfp->class == F_EVAL) || (myfp->class == F_FUNCALL))
+            return(myfp);
     }
     return((struct frame *)0);
 }
@@ -141,24 +141,24 @@ register struct frame *curfp;
     register struct frame *myfp;
 
     for (myfp = errp; myfp != (struct frame *)0 ; myfp = myfp->olderrp)
-	if(myfp == curfp) return;
+        if(myfp == curfp) return;
     errorh1(Vermisc,"Invalid pdl pointer given: ",nil,FALSE,0,inewint(curfp));
 }
 
 lispval
 Lfretn ()
 {
-    struct frame *myfp;	
+    struct frame *myfp; 
     chkarg(2,"freturn");
 
     if( TYPE(lbot->val) != INT )
-	error("freturn: 1st arg not pdl pointer",FALSE);
+        error("freturn: 1st arg not pdl pointer",FALSE);
 
     myfp = (struct frame *) (lbot->val->i);
-    vfypdlp(myfp);		/* make sure pdlp is valid */
+    vfypdlp(myfp);              /* make sure pdlp is valid */
 
-    retval = C_FRETURN;		/* signal coming from freturn */
-    lispretval = (lbot+1)->val;	/* value to return 	*/
+    retval = C_FRETURN;         /* signal coming from freturn */
+    lispretval = (lbot+1)->val; /* value to return      */
     Iretfromfr(myfp);
     /* NOT REACHED */
 }

@@ -1,5 +1,5 @@
-/*					-[Sat May  7 20:46:54 1983 by jkf]-
- * 	sigtab.h			$Locker:  $
+/*                                      -[Sat May  7 20:46:54 1983 by jkf]-
+ *      sigtab.h                        $Locker:  $
  * table of lispvals needed by C 
  *
  * $Header: sigtab.h 1.4 83/06/09 01:15:47 sklower Exp $
@@ -67,7 +67,7 @@ extern lispval lispsys[SIGNIF];
 #define val_items (lispsys[51])
 #define val_pages (lispsys[52])
 #define val_name  (lispsys[53])
-#define splice	(lispsys[54])
+#define splice  (lispsys[54])
 #define rdrsdot (lispsys[55])
 #define funct_items (lispsys[56])
 #define funct_pages (lispsys[57])

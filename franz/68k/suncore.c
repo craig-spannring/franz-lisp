@@ -4,7 +4,7 @@
  *
  * Copyright (c) 1982, by the Regents, University of California
  *
- *			-[Tue Apr 10 08:32:07 1984 by jkf]-
+ *                      -[Tue Apr 10 08:32:07 1984 by jkf]-
  *
  * Interface to sun core graphics.
  *
@@ -222,9 +222,9 @@ int set_coordinate_system_type();
 
 static char *disc = "c-function";
 static struct cftab {
-	char *name;
-	int (*cfn)();
-	char **discipline;
+        char *name;
+        int (*cfn)();
+        char **discipline;
 } corefuns[] = {
 {"_inquire_detectability", inquire_detectability, &disc},
 {"_set_detectability", set_detectability, &disc},

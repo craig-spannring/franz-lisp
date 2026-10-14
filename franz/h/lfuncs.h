@@ -1,5 +1,5 @@
-/*					-[Sat Feb 11 14:47:50 1984 by layer]-
- * 	lfuncs.h			$Locker:  $
+/*                                      -[Sat Feb 11 14:47:50 1984 by layer]-
+ *      lfuncs.h                        $Locker:  $
  * lisp external function definitons
  *
  * $Header: lfuncs.h,v 1.6 84/02/29 17:08:03 sklower Exp $
@@ -22,8 +22,8 @@ lispval Ntpl();
 lispval Lstacktrace();
 lispval Lunstacktrace();
 
-lispval	Lalfalp();
-lispval	Lfseek();
+lispval Lalfalp();
+lispval Lfseek();
 lispval LDivide();
 lispval LIfss();
 lispval LEmuldiv();
@@ -57,11 +57,11 @@ lispval Lbind();
 lispval Lboole();
 lispval Lboundp();
 lispval Lc02r();
-lispval Lc03r();		/* cdddr */
-lispval Lc04r();		/* cddddr */
-lispval Lc12r();		/* caddr */
-lispval Lc13r();		/* cadddr */
-lispval Lc14r();		/* caddddr */
+lispval Lc03r();                /* cdddr */
+lispval Lc04r();                /* cddddr */
+lispval Lc12r();                /* caddr */
+lispval Lc13r();                /* cadddr */
+lispval Lc14r();                /* caddddr */
 lispval Lcaar();
 lispval Lcadr();
 lispval Lcar();
@@ -72,11 +72,11 @@ lispval Lchdir();
 lispval Lclose();
 lispval Lconcat();
 lispval Lcons();
-lispval Lcopyint();		/* actually copyint* */
+lispval Lcopyint();             /* actually copyint* */
 lispval Lcos();
 lispval Lcprintf();
 lispval Lcpy1();
-lispval Lctcherr();	/* function def of ER%unwind-protect */
+lispval Lctcherr();     /* function def of ER%unwind-protect */
 lispval Lcxr();
 lispval Ldbtofl();
 lispval Lderef();
