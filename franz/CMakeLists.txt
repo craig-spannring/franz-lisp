@@ -1,63 +1,61 @@
+#
+# The original make files create lisp through 2 intermediate programs
+# 
+#   - rawlisp  Created by linking 
+#           ${BottomObj}
+#           ${NoHoleObj} or ${HoleObj}
+#           ${MipObj4}
+#           ${CPU_SpecificObj}
+#           ${OsObjs}
+#   - nlisp    Lisp interpreter with compiled lisp
+#              functions/macros/etc dumped. 
+# nlisp is copied into the install directory.
+#
+add_executable(rawlisp)
 
-add_executable(fl)
-
-target_compile_options(fl PRIVATE ${fl_cc_flags})
-target_include_directories(fl PRIVATE
+target_compile_options(rawlisp PRIVATE ${rawlisp_cc_flags})
+target_include_directories(rawlisp PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/./h
   )
-# target_link_libraries(fl PRIVATE )
+# target_link_libraries(rawlisp PRIVATE )
 
-target_compile_definitions(fl PRIVATE
+target_compile_definitions(rawlisp PRIVATE
   HOLE=2097152
   PORTABLE=1
 )
 
-target_sources(fl PRIVATE
-  portable/shims.c
-  
-  # MipObj2     =
-  alloc.c
-  data.c
+set(BottomSrc "")
+list(JOIN BottomSrc " " BottomSrcStr)
 
-  # HoleMipObj2 =
-  #Salloc.c
-  #Sdata.c
+set(MipSrc1 "")
+list(JOIN MipSrc1 " " MipSrc1Str)
 
-  # HoleMipObj3 =
-  rlc.c
+set(MipSrc2 "")
+list(JOIN MipSrc2 " " MipSrc2Str)
 
-  # MipObj4     =
+set(MipSrc3 "")
+list(JOIN MipSrc3 " " MipSrc3Str)
+
+set(MipSrc4 "")
+list(JOIN MipSrc4 " " MipSrc4Str)
+
+
+set(BottomSrc "")
+list(JOIN BottomSrc " " BottomSrcStr)
+
+set(MipSrc1 "")
+list(JOIN MipSrc1 " " MipSrc1Str)
+
+set(MipSrc2 "")
+list(JOIN MipSrc2 " " MipSrc2Str)
+
+set(MipSrc3 "")
+list(JOIN MipSrc3 " " MipSrc3Str)
+
+set(MipSrc4 "")
+list(JOIN MipSrc4 " " MipSrc4Str)
+
+target_sources(rawlisp PRIVATE
   lisp.c
-  eval.c
-  eval2.c
-  inits.c
-  io.c
-  error.c
-  sysat.c
-  lam1.c
-  lam2.c
-  lam3.c
-  lam4.c
-  lam5.c
-  lam6.c
-  lam7.c
-  lam8.c
-  lam9.c
-  lamr.c
-  lamp.c
-  fex1.c
-  fex2.c
-  fex3.c
-  fex4.c
-  fexr.c
-  fpipe.c
-  subbig.c
-  pbignum.c
-  divbig.c
-  ffasl.c
-  fasl.c
-  trace.c
-  evalf.c
-  frame.c
-  lamgc.c
   )
+  
