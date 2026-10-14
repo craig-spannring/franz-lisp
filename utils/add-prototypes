@@ -74,14 +74,14 @@ def _main(args):
             okay = okay and args.clobber 
             print(f"Error: File {h} already exists. ", file=sys.stderr)
         if okay:
-            h_contents = check_output(["cproto",
-                                       "-I", includes_dir,
-                                       "-D", "FILE=int",
-                                       "-q",                # no msg if #include fails
-                                       "-a",                # convert func defs to ANSI
-                                       "-e",                # add extern
-                                       f],
-                                      encoding="utf-8" )
+            cmd = ["cproto",
+                   "-I", includes_dir,
+                   "-D", "FILE=int",
+                   "-q",                # no msg if #include fails
+                   "-a",                # convert func defs to ANSI
+                   "-e",                # add extern
+                   f]
+            h_contents = check_output(cmd, encoding="utf-8" )
             guard_id = (f"INC_{op.splitext(op.basename(h))[0]}"
                         + f"_{md5((h.encode('utf-8'))).hexdigest()}_h")
 
