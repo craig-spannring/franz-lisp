@@ -36,26 +36,50 @@ list(JOIN MipSrc2 " " MipSrc2Str)
 set(MipSrc3 "")
 list(JOIN MipSrc3 " " MipSrc3Str)
 
-set(MipSrc4 "")
-list(JOIN MipSrc4 " " MipSrc4Str)
-
-
-set(BottomSrc "")
-list(JOIN BottomSrc " " BottomSrcStr)
-
-set(MipSrc1 "")
-list(JOIN MipSrc1 " " MipSrc1Str)
-
-set(MipSrc2 "")
-list(JOIN MipSrc2 " " MipSrc2Str)
-
-set(MipSrc3 "")
-list(JOIN MipSrc3 " " MipSrc3Str)
-
-set(MipSrc4 "")
+set(MipSrc4
+#  mac          #     tahoe        #     68k              # vax       
+#  ----------------------------------------------------------------------
+   lisp.c       #     lisp.c       #     lisp.c           # lisp.c    
+   eval.c       #     eval.c       #     eval.c           # eval.c    
+   eval2.c      #     eval2.c      #     eval2.c          # eval2.c   
+   inits.c      #     inits.c      #     inits.c          # inits.c   
+   io.c         #     io.c         #     io.c             # io.c      
+   error.c      #     error.c      #     error.c          # error.c   
+   sysat.c      #     sysat.c      #     sysat.c          # sysat.c   
+   lam1.c       #     lam1.c       #     lam1.c           # lam1.c    
+   lam2.c       #     lam2.c       #     lam2.c           # lam2.c    
+   lam3.c       #     lam3.c       #     lam3.c           # lam3.c    
+   lam4.c       #     lam4.c       #     lam4.c           # lam4.c    
+   lam5.c       #     lam5.c       #     lam5.c           # lam5.c    
+   lam6.c       #     lam6.c       #     lam6.c           # lam6.c    
+   lam7.c       #     lam7.c       #     lam7.c           # lam7.c    
+   lam8.c       #     lam8.c       #     lam8.c           # lam8.c    
+   lam9.c       #     lam9.c       #     lam9.c           # lam9.c    
+   lamr.c       #     lamr.c       #     lamr.c           # lamr.c    
+   lamp.c       #     lamp.c       #     lamp.c           # lamp.c    
+   fex1.c       #     fex1.c       #     fex1.c           # fex1.c    
+   fex2.c       #     fex2.c       #     fex2.c           # fex2.c    
+   fex3.c       #     fex3.c       #     fex3.c           # fex3.c    
+   fex4.c       #     fex4.c       #     fex4.c           # fex4.c    
+   fexr.c       #     fexr.c       #     fexr.c           # fexr.c    
+   fpipe.c      #     fpipe.c      #     fpipe.c          # fpipe.c   
+   subbig.c     #     subbig.c     #     subbig.c         # subbig.c  
+   pbignum.c    #     pbignum.c    #     pbignum.c        # pbignum.c 
+   divbig.c     #     divbig.c     #     divbig.c         # divbig.c  
+   ffasl.c      #     ffasl.c      #     ffasl.c          # ffasl.c   
+   fasl.c       #     fasl.c       #     fasl.c           # fasl.c    
+   trace.c      #     trace.c      #     trace.c          # trace.c   
+   evalf.c      #     evalf.c      #     evalf.c          # evalf.c   
+   frame.c      #     frame.c      #     frame.c          # frame.c   
+   lamgc.c      #     lamgc.c      #     lamgc.c          # lamgc.c   
+ )
 list(JOIN MipSrc4 " " MipSrc4Str)
 
 target_sources(rawlisp PRIVATE
-  lisp.c
+  ${BottomSrc}
+  ${MipSrc1}
+  ${MipSrc2}
+  ${MipSrc3}
+  ${MipSrc4}
   )
   
