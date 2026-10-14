@@ -14,8 +14,8 @@ static char *rcsid =
 #include "global.h"
 lispval adbig(),subbig(),mulbig();
 double Ifloat();
-lispval
-Ladd()
+lispval 
+Ladd (void)
 {
         register lispval work;
         register struct argent *result, *mynp, *oldnp;
@@ -159,8 +159,8 @@ Ladd()
  */
 
 
-lispval
-Lsub()
+lispval 
+Lsub (void)
 {
         register lispval work;
         register struct argent *result, *mynp, *oldnp;
@@ -361,8 +361,8 @@ out:
         return(work);
 }
 
-lispval
-Ltimes()
+lispval 
+Ltimes (void)
 {
         register lispval work;
         register struct argent *result, *mynp, *oldnp;
@@ -481,8 +481,8 @@ Ltimes()
         return(work);
 }
 
-lispval
-Lquo()
+lispval 
+Lquo (void)
 {
         register lispval work;
         register struct argent *result, *mynp, *oldnp;
@@ -650,7 +650,8 @@ out:
 }
 
 
-lispval Lfp()
+lispval 
+Lfp (void)
 {
         register temp = 0;
         register struct argent *argp; 
@@ -664,7 +665,8 @@ lispval Lfp()
         return(inewint(temp));
 }
 
-lispval Lfm()
+lispval 
+Lfm (void)
 {
         register temp;
         register struct argent *argp;
@@ -685,7 +687,8 @@ lispval Lfm()
         return(inewint(temp));
 }
 
-lispval Lft()
+lispval 
+Lft (void)
 {
         register temp = 1;
         register struct argent *argp;
@@ -699,7 +702,8 @@ lispval Lft()
         return(inewint(temp));
 }
 
-lispval Lflessp()
+lispval 
+Lflessp (void)
 {
         register struct argent *argp = lbot;
         register old, new;
@@ -718,7 +722,8 @@ lispval Lflessp()
         return(tatom);
 }
 
-lispval Lfd()
+lispval 
+Lfd (void)
 {
         register temp = 0;
         register struct argent *argp;
@@ -738,7 +743,8 @@ lispval Lfd()
         return(inewint(temp));
 }
 
-lispval Lfadd1()
+lispval 
+Lfadd1 (void)
 {
     chkarg(1,"1+");
     if(TYPE(lbot->val) != INT)
@@ -752,7 +758,8 @@ lispval Lfadd1()
  *   exponentiation of fixnums x_a and x_b returning a fixnum
  * result
  */
-lispval Lfexpt()
+lispval 
+Lfexpt (void)
 {
     register int base;
     register int exp;
@@ -821,7 +828,8 @@ lispval Lfexpt()
             
     
 
-lispval Lfsub1()
+lispval 
+Lfsub1 (void)
 {
     chkarg(1,"1-");
     if(TYPE(lbot->val) != INT)
@@ -830,8 +838,8 @@ lispval Lfsub1()
     return(inewint(lbot->val->i - 1));
 }
 
-lispval
-Ldbtofl()
+lispval 
+Ldbtofl (void)
 {
         float x;
         chkarg(1,"double-to-float");
@@ -843,8 +851,8 @@ Ldbtofl()
         return(inewint(*(long *)&x));
 }
 
-lispval
-Lfltodb()
+lispval 
+Lfltodb (void)
 {
         register lispval handy;
         chkarg(1,"float-to-double");

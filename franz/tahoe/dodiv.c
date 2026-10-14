@@ -9,8 +9,11 @@ struct vl
         long low;
        };
 
-long dodiv(top,bottom)
-long *top, *bottom; /* top least significant; bottom most */
+long 
+dodiv (
+    long *top,
+    long *bottom /* top least significant; bottom most */
+)
 {
         struct vl work;
         char error;
@@ -29,8 +32,8 @@ long *top, *bottom; /* top least significant; bottom most */
         return(rem);
 }
 
-long dsneg(top,bottom)
-long *top, *bottom;
+long 
+dsneg (long *top, long *bottom)
 {
         register long *p = top;
         register carry = 0;

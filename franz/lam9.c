@@ -43,8 +43,8 @@ extern char   *UP;
 /*      If the termcap file is not found, or terminal type is undefined,
 /*      it will print out an error mesg.                                */
 
-lispval
-Ltci()
+lispval 
+Ltci (void)
 {
 char *cp = getenv("TERM");
 char *pc;
@@ -77,8 +77,8 @@ return(nil);
 /*              line    : line if is nessery
 /*              colum   : colum if is nessaery
 /*                                                                      */
-lispval
-Ltcx()
+lispval 
+Ltcx (void)
 {
         register struct argent *mylbot = lbot;
         int line, column;
@@ -98,10 +98,8 @@ Ltcx()
 }
 
 
-static
-show(option,line,colum)
-char *option;
-int  *line,*colum;
+static 
+show (char *option, int *line, int *colum)
 {
 int found;
 char clbuf[20];
@@ -159,8 +157,8 @@ return (0);
 #define fc_sleep    11
 #define fc_nice     12
 
-lispval
-LIfranzcall()
+lispval 
+LIfranzcall (void)
 {
     register lispval handy;
     

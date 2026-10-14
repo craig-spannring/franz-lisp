@@ -18,7 +18,8 @@
 char mybuf[BUFSIZ];
 int mask;
 
-main()
+int 
+main (void)
 {
  register savesize = 0;
  char *cp;

@@ -5,8 +5,8 @@ static char *sccsid = "%W% %G%";
 #include "global.h"
 #include "frame.h"
 
-lispval
-Levalf ()
+lispval 
+Levalf (void)
 {
     register struct frame *myfp;
     register lispval handy, result;
@@ -114,8 +114,8 @@ Levalf ()
     return(result);
 }
 
-struct frame *searchforpdl (myfp)
-struct frame *myfp;
+struct frame *
+searchforpdl (struct frame *myfp)
 {
     /*
      * for safety sake, we verify that this is a real pdl pointer by
@@ -135,8 +135,8 @@ struct frame *myfp;
  * vfypdlp :: verify pdl pointer as existing,  do not return unless
  * it is valid
  */
-vfypdlp(curfp)
-register struct frame *curfp;
+int 
+vfypdlp (register struct frame *curfp)
 {
     register struct frame *myfp;
 
@@ -145,8 +145,8 @@ register struct frame *curfp;
     errorh1(Vermisc,"Invalid pdl pointer given: ",nil,FALSE,0,inewint(curfp));
 }
 
-lispval
-Lfretn ()
+lispval 
+Lfretn (void)
 {
     struct frame *myfp; 
     chkarg(2,"freturn");

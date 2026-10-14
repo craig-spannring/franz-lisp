@@ -25,7 +25,8 @@ extern char *stabf;
 extern int fvirgin;
 extern int keywait;
 extern sigstruck, sigdelay;
-initial()
+int 
+initial (void)
 {
         int sigalrmh(), sigfpeh(),  sginth();
         lispval Isstatus(),Istsrch();
@@ -78,8 +79,8 @@ initial()
 
 }
 
-static
-makenv()
+static 
+makenv (void)
 {
         register lispval env, temp;
         register char *p, *q;
@@ -109,7 +110,8 @@ makenv()
         np--;
 }
 
-sginth(signo){
+int 
+sginth (int signo){
         re_enable(signo,sginth);
         sigstruck |= (1 << signo);
         /* handle SIGINT differently since it is the only
@@ -148,8 +150,8 @@ sginth(signo){
 
         sigcall(signo);
 }
-sigcall(which)
-register which;
+int 
+sigcall (register which)
 {
         extern lispval Lfuncal();
         Savestack(1);
@@ -177,12 +179,14 @@ register which;
         sigstruck &= ~ (1<<which);
         Restorestack();
 }
-delayoff(){
+int 
+delayoff (void){
         sigdelay = FALSE;
         if(sigstruck)
                 dosig();
 }
-dosig()
+int 
+dosig (void)
 {
         register int i; int which;
         if(!sigdelay) 
@@ -192,7 +196,8 @@ dosig()
                                 sigcall(which);
                 }
 }
-badmr(number)
+int 
+badmr (int number)
 {
         signal(number,badmr);
         fflush(stdout);
@@ -200,9 +205,8 @@ badmr(number)
 }
 
 #define mask(s) (1 << ((s)-1))
-static
-re_enable(signo,handler)
-int (*handler)();
+static 
+re_enable (int signo, int (*handler)(void))
 {
 #if (os_4_2| os_4_3)
         sigsetmask(sigblock(0) &~ mask(signo));

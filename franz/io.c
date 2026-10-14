@@ -99,9 +99,8 @@ FILE *useport;
 /* passed in the first  */
 /* argument.  Does the actual work for readr, including list, dotted    */
 /* pair, and quoted atom detection                                      */
-lispval
-readrx(code)
-register int code;
+lispval 
+readrx (register int code)
 {
         register lispval work;
         register lispval *current;
@@ -248,7 +247,8 @@ out:
         Restorestack();
         return(work);
 }
-macrox()
+int 
+macrox (void)
 {
         FILE *svport;
         lispval handy, Lapply();
@@ -271,8 +271,8 @@ macrox()
         Restorestack();
         return;
 }
-imacrox(current,inlist)
-register lispval current;
+int 
+imacrox (register lispval current, int inlist)
 {
         FILE *svport;
         register lispval work;
@@ -331,7 +331,8 @@ register FILE   *useport;
 #define push(); *name++ = c; if(name>=endstrb) name = atomtoolong(name);
 #define next() (((cc=getc(useport))!=EOF)?(stats = ctable[c = cc &0177]):\
                                         ((c=0),(saweof = 1),(stats = SEPMASK)))
-Iratom()
+int 
+Iratom (void)
 {
         register FILE   *useport = rdrport;
         register char   c, marker, *name;
@@ -460,9 +461,8 @@ again:  cc = getc(useport);
         }
 }
 
-lispval
-getnum(name)
-register char *name;
+lispval 
+getnum (register char *name)
 {
         unsigned char c;
         register lispval result;
@@ -582,9 +582,8 @@ verylast:
         return(result);
 }
 
-lispval
-dopow(part2,base)
-register char *part2;
+lispval 
+dopow (register char *part2, int base)
 {
         register char *name = part2;
         register FILE *useport = rdrport;
@@ -625,10 +624,8 @@ register char *part2;
 }
         
 
-lispval
-calcnum(strbuf,name,base)
-register char *name;
-char *strbuf;
+lispval 
+calcnum (char *strbuf, register char *name, int base)
 {
         register char *p;
         register lispval result, temp;
@@ -654,9 +651,8 @@ char *strbuf;
         np--;
         return(result);
 }
-lispval
-finatom(name)
-register char *name;
+lispval 
+finatom (register char *name)
 {
         register FILE *useport = rdrport;
         unsigned char c, stats;
@@ -677,8 +673,7 @@ register char *name;
 }
 
 char *
-atomtoolong(copyto)
-char *copyto;
+atomtoolong (char *copyto)
 {
     int size;
     register char *oldp = strbuf;
@@ -989,9 +984,11 @@ FILE *port;
 
 
 
-lfltpr(buf,val)         /* lisp floating point printer */
-char *buf;
-double val;
+int 
+lfltpr (         /* lisp floating point printer */
+    char *buf,
+    double val
+)
 {
         register char *cp1;
 

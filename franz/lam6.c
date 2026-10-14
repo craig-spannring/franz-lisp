@@ -19,8 +19,8 @@ static char *rcsid =
 #include "chars.h"
 
 
-lispval
-Lreadli()
+lispval 
+Lreadli (void)
 {
         register lispval work, handy;
         register FILE *p;
@@ -95,8 +95,8 @@ Lreadli()
         /* NOTREACHED */
 }
 
-lispval
-Lgetenv()
+lispval 
+Lgetenv (void)
 {
         char *getenv(), *strcpy();
         char *res;
@@ -112,8 +112,8 @@ Lgetenv()
         return(getatom(FALSE));
 }
 
-lispval
-Lboundp()
+lispval 
+Lboundp (void)
 {
         register lispval result, handy;
 
@@ -129,8 +129,8 @@ Lboundp()
 }
 
 
-lispval
-Lplist()
+lispval 
+Lplist (void)
 {       
         register lispval atm;
         /* get property list of an atom or disembodied property list */
@@ -149,8 +149,8 @@ Lplist()
 }
 
 
-lispval
-Lsetpli()
+lispval 
+Lsetpli (void)
 {       /* set the property list of the given atom to the given list */
         register lispval atm, vall;
 
@@ -168,8 +168,8 @@ Lsetpli()
         return(vall);
 }
 
-lispval
-Lsignal()
+lispval 
+Lsignal (void)
 {
         register lispval handy, old, routine;
         int i;
@@ -209,8 +209,8 @@ Lsignal()
         return(old);
 }
 
-lispval
-Lassq()
+lispval 
+Lassq (void)
 {
         register lispval work, handy;
 
@@ -222,16 +222,16 @@ Lassq()
         return(work->d.car);
 }
 
-lispval
-Lkilcopy()
+lispval 
+Lkilcopy (void)
 {
         if(fork()==0) {
                 abort();
         }
 }
 
-lispval
-Larg()
+lispval 
+Larg (void)
 {
         register lispval handy; register offset, count;
 
@@ -246,8 +246,8 @@ Larg()
         return( ((struct argent *)handy->d.car)[offset].val);
 }
 
-lispval
-Lsetarg()
+lispval 
+Lsetarg (void)
 {
         register lispval handy, work;
         register limit, index;
@@ -265,8 +265,8 @@ Lsetarg()
         return(((struct argent *) work)[index].val = lbot[1].val);
 }
 
-lispval
-Lptime(){
+lispval 
+Lptime (void){
         extern int gctime;
         int lgctime = gctime;
         struct tms current;
@@ -296,7 +296,8 @@ Lptime(){
     pending.
  */
 
-lispval Lerr()
+lispval 
+Lerr (void)
 {
         lispval errorh();
         lispval valret = nil;
@@ -318,8 +319,8 @@ lispval Lerr()
  *  (tyi ['p_port ['g_eofval]])
  * normally -1 is return on eof, but g_eofval will be returned if given.
  */
-lispval
-Ltyi()
+lispval 
+Ltyi (void)
 {
         register FILE *port;
         register lispval handy;
@@ -361,8 +362,8 @@ Ltyi()
    the loss of the peeked char.
  */
    
-lispval
-Luntyi()
+lispval 
+Luntyi (void)
 {
 
     lispval port,ch;
@@ -386,8 +387,8 @@ Luntyi()
     return(ch);
 }
 
-lispval
-Ltyipeek()
+lispval 
+Ltyipeek (void)
 {
         register FILE *port;
         register lispval handy;
@@ -412,8 +413,8 @@ Ltyipeek()
         return(inewint(val));
 }
 
-lispval
-Ltyo()
+lispval 
+Ltyo (void)
 {
         register FILE *port;
         register lispval handy, where;
@@ -438,8 +439,8 @@ Ltyo()
         return(handy);
 }
 
-lispval
-Imkrtab(current)
+lispval 
+Imkrtab (int current)
 {
         extern struct rtab {
                 unsigned char ctable[132];
@@ -492,8 +493,8 @@ Imkrtab(current)
 
                              nil means return a copy of the current readtable
 */
-lispval
-Lmakertbl()
+lispval 
+Lmakertbl (void)
 {
         lispval handy = Vreadtable->a.clb;
         lispval value;
@@ -507,8 +508,8 @@ Lmakertbl()
         else return(Imkrtab(0));
 }
 
-lispval
-Lcpy1()
+lispval 
+Lcpy1 (void)
 {
         register lispval handy = lbot->val, result = handy;
 
@@ -536,8 +537,8 @@ top:
  *       be a fresh integer cell, and will not point into the read only
  *       small integer table.
  */
-lispval
-Lcopyint()
+lispval 
+Lcopyint (void)
 {
         register lispval handy = lbot->val;
         register lispval ret;

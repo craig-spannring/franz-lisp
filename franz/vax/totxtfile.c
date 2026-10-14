@@ -10,8 +10,8 @@
 
 static char *rcsid = "$Header: /na/franz/franz/vax/RCS/totxtfile.c,v 1.1 83/04/11 00:31:07 sklower Exp $";
 
-main(argc,argv)
-char *argv[];
+int 
+main (int argc, char *argv[])
 {
         int fd;
         register FILE *f, *in;

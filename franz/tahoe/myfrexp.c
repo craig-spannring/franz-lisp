@@ -7,7 +7,8 @@
 
 #include "global.h"
 
-myfrexp()
+int 
+myfrexp (void)
 {error("myfrexp called", FALSE);
 }
 

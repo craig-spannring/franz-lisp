@@ -10,8 +10,8 @@
  */
 
 struct vl       { long high; long low; };
-dsmult(top,bot,mul)
-long *top, *bot, mul;
+int 
+dsmult (long *top, long *bot, long mul)
 {
         register long *p;
         struct vl work;

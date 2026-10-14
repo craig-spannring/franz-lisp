@@ -33,8 +33,8 @@ static char *rcsid =
  * routine.  A non zero return indicates that x requires more than 31 bits
  * to describe.
  */
-exarith(a,b,c,phi,plo)
-int *phi, *plo;
+int 
+exarith (int a, int b, int c, int *phi, int *plo)
 {
 asm("   emul    4(ap),8(ap),12(ap),r2   #r2 = a*b + c to 64 bits");
 asm("   extzv   $0,$30,r2,*20(ap)       #get new lo");
@@ -47,21 +47,21 @@ asm("   bisl2   $0xc0000000,*20(ap)     # alter low so that it is ok.");
 asm("out:       ret");
 }
 
-mmuladd (a, b, c, m) 
-int a, b, c, m;
+int 
+mmuladd (int a, int b, int c, int m)
 {
         asm ("emul      4(ap),8(ap),12(ap),r0");
         asm ("ediv      16(ap),r0,r2,r0");
 }
 
-Imuldiv() {
+int 
+Imuldiv (void) {
 asm("   emul    4(ap),8(ap),12(ap),r0");
 asm("   ediv    16(ap),r0,*20(ap),*24(ap)");
 }
 
-callg_(funct,arglist)
-lispval (*funct)();
-int *arglist;
+int 
+callg_ (lispval (*funct)(void), int *arglist)
 {
         asm("   callg   *8(ap),*4(ap)");
 }
@@ -82,8 +82,8 @@ int *arglist;
   nwritten = write(file, buffer, count);
   nwritten == -1 means error
 */
-write(file, buffer, count)
-char *buffer;
+int 
+write (int file, char *buffer, int count)
 {
         register lispval handy;
         int retval;
@@ -116,7 +116,8 @@ skipit:
  *
  */
 
-read(file,buffer,count)
+int 
+read (int file, int buffer, int count)
 {
         extern int errno;
         register int Size;
@@ -127,8 +128,8 @@ again:
         goto again;
 }
 
-lispval
-Lpolyev()
+lispval 
+Lpolyev (void)
 {
         register int count; 
         register double *handy, *base;
@@ -160,8 +161,8 @@ Lpolyev()
         return(result);
 }
 
-lispval
-Lrot()
+lispval 
+Lrot (void)
 {
         register rot,val;               /* these must be the first registers */
         register struct argent *mylbot = lbot;
@@ -187,14 +188,13 @@ Lrot()
    then we print the first argument to that eval frame. This is done
    by looking one beyond the saved ap.
 */
-lispval
-Lshostk()
+lispval 
+Lshostk (void)
 {       lispval isho();
         return(isho(1));
 }
-static lispval
-isho(f)
-int f;
+static lispval 
+isho (int f)
 {
         register struct machframe *myfp; register lispval handy;
         int **fp;       /* this must be the first local */
@@ -262,8 +262,8 @@ int f;
  * written by jkf.
  *
  */
-lispval
-Lbaktrace()
+lispval 
+Lbaktrace (void)
 {
         isho(0);
 }
@@ -276,8 +276,8 @@ Lbaktrace()
  *   where expression is something passed to eval
  * very vax specific
  */
-lispval
-LIshowstack()
+lispval 
+LIshowstack (void)
 {
     int **fp;   /* must be the first local variable */
     register lispval handy;
@@ -331,11 +331,8 @@ LIshowstack()
  * this code is very similar to ftolsp.
  * if it gets revised, so should this.
  */
-lispval
-dothunk(func,count,arglist)
-lispval func;
-long count;
-register long *arglist;
+lispval 
+dothunk (lispval func, long count, register long *arglist)
 {
 
         lispval save;
@@ -365,8 +362,8 @@ _thcpy:
         ret */
 static char fourwords[] = "0123456789012345";
 
-lispval
-Lmkcth()
+lispval 
+Lmkcth (void)
 {
         register struct argent *mylbot = lbot;
         register struct thunk {

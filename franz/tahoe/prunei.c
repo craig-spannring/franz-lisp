@@ -1,8 +1,8 @@
 #include "global.h"
 #include "structs.h"
 
-prunei(what)
-register lispval what;
+int 
+prunei (register lispval what)
 {
         extern struct types int_str;
         int gstart();

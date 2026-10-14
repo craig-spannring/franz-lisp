@@ -14,7 +14,8 @@ static char *rcsid =
 #include <stdio.h>
 char mybuf[BUFSIZ];
 extern unsigned short mask[];
-main(){
+int 
+main (void){
         register savesize = 0; char *cp;
         while(fgets(mybuf,BUFSIZ,stdin)!=NULL) {
                 if(*mybuf=='#') {

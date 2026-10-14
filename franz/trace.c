@@ -11,8 +11,8 @@ static char *rcsid =
  */
 
 #include "global.h"
-lispval
-Leval1(){
+lispval 
+Leval1 (void){
     register struct nament *bindptr;
     register lispval handy;
     if (np-lbot == 2) { /*if two arguments to eval */
@@ -39,8 +39,8 @@ Leval1(){
     };
 }
 
-lispval
-Levalhook()
+lispval 
+Levalhook (void)
 {
     register lispval handy;
     register lispval funhval = CNIL;
@@ -76,8 +76,8 @@ Levalhook()
 }
 
 
-lispval
-Lfunhook()
+lispval 
+Lfunhook (void)
 {
     register lispval handy;
     register lispval evalhval = CNIL;
@@ -127,8 +127,8 @@ Lfunhook()
 }
 
 
-lispval
-Lrset ()
+lispval 
+Lrset (void)
     {
     chkarg(1,"rset");
 

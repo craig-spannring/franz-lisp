@@ -5,9 +5,11 @@
  *
  */
 
-callg_(funct, arglist)
-register int (*funct)();                /* r12 */
-register int *arglist;                  /* r11 */
+int 
+callg_ (
+    register int (*funct)(void),                /* r12 */
+    register int *arglist                  /* r11 */
+)
 {
  register int *argptr, n;               /* r10, r9 */
 

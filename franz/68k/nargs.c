@@ -5,8 +5,10 @@
 /* These structures are here for looks, only */
 struct add { short op:4, reg:3, mode:3, ea:6; } x;
 struct addq { short op:4, data:3, size:3, ea:6; } y;
-nargs(arg)
-long arg; /* this is only here for address calculation */
+int 
+nargs (
+    long arg /* this is only here for address calculation */
+)
 {
         register long *a5;
         register handy;

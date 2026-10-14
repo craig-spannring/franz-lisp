@@ -16,8 +16,8 @@ static char *rcsid =
 #define b 0x40000000
 #define toint(p) ((int) (p))
 
-divbig(dividend, divisor, quotient, remainder)
-lispval dividend, divisor, *quotient, *remainder;
+int 
+divbig (lispval dividend, lispval divisor, lispval *quotient, lispval *remainder)
 {
         register *ujp, *vip;
         int *alloca(), d, negflag = 0, m, n, carry, rem, qhat, j;
@@ -182,9 +182,8 @@ asm("   acbl    8(ap),$-4,r11,loop5");
 asm("   movl    r1,4(r11)");
 }
 */
-lispval
-export(top,bot)
-register long *top, *bot;
+lispval 
+export (register long *top, register long *bot)
 {
         register lispval p;
         lispval result;
@@ -214,8 +213,8 @@ register long *top, *bot;
 
 #define MAXINT 0x80000000L
 
-Ihau(fix)
-register int fix;
+int 
+Ihau (register int fix)
 {
         register count;
         if(fix==MAXINT)
@@ -226,8 +225,8 @@ register int fix;
                 fix /= 2;
         return(count);
 }
-lispval
-Lhau()
+lispval 
+Lhau (void)
 {
         register count;
         register lispval handy;
@@ -253,8 +252,8 @@ top:
         }
         return(inewint(count));
 }
-lispval
-Lhaipar()
+lispval 
+Lhaipar (void)
 {
         register lispval work;
         register n;
@@ -322,9 +321,8 @@ done:
 }
 #define STICKY 1
 #define TOEVEN 2
-lispval
-Ibiglsh(bignum,count,mode)
-lispval bignum, count;
+lispval 
+Ibiglsh (lispval bignum, lispval count, int mode)
 {
         register lispval work;
         register n;
@@ -425,22 +423,22 @@ To try again, more succintly:  the answer is correct to within 1, and
 the 1's bit of the answer will be 0 only if the answer is exactly
 correct. */
 
-lispval
-Lsbiglsh()
+lispval 
+Lsbiglsh (void)
 {
         register struct argent *mylbot = lbot;
         chkarg(2,"sticky-bignum-leftshift");
         return(Ibiglsh(lbot->val,lbot[1].val,STICKY));
 }
-lispval
-Lbiglsh()
+lispval 
+Lbiglsh (void)
 {
         register struct argent *mylbot = lbot;
         chkarg(2,"bignum-leftshift");
         return(Ibiglsh(lbot->val,lbot[1].val,TOEVEN));
 }
-lispval
-HackHex() /* this is a one minute function so drb and kls can debug biglsh */
+lispval 
+HackHex (void) /* this is a one minute function so drb and kls can debug biglsh */
 /* (HackHex i) returns a string which is the result of printing i in hex */
 {
         register struct argent *mylbot = lbot;

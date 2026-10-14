@@ -18,8 +18,8 @@ struct vl
        };
 
 
-struct s_dot *adbig(a,b)
-struct s_dot *a, *b;
+struct s_dot *
+adbig (struct s_dot *a, struct s_dot *b)
 {
         int la = 1, lb = 1;
         long *sa, *sb, *sc, *base, *alloca();

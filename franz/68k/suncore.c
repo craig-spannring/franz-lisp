@@ -434,4 +434,5 @@ static struct cftab {
 {"_set_coordinate_system_type", set_coordinate_system_type, &disc},
 {0}
 };
-hookupcore() {mftab(corefuns);}
+int 
+hookupcore (void) {mftab(corefuns);}

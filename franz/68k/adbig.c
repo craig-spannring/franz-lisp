@@ -10,8 +10,8 @@
 struct s_dot    { long I; struct s_dot *CDR; };
 struct vl       { long high; long low; };
 
-struct s_dot *adbig(a,b)
-struct s_dot *a, *b;
+struct s_dot *
+adbig (struct s_dot *a, struct s_dot *b)
 {
         int la = 1, lb = 1;
         long *sa, *sb, *sc, *base, *alloca();

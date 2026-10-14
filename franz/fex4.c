@@ -28,8 +28,8 @@ static char *rcsid =
    the person who wrote it didn't know how to write a lexpr
                                                 - jkf
 */
-lispval
-Lsyscall() {
+lispval 
+Lsyscall (void) {
         register lispval temp;
         register struct argent *aptr;
         register int acount = 1;
@@ -81,8 +81,8 @@ Lsyscall() {
    we treat the rest of the forms as a progn.
 */
 
-lispval
-Nevwhen()
+lispval 
+Nevwhen (void)
 {
         register lispval handy;
         register lispval handy2;
@@ -150,8 +150,8 @@ Nevwhen()
  *      ST_GCSTR - (ifdef GCSTRINGS) garbage collect strings
  */
 
-lispval
-Nstatus()
+lispval 
+Nstatus (void)
 {
         register lispval handy,curitm,valarg;
         int indx,ctim;
@@ -267,8 +267,8 @@ Nstatus()
         error("Internal error in status: Couldn't figure out request",FALSE);
         /* NOTREACHED */
 }
-lispval
-Nsstatus()
+lispval 
+Nsstatus (void)
 {
         register lispval handy;
         lispval Isstatus();
@@ -282,9 +282,8 @@ Nsstatus()
 }
 
 /* Isstatus - internal routine to do a set status.      */
-lispval
-Isstatus(curnam,curval)
-lispval curnam,curval;
+lispval 
+Isstatus (lispval curnam, lispval curval)
 {
         register lispval curitm,head;
         lispval Istsrch(),Iaddstat();
@@ -387,8 +386,8 @@ lispval curnam,curval;
    we return nil
  */
                         
-lispval Istsrch(nam)
-lispval nam;
+lispval 
+Istsrch (lispval nam)
 {
         register lispval handy; 
 
@@ -401,10 +400,8 @@ lispval nam;
 /* Iaddstat - add a status entry to the status list     */
 /*      return new entry in status list */
 
-lispval
-Iaddstat(name,readcode,setcode,valu)
-lispval name,valu;
-int readcode,setcode;
+lispval 
+Iaddstat (lispval name, int readcode, int setcode, lispval valu)
 {
         register lispval handy,handy2;
         Savestack(2);

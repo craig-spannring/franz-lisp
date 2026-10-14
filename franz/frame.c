@@ -63,8 +63,8 @@ static char *rcsid =
   * This routine never returns.
   */
 
-Inonlocalgo(class, arg1, arg2)
-lispval arg1,arg2;
+int 
+Inonlocalgo (int class, lispval arg1, lispval arg2)
 {
     struct frame *uwpframe, *Inlthrow();
     lispval handy;
@@ -118,8 +118,7 @@ lispval arg1,arg2;
  */
 
 struct frame *
-Inlthrow(class, arg1, arg2)
-lispval arg1, arg2;
+Inlthrow (int class, lispval arg1, lispval arg2)
 {
     struct frame *uwpframe = (struct frame *)0;
     struct frame *curp;
@@ -182,8 +181,8 @@ lispval arg1, arg2;
 
 
 #ifndef tahoe
-Iretfromfr(fram)
-register struct frame *fram;
+int 
+Iretfromfr (register struct frame *fram)
 {
     xpopnames(fram->svbnp);
     qretfromfr();       /* modified in sed script to point to real function */
@@ -194,8 +193,8 @@ register struct frame *fram;
 /* matchtags :: return TRUE if there is any atom in common between the
  * two tags.  Either tag may be an atom or an list of atoms.
  */
-matchtags(tag1,tag2)
-lispval tag1, tag2;
+int 
+matchtags (lispval tag1, lispval tag2)
 {
     int repeat1 = FALSE;
     int repeat2 = FALSE;
@@ -255,8 +254,8 @@ loop:
  * frame
  *
  */
-lispval
-Lframedump()
+lispval 
+Lframedump (void)
 {
     struct frame *curp;
 

@@ -24,13 +24,15 @@ char *strcpy();
 -===========================================*/
 
 #include "chars.h"
-lispval
-Lexpldx(kind,slashify)
-int kind, slashify;     /* kind = 0 => explode to characters 
+lispval 
+Lexpldx (
+    int kind,
+    int slashify     /* kind = 0 => explode to characters 
                                 = 1 => explode to fixnums (aexploden)
                            slashify = 0 => do not quote bizarre characters
                                     = 1 => quote bizarre characters
                         */
+)
 {
         int typ, i;
         char ch, *strb, strbb[BUFSIZ], *alloca();  /* temporary string buffer */
@@ -199,8 +201,8 @@ int kind, slashify;     /* kind = 0 => explode to characters
 - (aexplodec 234) returns (\2 \3 \4)
 -===========================*/
 
-lispval
-Lxpldc()
+lispval 
+Lxpldc (void)
 { return(Lexpldx(0,0)); }
 
 
@@ -211,8 +213,8 @@ Lxpldc()
 -=============================*/
 
 
-lispval
-Lxpldn()
+lispval 
+Lxpldn (void)
 { return(Lexpldx(1,0)); }
 
 /*===========================
@@ -221,8 +223,8 @@ Lxpldn()
 - (aexplode 123)  returns (\1 \2 \3);
 -=============================*/
 
-lispval
-Lxplda()
+lispval 
+Lxplda (void)
 { return(Lexpldx(0,1)); }
 
 /*
@@ -230,8 +232,8 @@ Lxplda()
  * lisp; (argv i) returns the i'th argument made into an atom;
  */
 
-lispval
-Largv()
+lispval 
+Largv (void)
 {
         register lispval handy;
         extern int Xargc;
@@ -251,7 +253,8 @@ Largv()
  * (chdir <atom>) executes a chdir command
  * if successful, return t otherwise returns nil
  */
-lispval Lchdir(){
+lispval 
+Lchdir (void){
         register char *filenm;
 
         chkarg(1,"chdir");
@@ -272,8 +275,8 @@ lispval Lchdir(){
 - then it is made a character and returned
 - =========================================================*/
 
-lispval
-Lascii() 
+lispval 
+Lascii (void) 
 {
         register lispval handy;
 
@@ -303,8 +306,8 @@ Lascii()
  *  truth tables may be applied.  Common values are 1 (and) 6 (xor) 7 (or)
  *  the result is mapped over each pair of bits on input
  */
-lispval
-Lboole(){
+lispval 
+Lboole (void){
         register x, y;
         register struct argent *mynp;
         int k;
@@ -352,8 +355,8 @@ Lboole(){
         }
         return(inewint(x));
 }
-lispval
-Lfact()
+lispval 
+Lfact (void)
 {
         register lispval result, handy;
         register itemp;
@@ -383,7 +386,8 @@ to calculate fact of > 2^30 We will be here till doomsday!.",FALSE);
  * for the moment, mereley convert floats to ints.
  * eventual convert to bignum if too big to fit.
  */
- lispval Lfix() 
+ lispval 
+Lfix (void) 
  {
         register lispval handy;
         double floor();
@@ -412,8 +416,8 @@ to calculate fact of > 2^30 We will be here till doomsday!.",FALSE);
  *
  * Lfix should probably be rewritten to take advantage of myfrexp
  */
-lispval
-Lfrexp()
+lispval 
+Lfrexp (void)
 {
         register lispval handy, result;
         int exp, hi, lo;
@@ -448,8 +452,8 @@ Lfrexp()
 #define B 1073741824.0
 static double table[] = { 1.0, B, B*B, B*B*B, B*B*B*B, 0.0};
 
-lispval
-Lfloat()
+lispval 
+Lfloat (void)
 {
         register lispval handy,result;
         register double sum = 0;
@@ -482,9 +486,8 @@ Lfloat()
           /* NOTREACHED */
         }
 }
-double
-Ifloat(handy)
-register lispval handy;
+double 
+Ifloat (register lispval handy)
 {
         register double sum = 0.0; register int count=0;
         for(; count < 5; count++, handy = handy->s.CDR) {
@@ -499,7 +502,8 @@ register lispval handy;
 /* Lbreak ***************************************************************/
 /* If first argument is not nil, this is evaluated and printed.  Then   */
 /* error is called with the "breaking" message.                         */
-lispval Lbreak() {
+lispval 
+Lbreak (void) {
 
         if (np > lbot) {
                 printr(lbot->val,poport);
@@ -509,8 +513,8 @@ lispval Lbreak() {
 }
 
 
-lispval
-LDivide() {
+lispval 
+LDivide (void) {
         register lispval result, work;
         register struct argent *mynp;
         lispval quo, rem, arg1, arg2; struct sdot dummy, dum2;
@@ -557,7 +561,8 @@ LDivide() {
         return(result);
 }
 
-lispval LEmuldiv(){
+lispval 
+LEmuldiv (void){
         register struct argent * mynp = lbot+AD;
         register lispval work, result;
         int quo, rem;

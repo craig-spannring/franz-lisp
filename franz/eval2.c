@@ -20,9 +20,8 @@ static char *rcsid =
  *  evalp - flag, if TRUE then the arguments should be evaluated when they
  *      are stacked.
  */
-lispval
-Iarray(fun,args,evalp)
-register lispval fun,args;
+lispval 
+Iarray (register lispval fun, register lispval args, int evalp)
 {
         Savestack(2);
         
@@ -38,8 +37,8 @@ register lispval fun,args;
 }
 
     
-dumpmydata(thing)
-int thing;
+int 
+dumpmydata (int thing)
 {
         register int *ip = &thing;
         register int *lim = ip + nargs();
@@ -60,9 +59,8 @@ int thing;
  * When the foreign function returns, we may have to box the result,
  * depending on the type of foreign function.
  */
-lispval
-Ifcall(a)
-lispval a;
+lispval 
+Ifcall (lispval a)
 {
         char *alloca();
         long callg_();
@@ -204,16 +202,14 @@ lispval a;
         return(ltemp);
 }
 
-xbcopy(to,from,size)
-register char *to, *from;
-register size;
+int 
+xbcopy (register char *to, register char *from, register size)
 {
         while(--size >= 0) *to++ = *from++;
 }
 
-lispval
-ftolsp_(arg1)
-lispval arg1;
+lispval 
+ftolsp_ (lispval arg1)
 {
         int count; 
         register lispval *ap = &arg1;
@@ -235,10 +231,8 @@ lispval arg1;
         return(save);
 }
 
-lispval
-ftlspn_(func,arglist)
-lispval func;
-register long *arglist;
+lispval 
+ftlspn_ (lispval func, register long *arglist)
 {
         int count; 
         lispval save;
@@ -327,9 +321,8 @@ register long *arglist;
 #define Case_B 1
 #define Case_C 2
 
-lispval
-Ifclosure(clos,funcallp)
-register lispval clos;
+lispval 
+Ifclosure (register lispval clos, int funcallp)
 {
     struct nament *oldbnp = bnp, *lbnp, *locatevar();
     register int i;
@@ -406,8 +399,8 @@ register lispval clos;
  * when we know there will be closure markers or when we can't
  * be sure that there won't be closure markers (eg. in non-local go's)
  */
-xpopnames(llimit)
-register struct nament *llimit;
+int 
+xpopnames (register struct nament *llimit)
 {
     register struct nament *rnp, *lbnp;
     lispval atm_dtpr, value_dtpr;
@@ -460,10 +453,7 @@ register struct nament *llimit;
 
 
 struct nament *
-locatevar(clos,foundc,rnp)
-struct nament *rnp;
-lispval clos;
-int *foundc;
+locatevar (lispval clos, int *foundc, struct nament *rnp)
 {
     register struct nament  *retbnp;
     lispval symb;
@@ -485,8 +475,8 @@ int *foundc;
     return(retbnp);     
 }
 
-lispval
-LIfss()
+lispval 
+LIfss (void)
 {
         register lispval atm_dtpr, value_dtpr;
         struct nament *oldbnp = bnp, *lbnp;

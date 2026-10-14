@@ -21,9 +21,8 @@ static char *rcsid =
  * sentation of a bignum.  Addbig then adds it to a bignum, and produces
  * a result in canonical form.
  */
-lispval
-subbig(pos,neg)
-lispval pos, neg;
+lispval 
+subbig (lispval pos, lispval neg)
 {
         register lispval work;
         lispval adbig();

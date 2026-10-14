@@ -18,8 +18,8 @@ static char *rcsid =
 /*
  * Ndo  maclisp do function.
  */
-lispval
-Ndo()
+lispval 
+Ndo (void)
 {
         register lispval current, where, handy;
         register struct nament *mybnp;
@@ -252,8 +252,8 @@ Ndo()
                 /* NOTREACHED */
 }
 
-lispval
-Nprogv()
+lispval 
+Nprogv (void)
 {
         register lispval where, handy;
         register struct nament *namptr;
@@ -298,8 +298,8 @@ Nprogv()
         return(handy);
 }
 
-lispval
-Nprogn()
+lispval 
+Nprogn (void)
 {
         register lispval result, where;
 
@@ -310,8 +310,8 @@ Nprogn()
 
 
 }
-lispval
-Nprog2()
+lispval 
+Nprog2 (void)
 {
         register lispval result, where;
 
@@ -324,10 +324,8 @@ Nprog2()
         np--;
         return(result);
 }
-lispval
-typred(typ,ptr)
-int     typ;
-lispval ptr;
+lispval 
+typred (int typ, lispval ptr)
 
 {   int tx;
         if ((tx = TYPE(ptr)) == typ) return(tatom);
@@ -339,8 +337,8 @@ lispval ptr;
  * function
  * In the interpreter, function is the same as quote
  */
-lispval
-Nfunction()
+lispval 
+Nfunction (void)
 {
         if((lbot->val == nil) || (lbot->val->d.cdr != nil))
                 argerr("function");

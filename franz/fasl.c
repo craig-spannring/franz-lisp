@@ -175,7 +175,8 @@ struct trent *gettran();        /* function to allocate entries */
 /* maximum number of functions */
 #define MAXFNS 2000
 
-lispval Lfasl()
+lispval 
+Lfasl (void)
 {
         extern int holend,usehole;
         extern int uctolc;
@@ -638,8 +639,8 @@ lispval Lfasl()
 
 #if m_68k
 /* function used in qsort for 68k version only */
-compar(arg1,arg2)
-int *arg1,*arg2;
+int 
+compar (int *arg1, int *arg2)
 {
         if(*arg1 < *arg2) return (-1);
         else if (*arg1 == *arg2) return (0);
@@ -650,7 +651,7 @@ int *arg1,*arg2;
 /* gettran :: allocate a segment of transfer table of the given size    */
 
 struct trent *
-gettran(size)
+gettran (int size)
 {
         struct trtab *trp;
         struct trent *retv;
@@ -689,7 +690,8 @@ gettran(size)
  * 2) as many transfer tables are set up to point to bcd functions
  *    as possible
  */
-clrtt(flag)
+int 
+clrtt (int flag)
 {
         /*  flag = 0 :: set to qlinker
          *  flag = 1 :: set to function bcd binding if possible
@@ -714,7 +716,7 @@ clrtt(flag)
   were used, an undefined function error would result
  */
 lispval 
-chktt()
+chktt (void)
 {
         register struct trtab *temptt;
         register struct trent *tement;
@@ -745,8 +747,8 @@ chktt()
 ** we have to add the relocation offset in a slightly different manner.
 */
 #ifdef tahoe
-add_offset(addr, relocoffset)
-register int *addr;
+int 
+add_offset (register int *addr, int relocoffset)
 {register int r11, r10, r9, r8;
  asm("  cvtbl   (r12), r0");
  asm("  cvtbl   8(fp), r1");
@@ -763,8 +765,8 @@ register int *addr;
  asm("  cvtlb   r0,(r12)");
 }
 #else
-add_offset(addr, relocoffset)
-register int *addr;
+int 
+add_offset (register int *addr, int relocoffset)
 {
  *addr += relocoffset;
 }

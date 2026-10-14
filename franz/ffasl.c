@@ -35,9 +35,7 @@ lispval verify();
  */
 
 lispval 
-dispget(given,messg,defult)
-lispval given,defult;
-char *messg;
+dispget (lispval given, char *messg, lispval defult)
 {
         int typ;
 
@@ -56,8 +54,8 @@ char *messg;
         }
 }
 
-lispval
-Lcfasl(){
+lispval 
+Lcfasl (void){
         register struct argent *mlbot = lbot;
         register lispval work;
         register int fildes, totsize;
@@ -237,7 +235,7 @@ Lcfasl(){
 #define oktox(n) \
         (0==stat(n,&stbuf)&&(stbuf.st_mode&S_IFMT)==S_IFREG&&0==access(n,M))
 char *
-gstab()
+gstab (void)
 {
         register char *cp, *cp2; char *getenv();
         struct stat stbuf;
@@ -309,7 +307,7 @@ gstab()
 }
 static char mybuff[40]; 
 char *
-mytemp()
+mytemp (void)
 {
         /*if(mypid==0) mypid = (getpid() & 0xffff);
           fails if you do a dumplisp after doing a
@@ -317,7 +315,8 @@ mytemp()
         sprintf(mybuff,"/tmp/Li%d.%d",(getpid() & 0xffff),seed++);
         return(mybuff);
 }
-ungstab()
+int 
+ungstab (void)
 {
         seed--;
         sprintf(mybuff,"/tmp/Li%d.%d",(getpid() & 0xffff),seed-1);
@@ -326,10 +325,8 @@ ungstab()
                 fvirgin = 1;
         }
 }
-lispval
-verify(in,error)
-register lispval in;
-char *error;
+lispval 
+verify (register lispval in, char *error)
 {
         for(EVER) {
                 switch(TYPE(in)) {
@@ -381,8 +378,8 @@ long size;
  *
  */
 
-lispval
-Lrmadd(){
+lispval 
+Lrmadd (void){
         register struct argent *mlbot = lbot;
         register struct nlist *q; 
         register int i;
@@ -586,7 +583,7 @@ alldone:
         {Freexs(); return(tatom);}
 }
 char *
-Ilibdir()
+Ilibdir (void)
 {
         register lispval handy;
 tryagain:

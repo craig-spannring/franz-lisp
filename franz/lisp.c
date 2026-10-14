@@ -25,8 +25,8 @@ int     Xargc;
 char    **Xargv;
 extern char **environ;
 
-main(argc,argv,arge)
-char **argv,**arge;
+int 
+main (int argc, char **argv, char **arge)
 {
         lispval matom(), Lapply();
         extern struct frame *errp;
@@ -65,8 +65,8 @@ char **argv,**arge;
         }
 }
 
-lispval
-Ntpl()
+lispval 
+Ntpl (void)
 {
         lispval Lread(),Istsrch();
 
@@ -92,7 +92,8 @@ Ntpl()
  * We clean up a bit then call then standard exit routine.  C code 
  * in franz should never call exit() directly.
  */
-franzexit(code)
+int 
+franzexit (int code)
 {
         extern int fvirgin;
         extern char *stabf;

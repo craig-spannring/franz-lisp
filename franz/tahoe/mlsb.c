@@ -7,9 +7,8 @@ struct vl               /* very long? */
         long low;
        };
 
-long mlsb(utop,ubot,vtop,nqhat)
-long *utop; register long *ubot, *vtop;
-register nqhat;
+long 
+mlsb (long *utop, register long *ubot, register long *vtop, register nqhat)
 {
         register handy, carry;
         struct vl work;
@@ -30,8 +29,8 @@ register nqhat;
         return(carry);
 }
 
-long adback(utop,ubot,vtop)
-register long *utop, *ubot, *vtop;
+long 
+adback (register long *utop, register long *ubot, register long *vtop)
 {
         register handy, carry;
         carry = 0;
@@ -48,9 +47,8 @@ register long *utop, *ubot, *vtop;
         return(carry);
 }
 
-long dsdiv(top,bot,div)
-register long *top, *bot;
-register long div;
+long 
+dsdiv (register long *top, register long *bot, register long div)
 {
         struct vl work; char err;
         register long handy, carry = 0;
@@ -68,8 +66,8 @@ register long div;
         return(carry);
 }
 
-dsadd1(top,bot)
-long *top, *bot;
+int 
+dsadd1 (long *top, long *bot)
 {
         register long *p, work, carry = 0;
 
@@ -86,9 +84,8 @@ long *top, *bot;
         p[1] = work;
 }
 
-long dsrsh(top,bot,ncnt,mask1)
-long *top, *bot;
-long ncnt, mask1;
+long 
+dsrsh (long *top, long *bot, long ncnt, long mask1)
 {
         register long *p = bot;
         register r = -ncnt, l = 30+ncnt, carry = 0, work, save;

@@ -33,10 +33,8 @@ static int      IElimit;
  *
  */
 
-lispval
-error(mesg,contvl)
-char *mesg;
-int contvl;
+lispval 
+error (char *mesg, int contvl)
 {
     lispval errorh();
 
@@ -56,11 +54,8 @@ int contvl;
  
 
 /* VARARGS5 */
-static lispval
-Ierrorh(type,message,valret,contuab,uniqid)
-lispval type,valret;
-int uniqid,contuab;
-char *message;
+static lispval 
+Ierrorh (lispval type, char *message, lispval valret, int contuab, int uniqid)
 {
         register struct frame *curp, *uwpframe = (struct frame *)0; 
         register lispval handy;
@@ -274,11 +269,8 @@ char *message;
         /* NOTREACHED */
 }
 
-lispval
-errorh(type,message,valret,contuab,uniqid)
-lispval type,valret;
-int uniqid,contuab;
-char *message;
+lispval 
+errorh (lispval type, char *message, lispval valret, int contuab, int uniqid)
 {
         IElimit = 0;
         Ierrorh(type,message,valret,contuab,uniqid);
@@ -310,13 +302,8 @@ char *message;
         /* NOTREACHED */
 }
 
-lispval
-calhan(limit,work,type,uniqid,contuab,message,handler)
-register lispval *work;
-lispval handler,type,contuab;
-register limit;
-register char *message;
-int uniqid;
+lispval 
+calhan (register limit, register lispval *work, lispval type, int uniqid, lispval contuab, register char *message, lispval handler)
 {
             register lispval handy;
             Savestack(4);
@@ -344,8 +331,8 @@ int uniqid;
 
 /* lispend **************************************************************/
 /* Fatal errors come here, with their epitaph.                          */
-lispend(mesg)
-        char    mesg[];
+int 
+lispend (char mesg[])
         {
         dmpport(poport);
         fprintf(errport,"%s\n",mesg);
@@ -357,7 +344,8 @@ lispend(mesg)
 /* namerr ***************************************************************/
 /* handles namestack overflow, at present by simply giving a message    */
 
-namerr()
+int 
+namerr (void)
 {
         if((nplim = np + NAMINC) > orgnp + NAMESIZE) 
         {  
@@ -372,24 +360,28 @@ namerr()
         /* NOT REACHED */
 }
 
-binderr()
+int 
+binderr (void)
 {
         bnp -= 10;
         error("Bindstack overflow.",FALSE);
         /* NOT REACHED */
 }
 
-rtaberr()
+int 
+rtaberr (void)
 {
         bindfix(Vreadtable,strtab,nil);
         error("Illegal read table.",FALSE);
         /* NOT REACHED */
 }
-xserr()
+int 
+xserr (void)
 {
         error("Ran out of alternate stack",FALSE);
 }
-badmem(n)
+int 
+badmem (int n)
 {
         char errbuf[256];
 
@@ -397,8 +389,8 @@ badmem(n)
         error(errbuf,FALSE);
         /* NOT REACHED */
 }
-argerr(msg)
-char *msg;
+int 
+argerr (char *msg)
 {
         errorh1(Vermisc,"incorrect number of args to",
                                   nil,FALSE,0,matom(msg));
@@ -416,8 +408,8 @@ lispval Vinterrfcn = nil;
  * maximum.
  *
  */
-wnaerr(fcn,wantargs)
-lispval fcn;
+int 
+wnaerr (lispval fcn, int wantargs)
 {
     if (Vinterrfcn == nil)
     {

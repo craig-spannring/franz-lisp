@@ -2,7 +2,8 @@
 
 extern int Fixzero[];
 
-int *inewint(n)
+int *
+inewint (int n)
 {
         register int *ip;
         int *newint();
@@ -11,8 +12,8 @@ int *inewint(n)
         *ip = n;
         return(ip);
 }
-blzero(where,howmuch)
-register char *where;
+int 
+blzero (register char *where, int howmuch)
 {
         register char *p;
         for(p = where + howmuch; p > where; ) *--p = 0;

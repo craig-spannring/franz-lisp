@@ -24,8 +24,8 @@ static flen; /*Internal to this module, used as a running counter of flatsize*/
 static fmax; /*used for maximum for quick reference */
 char *strcpy();
 
-lispval
-Lflatsi()
+lispval 
+Lflatsi (void)
 {
         register lispval current;
         Savestack(1);                   /* fixup entry mask */
@@ -53,8 +53,8 @@ Lflatsi()
 /*
  * Iflatsi does the real work of the calculation for flatc
  */
-Iflatsi(current)
-register lispval current;
+int 
+Iflatsi (register lispval current)
 {
 
         if(flen > fmax) return;
@@ -89,16 +89,16 @@ register lispval current;
 
 #define EADC -1
 #define EAD  -2
-lispval
-Lread()
+lispval 
+Lread (void)
 { return (r(EAD)); }
 
-lispval
-Lratom()
+lispval 
+Lratom (void)
 { return (r(ATOM)); }
 
-lispval
-Lreadc()
+lispval 
+Lreadc (void)
 { return (r(EADC)); }
 
 
@@ -106,9 +106,8 @@ extern unsigned char *ctable;
 /* r *********************************************************************/
 /* this function maps the desired read  function into the system-defined */
 /* reading functions after testing for a legal port.                     */
-lispval
-r(op)
-int op;
+lispval 
+r (int op)
 {
         unsigned char c; register lispval result;
         register cc;
@@ -180,8 +179,8 @@ int op;
 /* really be an nlambda taking multiple arguments, but the error         */
 /* handling gets funny in that case (one file out of several not         */
 /* openable, for instance).                                              */
-lispval
-Lload()
+lispval 
+Lload (void)
 {
         register FILE *port;
         register char *p, *ttemp; register lispval vtemp;
@@ -245,8 +244,8 @@ Lload()
 - the arguments may be atoms, integers or real numbers.
 -
 - *********************************************************/
-lispval
-Iconcat(unintern)
+lispval 
+Iconcat (int unintern)
 {
         register struct argent *temnp;
         register char *cp = strbuf;
@@ -320,17 +319,17 @@ Iconcat(unintern)
         else
                 return( (lispval) getatom(FALSE)) ;
 }
-lispval
-Lconcat(){
+lispval 
+Lconcat (void){
         return(Iconcat(FALSE));
 }
-lispval
-Luconcat(){
+lispval 
+Luconcat (void){
         return(Iconcat(TRUE));
 }
 
-lispval
-Lputprop()
+lispval 
+Lputprop (void)
 {
         lispval Iputprop();
         chkarg(3,"putprop");
@@ -342,9 +341,8 @@ Lputprop()
  *  note: prop and ind are lisp values but are not protected (by this
  * function) from gc.  The caller should protect them!!
  */
-lispval
-Iputprop(atm,prop,ind)
-register lispval prop, ind, atm;
+lispval 
+Iputprop (register lispval atm, register lispval prop, register lispval ind)
 {
         register lispval pptr;
         lispval *tack;          /* place to begin property list */
@@ -404,8 +402,8 @@ register lispval prop, ind, atm;
  *            plists allowed
  *     Igetplist - internal routine, the first arg is the plist to search.
  */
-lispval
-Lget()
+lispval 
+Lget (void)
 {
         register lispval ind, atm;
         register lispval dum1;
@@ -454,9 +452,8 @@ top:
  * Iget - the first arg must be a symbol.
  */
         
-lispval
-Iget(atm,ind)
-register lispval atm, ind;
+lispval 
+Iget (register lispval atm, register lispval ind)
 {
         lispval Igetplist();
 
@@ -473,9 +470,8 @@ register lispval atm, ind;
  * ind is the indicator
  */
 
-lispval
-Igetplist(pptr,ind)
-register lispval pptr,ind;
+lispval 
+Igetplist (register lispval pptr, register lispval ind)
 {
         while (pptr != nil)
                 {
@@ -485,8 +481,8 @@ register lispval pptr,ind;
                 }
         return(nil);
 }
-lispval
-Lgetd()
+lispval 
+Lgetd (void)
 {
         register lispval typ;
         
@@ -501,8 +497,8 @@ Lgetd()
                   typ);
         return(typ->a.fnbnd);
 }
-lispval
-Lputd()
+lispval 
+Lputd (void)
 {
         register lispval atom, list;
         
@@ -521,10 +517,11 @@ Lputd()
 - maplist applies the given function to successive sublists
 - ===========================================================*/
 
-lispval
-Lmapcrx(maptyp,join)
-int maptyp;             /* 0 = mapcar,  1 = maplist  */
-int join;               /* 0 = the above, 1 = s/car/can/ */
+lispval 
+Lmapcrx (
+    int maptyp,             /* 0 = mapcar,  1 = maplist  */
+    int join               /* 0 = the above, 1 = s/car/can/ */
+)
 {
         register struct argent *namptr;
         register index;
@@ -584,8 +581,8 @@ done:   if (join == 0)current->l = nil;
 - Lmapcar
 - =============================*/
 
-lispval
-Lmpcar()
+lispval 
+Lmpcar (void)
 {
         return(Lmapcrx(0,0));   /* call general routine */
 }
@@ -597,8 +594,8 @@ Lmpcar()
 -  Lmaplist
 - ==============================*/
 
-lispval
-Lmaplist()
+lispval 
+Lmaplist (void)
 {
         return(Lmapcrx(1,0));   /* call general routine */
 }
@@ -609,9 +606,10 @@ Lmaplist()
 - mapc and map
 - ===================================================*/
 
-lispval
-Lmapcx(maptyp)
-int maptyp;             /* 0= mapc   , 1= map  */
+lispval 
+Lmapcx (
+    int maptyp             /* 0= mapc   , 1= map  */
+)
 {
         register struct argent *namptr;
         register index;
@@ -662,8 +660,8 @@ done:
 -
 - ==================================*/
 
-lispval
-Lmapc()
+lispval 
+Lmapc (void)
 {       return( Lmapcx(0) );  }
 
 
@@ -673,21 +671,21 @@ Lmapc()
 -
 - ===================================*/
 
-lispval
-Lmap()
+lispval 
+Lmap (void)
 {       return( Lmapcx(1) );   }
 
 
-lispval
-Lmapcan()
+lispval 
+Lmapcan (void)
 { 
         lispval Lmapcrx();
 
         return ( Lmapcrx ( 0,1 ) ); 
 } 
 
-lispval
-Lmapcon()
+lispval 
+Lmapcon (void)
 { 
         lispval Lmapcrx();
 

@@ -8,21 +8,22 @@
 #include "global.h"
 #include <signal.h>
 
-mmuladd (a, b, c, m) 
-int a, b, c, m;
+int 
+mmuladd (int a, int b, int c, int m)
 {
         asm ("emul      4(fp),8(fp),12(fp),r0");
         asm ("ediv      16(fp),r0,r2,r0");
 }
 
-Imuldiv(a, b, c, d, e)
+int 
+Imuldiv (int a, int b, int c, int d, int e)
 {
         asm("   emul    4(fp),8(fp),12(fp),r0");
         asm("   ediv    16(fp),r0,*20(fp),*24(fp)");
 }
 
-lispval
-Lpolyev()
+lispval 
+Lpolyev (void)
 {
         register int count; 
         register double *handy, *base;
@@ -57,8 +58,8 @@ Lpolyev()
         return(result);
 }
 
-lispval
-Lrot()
+lispval 
+Lrot (void)
 {
         register val;
         register unsigned long mask2 = -1;
@@ -93,14 +94,13 @@ Lrot()
    then we print the first argument to that eval frame. This is done
    by looking one beyond the saved ap.
 */
-lispval
-Lshostk()
+lispval 
+Lshostk (void)
 {       lispval isho();
         return(isho(1));
 }
-static lispval
-isho(f)
-int f;
+static lispval 
+isho (int f)
 {
         register struct machframe *myfp; register lispval handy;
         int **fp;       /* this must be the first local */
@@ -171,8 +171,8 @@ int f;
  * written by jkf.
  *
  */
-lispval
-Lbaktrace()
+lispval 
+Lbaktrace (void)
 {
         isho(0);
 }
@@ -187,8 +187,8 @@ Lbaktrace()
  */
 
 
-lispval
-LIshowstack()
+lispval 
+LIshowstack (void)
 {
     int **fp;   /* must be the first local variable */
     register lispval handy;
@@ -250,11 +250,8 @@ LIshowstack()
  * this code is very similar to ftolsp.
  * if it gets revised, so should this.
  */
-lispval
-dothunk(func,count,arglist)
-lispval func;
-long count;
-register long *arglist;
+lispval 
+dothunk (lispval func, long count, register long *arglist)
 {
         lispval save;
         pbuf pb;
@@ -303,8 +300,8 @@ struct thunk {
 { 0, { 0xd , 0x50 , 0x50}, {0xfe , 0x4 , 0x9f}, thunkstack1, 0, 0};
 static char sixwords[] = "01234567890123456789012"; /* trailing 0! */
 
-lispval
-Lmkcth()
+lispval 
+Lmkcth (void)
 {
         register struct argent *mylbot = lbot;
         register struct thunk *th;
@@ -325,8 +322,8 @@ Lmkcth()
  * and retrieves various data.  (Actually merges it into
  * its own stack frame).
  */
-lispval
-thunkstack1(retfromthunk)
+lispval 
+thunkstack1 (int retfromthunk)
 {
         register int *handy, *midthunk;
         int *arglist;

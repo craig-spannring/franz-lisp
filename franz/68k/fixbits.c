@@ -1,6 +1,6 @@
 /* Copyright (c) 1982, Regents, University of California */
-fixbits(from,to)
-register char *from, *to;
+int 
+fixbits (register char *from, register char *to)
 {
         register char save;
         

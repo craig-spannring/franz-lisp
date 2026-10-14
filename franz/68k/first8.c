@@ -11,17 +11,19 @@ char code[256];
 #define index strchr
 #endif
 
-init() {
+int 
+init (void) {
         doit(FIRST,"ABCDEFGHIJKLMNOPQRSTUVWXYZ_");
         doit(FIRST,"0abcdefghijklmnopqrstuvwxyz_");
         doit(FOLLOW,"123456789");
 }
-doit(act,list)
-register unsigned char *list;
+int 
+doit (int act, register unsigned char *list)
 {
         while(*list) {code[*list++]=act;}
 }
-main( )
+int 
+main (void)
 {
         register FILE *si = stdin, *so = stdout;
         register c, count;

@@ -9,9 +9,8 @@ struct vl       { long high; long low; };
  * routine returns non-zero if product is bigger than 30 bits
  */
 
-long exarith(mul1,mul2,add,hi,lo)
-long *hi, *lo;
-register long add;
+long 
+exarith (int mul1, int mul2, register long add, long *hi, long *lo)
 {
         struct vl work;
         register long rlo;

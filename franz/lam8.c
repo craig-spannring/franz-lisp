@@ -19,8 +19,8 @@ static char *rcsid =
 double sin(),cos(),asin(),acos(),atan2(),sqrt(), log(), exp();
 extern int current;
 
-lispval Imath(func)
-double (*func)();
+lispval 
+Imath (double (*func)(void))
 {
         register lispval handy;
         register double res;
@@ -39,36 +39,43 @@ double (*func)();
         handy->r = res;
         return(handy);
 }
-lispval Lsin()
+lispval 
+Lsin (void)
 {
         return(Imath(sin));
 }
 
-lispval Lcos()
+lispval 
+Lcos (void)
 {
         return(Imath(cos));
 }
 
-lispval Lasin()
+lispval 
+Lasin (void)
 {
         return(Imath(asin));
 }
 
-lispval Lacos()
+lispval 
+Lacos (void)
 {
         return(Imath(acos));
 }
 
-lispval Lsqrt()
+lispval 
+Lsqrt (void)
 {
         return(Imath(sqrt));
 }
-lispval Lexp()
+lispval 
+Lexp (void)
 {
         return(Imath(exp));
 }
 
-lispval Llog()
+lispval 
+Llog (void)
 {
         return(Imath(log));
 }
@@ -76,7 +83,8 @@ lispval Llog()
 /* although we call this atan, it is really atan2 to the c-world,
    that is, it takes two args
  */
-lispval Latan()
+lispval 
+Latan (void)
 {
         register lispval arg;
         register double arg1v;
@@ -112,8 +120,8 @@ lispval Latan()
 /* (random) returns a fixnum in the range -2**30 to 2**30 -1
    (random fixnum) returns a fixnum in the range 0 to fixnum-1
  */
-lispval
-Lrandom()
+lispval 
+Lrandom (void)
 {
         register int curval;
         float pow();
@@ -129,8 +137,8 @@ Lrandom()
         return(inewint(curval % lbot->val->i )); 
 
 }
-lispval
-Lmakunb()
+lispval 
+Lmakunb (void)
 {
         register lispval work;
 
@@ -142,8 +150,8 @@ Lmakunb()
         return(work);
 }
 
-lispval
-Lfseek()
+lispval 
+Lfseek (void)
 {
 
         FILE *f;
@@ -173,7 +181,8 @@ Lfseek()
 }
 
 /* function hashtabstat  : return list of number of members in  each bucket */
-lispval Lhashst()
+lispval 
+Lhashst (void)
 {
         register lispval handy,cur;
         register struct atom *pnt;
@@ -206,8 +215,8 @@ lispval Lhashst()
   We only handle the case where there are 0 to 2 extra arguments to the
   error call.
 */
-lispval
-Lctcherr()
+lispval 
+Lctcherr (void)
 {
         register lispval handy;
         lispval type,messg,valret,contuab,uniqid,datum1,datum2;
@@ -269,8 +278,8 @@ Lctcherr()
  *
  */
 
-lispval
-LMakhunk()
+lispval 
+LMakhunk (void)
 {
         register int hsize, hcntr;
         register lispval result;
@@ -300,8 +309,8 @@ LMakhunk()
  * Returns the <fixnum>'th element of <hunk>
  *
  */
-lispval
-Lcxr()
+lispval 
+Lcxr (void)
 {
         register lispval temp;
 
@@ -334,8 +343,8 @@ Lcxr()
  * Replaces the <fixnum>'th element of <hunk> with <expr>.
  *
  */
-lispval
-Lrplcx()
+lispval 
+Lrplcx (void)
 {
         lispval *handy;
         chkarg(3,"rplacx");
@@ -369,8 +378,8 @@ Lrplcx()
  * same as (rplacx ...) except with this function you can replace EMPTY's.
  *
  */
-lispval
-Lstarrpx()
+lispval 
+Lstarrpx (void)
 {
         chkarg(3,"*rplacx");
         if (TYPE(lbot->val)!=INT)
@@ -396,8 +405,8 @@ Lstarrpx()
  * Returns the size of <hunk>
  *
  */
-lispval
-Lhunksize()
+lispval 
+Lhunksize (void)
 {
         register int size,i;
 
@@ -423,8 +432,8 @@ Lhunksize()
 /*
  * (hunk-to-list 'hunk) returns a list of the hunk elements
  */
-lispval
-Lhtol()
+lispval 
+Lhtol (void)
 {
     register lispval handy,retval,last;
     register int i;
@@ -463,8 +472,8 @@ Lhtol()
  * open a file for read, write, or append the arguments can be either
  * strings or atoms.
  */
-lispval
-Lfileopen()
+lispval 
+Lfileopen (void)
 {
         FILE *port;
         register lispval name;
@@ -503,8 +512,8 @@ Lfileopen()
  * It is used in vaxima as a speed enhancement.
  */
 
-static lispval
-Ibalmod(invmodp)
+static lispval 
+Ibalmod (int invmodp)
 {
         register long mod_div_2, number, modulus;
 
@@ -532,8 +541,8 @@ Ibalmod(invmodp)
         /* NOTREACHED */
 }
 
-invmod (n,modulus)
-long n , modulus;
+int 
+invmod (long n, long modulus)
 
 { 
         long a1,a2,a3,y1,y2,y3,q;
@@ -558,8 +567,8 @@ step3:
         /* NOTREACHED */
 }
 
-lispval
-Lstarinvmod()
+lispval 
+Lstarinvmod (void)
 {
         return(Ibalmod(TRUE));
 }
@@ -569,14 +578,14 @@ Lstarinvmod()
  * This function returns <number> mod <modulus> (for balanced modulus).
  * It is used in vaxima as a speed enhancement.
  */
-lispval
-LstarMod()
+lispval 
+LstarMod (void)
 {
         return(Ibalmod(FALSE));
 }
 
-lispval
-Llsh()
+lispval 
+Llsh (void)
 {
         register struct argent *mylbot = lbot;
         int val,shift;
@@ -606,7 +615,8 @@ Llsh()
 
 /* very temporary function to test the validity of the bind stack */
 
-bndchk()
+int 
+bndchk (void)
 {  
         register struct nament *npt;
         register lispval in2;
@@ -621,8 +631,8 @@ bndchk()
  *      formatted printer for lisp data
  *    use: (cprintf formatstring datum [port])
  */
-lispval
-Lcprintf()
+lispval 
+Lcprintf (void)
 {
     FILE *p;
     char *fstrng;
@@ -663,8 +673,8 @@ Lcprintf()
  * C compiler does, so it works just fine. The return value is the
  * string that is the result of the sprintf.
  */
-lispval
-Lsprintf()
+lispval 
+Lsprintf (void)
 {
         register struct argent *argp;
         register int j;
@@ -713,8 +723,8 @@ Lsprintf()
         return ((lispval) inewstr(sbuf));
 }
 
-lispval
-Lprobef()
+lispval 
+Lprobef (void)
 {
         char *name;
         chkarg(1,"probef");
@@ -725,8 +735,8 @@ Lprobef()
         else return(nil);
 }
 
-lispval
-Lsubstring()
+lispval 
+Lsubstring (void)
 {       register char *name;
         register lispval index,length;
         int restofstring = FALSE;
@@ -773,8 +783,8 @@ Lsubstring()
 /*
  * This is substringn
  */
-lispval
-Lsstrn()
+lispval 
+Lsstrn (void)
 {
         register char *name;
         register int len,ind,reallen;
@@ -841,8 +851,8 @@ Lsstrn()
 #if os_unix_ts
 #define index strchr
 #endif
-lispval
-Lcharindex()
+lispval 
+Lcharindex (void)
 {
     register char *string;
     register char ch;
@@ -868,16 +878,15 @@ Lcharindex()
 lispval Ipurcopy();
 
 
-lispval
-Lpurcopy()
+lispval 
+Lpurcopy (void)
 {
         chkarg(1,"purcopy");
         return(Ipurcopy(lbot[0].val));
 }
             
-lispval
-Ipurcopy(handy)
-lispval handy;
+lispval 
+Ipurcopy (lispval handy)
 {
     extern int *beginsweep;
     register lispval retv, curv, lv;
@@ -994,8 +1003,8 @@ lispval handy;
 /*
  * Lpurep returns t if the given arg is in pure space
  */
-lispval
-Lpurep()
+lispval 
+Lpurep (void)
 {
     lispval Ipurep();
 
@@ -1009,26 +1018,26 @@ Lpurep()
 lispval newvec(), nveci(), Inewvector();
 
 /* vector creation and initialization functions */
-lispval
-Lnvec()
+lispval 
+Lnvec (void)
 {
     return(Inewvector(3));
 }
 
-lispval
-Lnvecb()
+lispval 
+Lnvecb (void)
 {
     return(Inewvector(0));
 }
 
-lispval
-Lnvecw()
+lispval 
+Lnvecw (void)
 {
     return(Inewvector(1));
 }
 
-lispval
-Lnvecl()
+lispval 
+Lnvecl (void)
 {
     return(Inewvector(2));
 }
@@ -1040,8 +1049,8 @@ Lnvecl()
  *       = 2: long /
  *       = 3: long
  */
-lispval
-Inewvector(class)
+lispval 
+Inewvector (int class)
 {
     register int i;
     register lispval handy;
@@ -1101,16 +1110,16 @@ Inewvector(class)
     return(handy);
 }
 
-lispval
-Lvectorp()
+lispval 
+Lvectorp (void)
 {
     chkarg(1,"vectorp");
     if(TYPE(lbot->val) == VECTOR) return(tatom);
     else return(nil);
 }
 
-lispval
-Lpvp()
+lispval 
+Lpvp (void)
 {
     chkarg(1,"vectorip");
     if(TYPE(lbot->val) == VECTORI) return(tatom);
@@ -1125,8 +1134,8 @@ Lpvp()
  * hack until we decide if we can live without it:
  *  class = 4: char, 5: short, 6: long, 7: float, 8: double
  */
-lispval
-LIvref()
+lispval 
+LIvref (void)
 {
     register lispval vect;
     register int index;
@@ -1163,8 +1172,8 @@ LIvref()
  * int:vset vector[i] index value class
  *  class = 0: byte immed, 1: word immed, 2: long immed, 3: long
  */
-lispval
-LIvset()
+lispval 
+LIvset (void)
 {
     register lispval vect,value;
     register int index;
@@ -1205,8 +1214,8 @@ LIvset()
  * LIvsize == (int:vsize 'vector 'x_shift)
  *  return the vsize field of the vector shifted right by x_shift
  */
-lispval
-LIvsize()
+lispval 
+LIvsize (void)
 {
     int typ;
     
@@ -1214,8 +1223,8 @@ LIvsize()
     return(inewint((lbot[0].val->vl.vectorl[VSizeOff]) >> lbot[1].val->i));
 }
 
-lispval
-Lvprop()
+lispval 
+Lvprop (void)
 {
     int typ;
     chkarg(1,"vprop");
@@ -1227,8 +1236,8 @@ Lvprop()
 }
 
     
-lispval
-Lvsp()
+lispval 
+Lvsp (void)
 {
         int typ;
         lispval vector, property;
@@ -1251,8 +1260,8 @@ Lvsp()
  *  this is called by equal which has already checked that
  *  the arguments are vector
  */
-vecequal(v,w)
-lispval v,w;
+int 
+vecequal (lispval v, lispval w)
 {
     int i;
     lispval vv, ww, ret;
@@ -1292,8 +1301,8 @@ lispval v,w;
  *  comparisons as possible and then did byte comparisons.
  *  or if we used pointers instead of indexing.
  */
-veciequal(v,w)
-lispval v,w;
+int 
+veciequal (lispval v, lispval w)
 {
     char vv, ww;
     int i;

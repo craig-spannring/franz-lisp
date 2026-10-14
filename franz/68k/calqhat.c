@@ -1,7 +1,7 @@
 /* Copyright (c) 1982, Regents, University of California */
 struct vl       { long high; long low; };
-calqhat(uj,v1)
-register long *uj, *v1;
+int 
+calqhat (register long *uj, register long *v1)
 {
         struct vl work1, work2;
         register handy, handy2;

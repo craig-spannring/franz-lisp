@@ -40,8 +40,8 @@ FILE *info[2];
 }
 /* Nioreset *************************************************************/
 
-lispval
-Nioreset() {
+lispval 
+Nioreset (void) {
 #ifndef RTPORTS
         register FILE *p;
 
@@ -119,8 +119,7 @@ char *flag;
 
 #ifdef SPISFP
 char *
-alloca(howmuch)
-register int howmuch;
+alloca (register int howmuch)
 {
         howmuch += 3 ;
         howmuch >>= 2;

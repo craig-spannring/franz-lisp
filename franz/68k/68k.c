@@ -2,8 +2,8 @@
 #include <signal.h>
 
 
-mmuladd(a,b,c,m)
-long a,b,c,m;
+int 
+mmuladd (long a, long b, long c, long m)
 {
         long work[2]; char err;
         emul(a,b,c,work);
@@ -22,9 +22,8 @@ asm("   emul    4(ap),8(ap),12(ap),r0");
 asm("   ediv    16(ap),r0,*20(ap),*24(ap)");
 }*/
 
-Imuldiv(p1,p2,add,dv,quo,rem)
-long p1, p2, add, dv;
-long *quo, *rem;
+int 
+Imuldiv (long p1, long p2, long add, long dv, long *quo, long *rem)
 {
         long work[2]; char err;
 
@@ -36,8 +35,8 @@ long *quo, *rem;
   nwritten = write(file, buffer, count);
   nwritten == -1 means error
 */
-write(file, buffer, count)
-char *buffer;
+int 
+write (int file, char *buffer, int count)
 {
         register lispval handy;
         int retval;
@@ -73,7 +72,8 @@ skipit:
 # nread ==0 means eof; nread == -1 means error
 */
 #include <errno.h>
-read(file,buffer,count)
+int 
+read (int file, int buffer, int count)
 {
         extern int errno;
         register int Size;
@@ -85,8 +85,8 @@ again:
         goto again;
 }
 
-lispval
-Lpolyev()
+lispval 
+Lpolyev (void)
 {
         register int count; 
         register double *handy, *base;
@@ -116,8 +116,8 @@ Lpolyev()
         return(result);
 }
 
-lispval
-Lrot()
+lispval 
+Lrot (void)
 {
         register rot,val;               /* these must be the first registers */
         register struct argent *mylbot = lbot;
@@ -137,14 +137,16 @@ Lrot()
         return( inewint(val));
 }
 
-myfrexp() { error("myfrexp called", FALSE);}
+int 
+myfrexp (void) { error("myfrexp called", FALSE);}
 #if os_unisoft | os_unix_ts
-syscall() { error("vsyscall called", FALSE);}
+int 
+syscall (void) { error("vsyscall called", FALSE);}
 #endif
 
 #include "structs.h"
-prunei(what)
-register lispval what;
+int 
+prunei (register lispval what)
 {
         extern struct types int_str;
         int gstart();
@@ -161,14 +163,13 @@ register lispval what;
    then we print the first argument to that eval frame. This is done
    by looking on the stack.
 */
-lispval
-Lshostk()
+lispval 
+Lshostk (void)
 {       lispval isho();
         return(isho(1));
 }
-static lispval
-isho(f)
-int f;
+static lispval 
+isho (int f)
 {
         register struct machframe *myfp; register lispval handy;
         int **fp;       /* this must be the first local */
@@ -235,8 +236,8 @@ int f;
  * written by jkf.
  *
  */
-lispval
-Lbaktrace()
+lispval 
+Lbaktrace (void)
 {
         isho(0);
 }
@@ -249,8 +250,8 @@ Lbaktrace()
  *   where expression is something passed to eval
  * very vax specific
  */
-lispval
-LIshowstack()
+lispval 
+LIshowstack (void)
 {
     int **fp;   /* must be the first local variable */
     register lispval handy;
@@ -303,10 +304,8 @@ LIshowstack()
  * this code is very similar to ftolsp.
  * if it gets revised, so should this.
  */
-lispval
-dothunk(func,count)
-lispval func;
-long count;
+lispval 
+dothunk (lispval func, long count)
 {
         register long *arglist = (& count) + 3;
         lispval save;
@@ -335,8 +334,8 @@ _thcpy:
         rts*/
 static char fivewords[] = "01234567890123456789";
 
-lispval
-Lmkcth()
+lispval 
+Lmkcth (void)
 {
         register struct argent *mylbot = lbot;
         register struct thunk {

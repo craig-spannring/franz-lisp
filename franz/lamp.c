@@ -22,8 +22,8 @@ int mcnts[NMCOUNT];
 int mcntp = (int) mcnts;
 int doprof = TRUE;
 
-lispval
-Lmonitor()
+lispval 
+Lmonitor (void)
 {
         extern etext, countbase;
 
@@ -52,7 +52,8 @@ int mcnts[1];
 int mcntp = (int) mcnts;
 int doprof = FALSE;
 
-Lmonitor()
+int 
+Lmonitor (void)
 {
         error("Profiling not enabled",FALSE);
 }

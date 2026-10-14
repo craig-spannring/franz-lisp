@@ -15,8 +15,8 @@ static char *rcsid =
 # include "chkrtab.h"
 # include "frame.h"
 
-lispval
-Leval()
+lispval 
+Leval (void)
 {
         register lispval temp;
 
@@ -25,8 +25,8 @@ Leval()
             return(eval(temp));
 }
 
-lispval
-Lxcar()
+lispval 
+Lxcar (void)
 {       register int typ;
         register lispval temp, result;
 
@@ -44,8 +44,8 @@ Lxcar()
 
 }
 
-lispval
-Lxcdr()
+lispval 
+Lxcdr (void)
 {       register int typ;
         register lispval temp;
 
@@ -67,9 +67,8 @@ Lxcdr()
                 return(error("Bad arg to cdr", FALSE));
 }
 
-lispval
-cxxr(as,ds)
-register int as,ds;
+lispval 
+cxxr (register int as, register int ds)
 {
 
         register lispval temp, temp2;
@@ -123,44 +122,44 @@ register int as,ds;
         return(temp);
 }
 
-lispval
-Lcar()
+lispval 
+Lcar (void)
 {       return(cxxr(1,0)); }
 
-lispval
-Lcdr()
+lispval 
+Lcdr (void)
 {       return(cxxr(0,1)); }
 
-lispval
-Lcadr()
+lispval 
+Lcadr (void)
 {       return(cxxr(1,1)); }
 
-lispval
-Lcaar()
+lispval 
+Lcaar (void)
 {       return(cxxr(2,0)); }
 
-lispval
-Lc02r()
+lispval 
+Lc02r (void)
 {       return(cxxr(0,2)); }    /* cddr */
 
-lispval
-Lc12r()
+lispval 
+Lc12r (void)
 {       return(cxxr(1,2)); }    /* caddr */
 
-lispval
-Lc03r()
+lispval 
+Lc03r (void)
 {       return(cxxr(0,3)); }    /* cdddr */
 
-lispval
-Lc13r()
+lispval 
+Lc13r (void)
 {       return(cxxr(1,3)); }    /* cadddr */
 
-lispval
-Lc04r()
+lispval 
+Lc04r (void)
 {       return(cxxr(0,4)); }    /* cddddr */
 
-lispval
-Lc14r()
+lispval 
+Lc14r (void)
 {       return(cxxr(1,4)); }    /* caddddr */
 
 /*
@@ -173,8 +172,8 @@ Lc14r()
  *
  */
 
-lispval
-Lnthelem()
+lispval 
+Lnthelem (void)
 {
         register lispval temp;
         register int i;
@@ -195,8 +194,8 @@ Lnthelem()
         return(temp);
 }
 
-lispval
-Lscons()
+lispval 
+Lscons (void)
 {
         register struct argent *argp = lbot;
         register lispval retp, handy;
@@ -218,8 +217,8 @@ Lscons()
         return(retp);
 }
 
-lispval
-Lbigtol(){
+lispval 
+Lbigtol (void){
         register lispval handy,newp;
 
         chkarg(1,"Bignum-to-list");
@@ -240,8 +239,8 @@ Lbigtol(){
         return(handy);
 }
 
-lispval
-Lcons()
+lispval 
+Lcons (void)
 {
         register lispval retp;
         register struct argent *argp;
@@ -255,9 +254,8 @@ Lcons()
 #define CA 0
 #define CD 1
 
-lispval
-rpla(what)
-int what;
+lispval 
+rpla (int what)
 {       register struct argent *argp;
         register int typ; register lispval first, second;
 
@@ -289,17 +287,17 @@ int what;
         }
         return(error("Bad arg to rpla",FALSE));
 }
-lispval
-Lrplca()
+lispval 
+Lrplca (void)
 {       return(rpla(CA));       }
 
-lispval
-Lrplcd()
+lispval 
+Lrplcd (void)
 {       return(rpla(CD));       }
 
 
-lispval
-Leq()
+lispval 
+Leq (void)
 {
         register struct argent *mynp = lbot + AD;
 
@@ -310,8 +308,8 @@ Leq()
 
 
 
-lispval
-Lnull()
+lispval 
+Lnull (void)
 {       chkarg(1,"null");
         return ((lbot->val == nil) ? tatom : nil);
 }
@@ -321,8 +319,8 @@ Lnull()
 /* Lreturn **************************************************************/
 /* Returns the first argument - which is nill if not specified.         */
 
-lispval
-Lreturn()
+lispval 
+Lreturn (void)
 {
         if(lbot==np) protect (nil);
         Inonlocalgo(C_RET,lbot->val,nil);
@@ -330,8 +328,8 @@ Lreturn()
 }
 
 
-lispval
-Linfile()
+lispval 
+Linfile (void)
 {
         FILE *port;
         register lispval name;
@@ -356,8 +354,8 @@ loop:
  *   string or atom, which if it begins with an `a' tells outfile to open the
  *   file in append mode
  */
-lispval
-Loutfile()
+lispval 
+Loutfile (void)
 {
         FILE *port; register lispval name;
         char *mode ="w";    /* mode is w for create new file, a for append */
@@ -392,8 +390,8 @@ loop:
         return(P(port));
 }
 
-lispval
-Lterpr()
+lispval 
+Lterpr (void)
 {
         register lispval handy;
         FILE *port;
@@ -411,8 +409,8 @@ Lterpr()
         return(nil);
 }
 
-lispval
-Lclose()
+lispval 
+Lclose (void)
 {
         lispval port;
 
@@ -427,8 +425,8 @@ Lclose()
         /* not reached */
 }
 
-lispval
-Ltruename()
+lispval 
+Ltruename (void)
 {
     chkarg(1,"truename");
     if(TYPE(lbot->val) != PORT)
@@ -437,8 +435,8 @@ Ltruename()
     return(ioname[PN(lbot->val->p)]);
 }
 
-lispval
-Lnwritn()
+lispval 
+Lnwritn (void)
 {
         register FILE *port;
         register value;
@@ -456,8 +454,8 @@ Lnwritn()
         return(inewint(value));
 }
 
-lispval
-Ldrain()
+lispval 
+Ldrain (void)
 {
         register FILE *port;
         register int iodes;
@@ -483,8 +481,8 @@ Ldrain()
         return(P(port));
 }
 
-lispval
-Llist()
+lispval 
+Llist (void)
 {
         /* added for the benefit of mapping functions. */
         register struct argent *ulim, *namptr;
@@ -504,8 +502,8 @@ Llist()
         return(result->l);
 }
 
-lispval
-Lnumberp()
+lispval 
+Lnumberp (void)
 {
         chkarg(1,"numberp");
         switch(TYPE(lbot->val)) {
@@ -515,8 +513,8 @@ Lnumberp()
         return(nil);
 }
 
-lispval
-Latom()
+lispval 
+Latom (void)
 {
         register struct argent *lb = lbot;
         chkarg(1,"atom");
@@ -526,8 +524,8 @@ Latom()
                 return(tatom);
 }
 
-lispval
-Ltype()
+lispval 
+Ltype (void)
 {
         chkarg(1,"type");
         switch(TYPE(lbot->val)) {
@@ -578,29 +576,29 @@ Ltype()
         return(nil);
 }
 
-lispval
-Ldtpr()
+lispval 
+Ldtpr (void)
 {
         chkarg(1,"dtpr");
         return(typred(DTPR, lbot->val));
 }
 
-lispval
-Lbcdp()
+lispval 
+Lbcdp (void)
 {
         chkarg(1,"bcdp");
         return(typred(BCD, lbot->val));
 }
 
-lispval
-Lportp()
+lispval 
+Lportp (void)
 {
         chkarg(1,"portp");
         return(typred(PORT, lbot->val));
 }
 
-lispval
-Larrayp()
+lispval 
+Larrayp (void)
 {
         chkarg(1,"arrayp");
         return(typred(ARRAY, lbot->val));
@@ -611,8 +609,8 @@ Larrayp()
  * Returns t if g_arg1 is a hunk, otherwise returns nil.
  */
 
-lispval
-Lhunkp()
+lispval 
+Lhunkp (void)
 {
         chkarg(1,"hunkp");
         if (HUNKP(lbot->val))
@@ -621,8 +619,8 @@ Lhunkp()
                 return(nil);            /* else nil */
 }
 
-lispval
-Lset()
+lispval 
+Lset (void)
 {
         lispval varble;
 
@@ -639,8 +637,8 @@ Lset()
         /* NOTREACHED */
 }
 
-lispval
-Lequal()
+lispval 
+Lequal (void)
 {
         register lispval first, second;
         register type1, type2;
@@ -713,8 +711,8 @@ Lequal()
         }
         {Freexs(); return(tatom);}
 }
-lispval
-oLequal()
+lispval 
+oLequal (void)
 {
         chkarg(2,"equal");
 
@@ -722,8 +720,8 @@ oLequal()
         if(Iequal(lbot[1].val,lbot->val)) return(tatom); else return(nil);
 }
 
-Iequal(first,second) 
-register lispval first, second;
+int 
+Iequal (register lispval first, register lispval second)
 {
         register type1, type2;
         lispval Lsub(),Lzerop();
@@ -766,8 +764,8 @@ dosub:
         }
         return(0);
 }
-lispval
-Zequal()
+lispval 
+Zequal (void)
 {
         register lispval first, second;
         register type1, type2;
@@ -840,8 +838,8 @@ Zequal()
  * printed is a function of global lisp variables plevel and
  * plength.
  */
-lispval
-Lprint()
+lispval 
+Lprint (void)
 {
         register lispval handy;
         extern int plevel,plength;
@@ -874,8 +872,8 @@ Lprint()
  *
  * form is (patom 'value ['port])
  */
-lispval
-Lpatom()
+lispval 
+Lpatom (void)
 {
         register lispval temp;
         register lispval handy;
@@ -920,12 +918,13 @@ Lpatom()
  * an atom or number.
  */
 
-lispval
-Lpntlen()
+lispval 
+Lpntlen (void)
 {
         return(inewint((long)Ipntlen()));
 }
-Ipntlen()
+int 
+Ipntlen (void)
 {
         register lispval temp;
         register char *handy;

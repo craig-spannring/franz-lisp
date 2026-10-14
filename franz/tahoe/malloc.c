@@ -71,9 +71,8 @@ static  u_int nmalloc[NBUCKETS];
 
 #ifdef debug
 #define ASSERT(p)   if (!(p)) botch("p"); else
-static
-botch(s)
-        char *s;
+static 
+botch (char *s)
 {
 
         printf("assertion botched: %s\n", s);
@@ -84,8 +83,7 @@ botch(s)
 #endif
 
 char *
-malloc(nbytes)
-        register unsigned nbytes;
+malloc (register unsigned nbytes)
 {
         register union overhead *p;
         register int bucket = 0;
@@ -134,9 +132,8 @@ malloc(nbytes)
 /*
  * Allocate more memory to the indicated bucket.
  */
-static
-morecore(bucket)
-        register bucket;
+static 
+morecore (register bucket)
 {
         register union overhead *op;
         register int rnu;       /* 2^rnu bytes will be requested */
@@ -182,8 +179,8 @@ morecore(bucket)
         }
 }
 
-free(cp)
-        char *cp;
+int 
+free (char *cp)
 {   
         register int size;
         register union overhead *op;
@@ -225,9 +222,7 @@ free(cp)
 int realloc_srchlen = 4;        /* 4 should be plenty, -1 =>'s whole list */
 
 char *
-realloc(cp, nbytes)
-        char *cp; 
-        unsigned nbytes;
+realloc (char *cp, unsigned nbytes)
 {   
         register u_int onb;
         union overhead *op;
@@ -276,10 +271,8 @@ realloc(cp, nbytes)
  * header starts at ``freep''.  If srchlen is -1 search the whole list.
  * Return bucket number, or -1 if not found.
  */
-static
-findbucket(freep, srchlen)
-        union overhead *freep;
-        int srchlen;
+static 
+findbucket (union overhead *freep, int srchlen)
 {
         register union overhead *p;
         register int i, j;
@@ -303,8 +296,8 @@ findbucket(freep, srchlen)
  * for each size category, the second showing the number of mallocs -
  * frees for each size category.
  */
-mstats(s)
-        char *s;
+int 
+mstats (char *s)
 {
         register int i, j;
         register union overhead *p;

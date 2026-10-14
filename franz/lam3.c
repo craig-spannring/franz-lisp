@@ -14,8 +14,8 @@ static char *rcsid =
 # include "chars.h"
 # include "chkrtab.h"
 
-lispval
-Lalfalp()
+lispval 
+Lalfalp (void)
 {
         register char  *first, *second;
 
@@ -28,8 +28,8 @@ Lalfalp()
                 return(nil);
 }
 
-lispval
-Lncons()
+lispval 
+Lncons (void)
 {
         register lispval handy;
 
@@ -39,8 +39,8 @@ Lncons()
         handy->d.car = lbot->val;
         return(handy);
 }
-lispval
-Lzerop()
+lispval 
+Lzerop (void)
 {
         register lispval handy;
 
@@ -54,8 +54,8 @@ Lzerop()
         }
         return(nil);
 }
-lispval
-Lonep()
+lispval 
+Lonep (void)
 {
         register lispval handy; 
         lispval Ladd();
@@ -77,8 +77,8 @@ Lonep()
         return(nil);
 }
 
-lispval
-cmpx(lssp)
+lispval 
+cmpx (int lssp)
 {
         register struct argent *argp;
         register struct argent *outarg;
@@ -108,8 +108,8 @@ cmpx(lssp)
         return(tatom);
 }
 
-lispval
-Lgreaterp()
+lispval 
+Lgreaterp (void)
 {
         register int typ;
         /* do the easy cases first */
@@ -131,8 +131,8 @@ Lgreaterp()
         return(cmpx(FALSE));
 }
 
-lispval
-Llessp()
+lispval 
+Llessp (void)
 {
         register int typ;
         /* do the easy cases first */
@@ -154,8 +154,8 @@ Llessp()
         return(cmpx(TRUE));
 }
 
-lispval
-Ldiff()
+lispval 
+Ldiff (void)
 {
         register lispval arg1,arg2; 
         register handy = 0;
@@ -171,8 +171,8 @@ Ldiff()
         return(inewint(handy));
 }
 
-lispval
-Lmod()
+lispval 
+Lmod (void)
 {
         register lispval arg1,arg2;
         lispval  handy;
@@ -220,8 +220,8 @@ Lmod()
                 handy = inewint(fake2.I);
         return(handy);
 }
-lispval
-Ladd1()
+lispval 
+Ladd1 (void)
 {
         register lispval handy;
         lispval Ladd();
@@ -246,8 +246,8 @@ Ladd1()
 
 
 
-lispval
-Lsub1()
+lispval 
+Lsub1 (void)
 {
         register lispval handy;
         lispval Ladd();
@@ -268,8 +268,8 @@ Lsub1()
         return(handy);
 }
 
-lispval
-Lminus()
+lispval 
+Lminus (void)
 {
         register lispval arg1, handy;
         lispval subbig();
@@ -298,8 +298,8 @@ Lminus()
         return(handy);
 }
 
-lispval
-Lnegp()
+lispval 
+Lnegp (void)
 {
         register lispval handy = np[-1].val, work;
         register flag = 0;
@@ -331,8 +331,8 @@ loop:
         return(nil);
 }
 
-lispval
-Labsval()
+lispval 
+Labsval (void)
 {
         register lispval arg1;
 
@@ -351,8 +351,8 @@ Labsval()
  *
  * written by jkf.
  */
-lispval
-Loblist()
+lispval 
+Loblist (void)
 {
     int indx;
     lispval headp, tailp ;
@@ -398,8 +398,8 @@ Loblist()
  * for c in the readtable.
  */
 
-lispval
-Lsetsyn()
+lispval 
+Lsetsyn (void)
 {
         register lispval s, c;
         register struct argent *mynp;
@@ -506,9 +506,8 @@ Lsetsyn()
  * puts that character in Xesc or Xdqc (whichever is pointed to by
  * addr).
  */
-rpltab(cclass,addr)
-char cclass;
-unsigned char *addr;
+int 
+rpltab (int cclass, unsigned char *addr)
 {
         register int i;
         extern unsigned char *ctable;
@@ -524,8 +523,8 @@ unsigned char *addr;
  * to be used by the lisp-code function getsyntax, not to be used by 
  * joe user.
  */
-lispval
-Lgetsyntax()
+lispval 
+Lgetsyntax (void)
 {
     register char *name;
     int number, typ;
@@ -575,8 +574,8 @@ Lgetsyntax()
     
         
     
-lispval
-Lzapline()
+lispval 
+Lzapline (void)
 {
         register FILE *port;
         extern FILE * rdrport;

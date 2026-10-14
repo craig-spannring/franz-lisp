@@ -21,8 +21,8 @@ static char *rcsid =
 /* "Lreturn".  At the end is the loop that cycles through the contents  */
 /* of the prog.                                                         */
 
-lispval
-Nprog() {
+lispval 
+Nprog (void) {
         register lispval where, temp;
         struct nament *savedbnp = bnp;
         extern struct frame *errp;
@@ -109,8 +109,8 @@ lispval globtag;
 
    (catch form [tag]) is translated to (*catch 'tag form) by a macro.
  */
-lispval
-Ncatch()
+lispval 
+Ncatch (void)
 {
         register lispval tag;
         pbuf pb;
@@ -148,7 +148,8 @@ Ncatch()
     be non nil if err threw a non nil value 
  */
 
-lispval Nerrset()
+lispval 
+Nerrset (void)
 {
         lispval temp,flag;
         pbuf pb;
@@ -189,8 +190,8 @@ lispval Nerrset()
 /* this was changed from throw to *throw 21nov79
    it is now a lambda and really should be called Lthrow
 */
-lispval
-Nthrow()
+lispval 
+Nthrow (void)
 {
         switch(np-lbot) {
         case 0:
@@ -210,8 +211,8 @@ Nthrow()
 /* Ngo ******************************************************************/
 /* First argument only is checked - and must be an atom or evaluate     */
 /* to one.                                                              */
-lispval
-Ngo() 
+lispval 
+Ngo (void) 
 {
     register lispval temp;
     chkarg(1,"go");
@@ -230,8 +231,8 @@ Ngo()
 
 /* Nreset ***************************************************************/
 /* All arguments are ignored.  This just returns-from-break to depth 0. */
-lispval
-Nreset()
+lispval 
+Nreset (void)
 {
     Inonlocalgo(C_RESET,inewint(0),nil);
 }
@@ -242,8 +243,8 @@ Nreset()
 /* If first argument is not nil, this is evaluated and printed.  Then   */
 /* error is called with the "breaking" message.                         */
 
-lispval
-Nbreak()
+lispval 
+Nbreak (void)
 {
         register lispval hold; register FILE *port;
         port = okport(Vpoport->a.clb,stdout);
@@ -261,7 +262,8 @@ Nbreak()
 
 /* Nexit ****************************************************************/
 /* Just calls lispend with no message.                                  */
-Nexit()
+int 
+Nexit (void)
         {
         lispend("");
         }
@@ -270,8 +272,8 @@ Nexit()
 /* Nsys *****************************************************************/
 /* Just calls lispend with no message.                                  */
 
-lispval
-Nsys()
+lispval 
+Nsys (void)
         {
         lispend("");
         }
@@ -279,8 +281,8 @@ Nsys()
 
 
 
-lispval
-Ndef() {
+lispval 
+Ndef (void) {
         register lispval arglist, body, name, form;
         
         form = lbot->val;
@@ -295,15 +297,15 @@ Ndef() {
 }
 
 
-lispval
-Nquote()
+lispval 
+Nquote (void)
 {
         return((lbot->val)->d.car);
 }
 
 
-lispval
-Nsetq()
+lispval 
+Nsetq (void)
 {       register lispval handy, where, value;
         register int lefttype;
 
@@ -327,8 +329,8 @@ Nsetq()
 }
 
 
-lispval
-Ncond()
+lispval 
+Ncond (void)
 {
         register lispval  where, last;
 
@@ -354,8 +356,8 @@ Ncond()
         return(last);
 }
 
-lispval
-Nand()
+lispval 
+Nand (void)
 {
         register lispval current, temp;
 
@@ -372,8 +374,8 @@ Nand()
 }
 
 
-lispval
-Nor()
+lispval 
+Nor (void)
 {
         register lispval current, temp;
 

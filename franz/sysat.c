@@ -36,7 +36,8 @@ extern int ttsize;      /* need to know how much of pagetable to set to other */
 extern lispval Iaddstat(), Isstatus();
 lispval inewatom();
 
-makevals()
+int 
+makevals (void)
         {
         int i;
         lispval temp;
@@ -452,9 +453,8 @@ makevals()
 /*  BEWARE:  if an atom becomes "truly worthless" and is collected,     */
 /*  the pointer becomes obsolete.                                       */
 /*                                                                      */
-lispval
-matom(string)
-char *string;
+lispval 
+matom (char *string)
         {
         strbuf[0] = 0;
         strncat(strbuf,string,STRBLEN-1); /* strcpyn always pads to n */
@@ -468,7 +468,8 @@ char *string;
 /*  Not the most efficient but will do until the string from the code   */
 /*  itself can be used as a lispval.                                    */
 
-lispval mstr(string) char *string;
+lispval 
+mstr (char *string)
         {
         return((lispval)(pinewstr(string)));
         }
@@ -479,7 +480,8 @@ lispval mstr(string) char *string;
 /*  "name" as function binding.                                         */
 /*  A pointer to the atom is returned.                                  */
 /*                                                                      */
-lispval mfun(string,start,discip) char *string; lispval (*start)(), discip;
+lispval 
+mfun (char *string, lispval (*start)(void), lispval discip)
         {
         lispval v;
         v = inewatom(string);
@@ -495,9 +497,8 @@ struct ftab {
         lispval *discip;
 };
 
-lispval
-mftab(table)
-register struct ftab *table;
+lispval 
+mftab (register struct ftab *table)
 {
         register lispval v;
         for(;table->string;table++) {
@@ -790,4 +791,5 @@ static struct ftab cfuns[] = {
   {"gcafter", Ngcafter, &(nlambda)},    /* garbage collection wind-up */
   {0}
 };
-static dofuns(){mftab(cfuns);}
+static 
+dofuns (void){mftab(cfuns);}

@@ -14,8 +14,8 @@ static char *rcsid =
 #include <signal.h>
 
 
-lispval
-Lfork() {
+lispval 
+Lfork (void) {
         int pid;
 
         chkarg(0,"fork");
@@ -25,8 +25,8 @@ Lfork() {
                 return(nil);
 }
 
-lispval
-Lwait()
+lispval 
+Lwait (void)
 {
         register lispval ret, temp;
         int status = -1, pid;
@@ -45,8 +45,8 @@ Lwait()
         return(ret);
 }
 
-lispval
-Lpipe()
+lispval 
+Lpipe (void)
 {
         register lispval ret, temp;
         int pipes[2];
@@ -66,8 +66,8 @@ Lpipe()
         return(ret);
 }
 
-lispval
-Lfdopen()
+lispval 
+Lfdopen (void)
 {
         register lispval fd, type;
         FILE *ptr;
@@ -82,8 +82,8 @@ Lfdopen()
         return(P(ptr));
 }
 
-lispval
-Lexece()
+lispval 
+Lexece (void)
 {
         lispval fname, arglist, envlist, temp;
         char *args[100], *envs[100], estrs[1024];
@@ -146,8 +146,8 @@ Lexece()
  *    If only s_writep is non nil, then readport will be nil
  */
 
-lispval
-Lprocess()
+lispval 
+Lprocess (void)
 {
         int wflag , childsi , childso , child;
         lispval handy;
@@ -260,8 +260,8 @@ Lprocess()
 
 extern int gensymcounter;
 
-lispval
-Lgensym()
+lispval 
+Lgensym (void)
 {
         lispval arg;
         char leader;
@@ -295,8 +295,8 @@ struct heads
         *first;
 } atom_str ;
 
-lispval
-Lremprop()
+lispval 
+Lremprop (void)
 {
         register struct argent *argp;
         register lispval pptr, ind, opptr;
@@ -346,8 +346,8 @@ Lremprop()
         }
 }
 
-lispval
-Lbcdad()
+lispval 
+Lbcdad (void)
 {
         lispval ret, temp;
 
@@ -363,8 +363,8 @@ Lbcdad()
         return(ret);
 }
 
-lispval
-Lstringp()
+lispval 
+Lstringp (void)
 {
         chkarg(1,"stringp");
         if (TYPE(lbot->val)==STRNG)
@@ -372,8 +372,8 @@ Lstringp()
         return(nil);
 }
 
-lispval
-Lsymbolp()
+lispval 
+Lsymbolp (void)
 {
         chkarg(1,"symbolp");
         if (TYPE(lbot->val)==ATOM)
@@ -381,8 +381,8 @@ Lsymbolp()
         return(nil);
 }
 
-lispval
-Lrematom()
+lispval 
+Lrematom (void)
 {
         register lispval temp;
 
@@ -403,8 +403,8 @@ Lrematom()
 #define QUTMASK 0200
 #define VNUM 0000
 
-lispval
-Lprname()
+lispval 
+Lprname (void)
 {
         lispval a, ret;
         register lispval work, prev;
@@ -454,8 +454,8 @@ Lprname()
         return(ret->d.cdr);
 }
 
-lispval
-Lexit()
+lispval 
+Lexit (void)
 {
         register lispval handy;
         if(np-lbot==0) franzexit(0);
@@ -464,8 +464,8 @@ Lexit()
                 franzexit((int) handy->i);
         franzexit(-1);
 }
-lispval
-Iimplode(unintern)
+lispval 
+Iimplode (int unintern)
 {
         register lispval handy, work;
         register char *cp = strbuf;
@@ -503,20 +503,20 @@ Iimplode(unintern)
         else return((lispval) getatom(FALSE));
 }
 
-lispval
-Lmaknam()
+lispval 
+Lmaknam (void)
 {
         return(Iimplode(TRUE));         /* unintern result */
 }
 
-lispval
-Limplode()
+lispval 
+Limplode (void)
 {
         return(Iimplode(FALSE));        /* intern result */
 }
 
-lispval
-Lntern()
+lispval 
+Lntern (void)
 {
         register int hash;
         register lispval handy,atpr;
@@ -551,8 +551,8 @@ Lntern()
         the value of bnp before the binding
         Use by compiled progv's.
  ***/
-lispval
-Ibindvars()
+lispval 
+Ibindvars (void)
 {
     register lispval vars,vals,handy;
     struct nament *oldbnp = bnp;
@@ -587,8 +587,8 @@ Ibindvars()
      called by compiled progv's
  ***/
  
-lispval
-Iunbindvars()
+lispval 
+Iunbindvars (void)
 {
     struct nament *oldbnp;
     
@@ -611,8 +611,8 @@ Iunbindvars()
  * except the trailing newline is removed.
  *
  */
-lispval
-Ltymestr()
+lispval 
+Ltymestr (void)
 {
     long timevalue;
     char *retval;

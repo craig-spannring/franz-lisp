@@ -21,8 +21,8 @@ static char *rcsid =
  *  if possible.  Returns the number of pages allocated.
  */
 
-lispval
-Lalloc()
+lispval 
+Lalloc (void)
         {
         long n;
         chkarg(2,"alloc");
@@ -33,15 +33,15 @@ Lalloc()
         return(alloc((lbot)->val,n));   /*  call alloc to do the work  */
         }
 
-lispval
-Lsizeof()
+lispval 
+Lsizeof (void)
         {
         chkarg(1,"sizeof");
         return(inewint(csizeof(lbot->val)));
         }
 
-lispval
-Lsegment()
+lispval 
+Lsegment (void)
         {
         chkarg(2,"segment");
 chek:   while(TYPE(np[-1].val) != INT )
@@ -58,8 +58,8 @@ chek:   while(TYPE(np[-1].val) != INT )
 /*                                                                      */
 /*  This function removes an atom from the hash table.                  */
 
-lispval
-Lforget()
+lispval 
+Lforget (void)
         {
         char *name;
         struct atom *buckpt;
@@ -96,8 +96,8 @@ Lforget()
         return(lbot->val);
         }
 
-lispval
-Lgetl()
+lispval 
+Lgetl (void)
         {
         chkarg(1,"getlength");
         if(TYPE(lbot->val) != ARRAY)
@@ -105,8 +105,8 @@ Lgetl()
         return(lbot->val->ar.length);
         }
 
-lispval
-Lputl()
+lispval 
+Lputl (void)
         {
         chkarg(2,"putlength");
         if(TYPE((lbot)->val) != ARRAY)
@@ -120,8 +120,8 @@ chek:   while(TYPE(np[-1].val) != INT)
                 }
         return((lbot)->val->ar.length = np[-1].val);
         }
-lispval
-Lgetdel()
+lispval 
+Lgetdel (void)
         {
         chkarg(1,"getdelta");
         if(TYPE(lbot->val) != ARRAY)
@@ -129,8 +129,8 @@ Lgetdel()
         return(lbot->val->ar.delta);
         }
 
-lispval
-Lputdel()
+lispval 
+Lputdel (void)
         {
         chkarg(2,"putdelta");
         if(TYPE((np-2)->val) != ARRAY)
@@ -145,8 +145,8 @@ chek:   while(TYPE(np[-1].val) != INT)
         return((lbot)->val->ar.delta = np[-1].val);
         }
 
-lispval
-Lgetaux()
+lispval 
+Lgetaux (void)
         {
         chkarg(1,"getaux");
         if(TYPE(lbot->val)!=ARRAY)
@@ -154,8 +154,8 @@ Lgetaux()
         return(lbot->val->ar.aux);
         }
 
-lispval
-Lputaux()
+lispval 
+Lputaux (void)
         {
         chkarg(2,"putaux");
 
@@ -164,8 +164,8 @@ Lputaux()
         return((lbot)->val->ar.aux = np[-1].val);
         }
 
-lispval
-Lgetdata()
+lispval 
+Lgetdata (void)
         {
         chkarg(1,"getdata");
         if(TYPE(lbot->val)!=ARRAY)
@@ -173,8 +173,8 @@ Lgetdata()
         return((lispval)lbot->val->ar.data);
         }
 
-lispval
-Lputdata()
+lispval 
+Lputdata (void)
         {
         chkarg(2,"putdata");
 
@@ -183,8 +183,8 @@ Lputdata()
         return((lispval)(lbot->val->ar.data = (char *)(lbot[1].val)));
         }
 
-lispval
-Lgeta()
+lispval 
+Lgeta (void)
         {
         chkarg(1,"getaccess");
         if(TYPE(lbot->val) != ARRAY)
@@ -192,8 +192,8 @@ Lgeta()
         return(lbot->val->ar.accfun);
         }
 
-lispval
-Lputa()
+lispval 
+Lputa (void)
         {
         chkarg(2,"putaccess");
         if(TYPE((lbot)->val) != ARRAY)
@@ -201,8 +201,8 @@ Lputa()
         return((lbot)->val->ar.accfun = np[-1].val);
         }
 
-lispval
-Lmarray()
+lispval 
+Lmarray (void)
 {
         register lispval handy;
 
@@ -217,8 +217,8 @@ Lmarray()
         return(handy);
         }
 
-lispval
-Lgtentry()
+lispval 
+Lgtentry (void)
         {
         chkarg(1,"getentry");
         if( TYPE(lbot->val) != BCD )
@@ -226,8 +226,8 @@ Lgtentry()
         return((lispval)(lbot->val->bcd.start));
         }
 
-lispval
-Lgetlang()
+lispval 
+Lgetlang (void)
         {
         chkarg(1,"getlang");
         while(TYPE(lbot->val)!=BCD)
@@ -235,8 +235,8 @@ Lgetlang()
         return(lbot->val->bcd.language);
         }
 
-lispval
-Lputlang()
+lispval 
+Lputlang (void)
         {
         chkarg(2,"putlang");
         while(TYPE((lbot)->val)!=BCD)
@@ -245,8 +245,8 @@ Lputlang()
         return(np[-1].val);
         }
 
-lispval
-Lgetparams()
+lispval 
+Lgetparams (void)
         {
         chkarg(1,"getparams");
         if(TYPE(np[-1].val)!=BCD)
@@ -254,8 +254,8 @@ Lgetparams()
         return(np[-1].val->bcd.params);
         }
 
-lispval
-Lputparams()
+lispval 
+Lputparams (void)
         {
         chkarg(2,"putparams");
         if(TYPE((lbot)->val)!=BCD)
@@ -263,8 +263,8 @@ Lputparams()
         return((lbot)->val->bcd.params = np[-1].val);
         }
 
-lispval
-Lgetdisc()
+lispval 
+Lgetdisc (void)
         {
         chkarg(1,"getdisc");
         if(TYPE(np[-1].val) != BCD)
@@ -272,8 +272,8 @@ Lgetdisc()
         return(np[-1].val->bcd.discipline);
         }
 
-lispval
-Lputdisc()
+lispval 
+Lputdisc (void)
         {
         chkarg(2,"putdisc");
         if(TYPE(np[-2].val) != BCD)
@@ -281,8 +281,8 @@ Lputdisc()
         return((np-2)->val->bcd.discipline  = np[-1].val);
         }
 
-lispval
-Lgetloc()
+lispval 
+Lgetloc (void)
         {
         chkarg(1,"getloc");
         if(TYPE(lbot->val)!=BCD)
@@ -290,8 +290,8 @@ Lgetloc()
         return(lbot->val->bcd.loctab);
         }
 
-lispval
-Lputloc()
+lispval 
+Lputloc (void)
         {
         chkarg(2,"putloc");
         if(TYPE((lbot+1)->val)!=BCD);
@@ -300,8 +300,8 @@ Lputloc()
         return((lbot+1)->val);
         }
 
-lispval
-Lmfunction()
+lispval 
+Lmfunction (void)
         {
         register lispval handy;
         chkarg(2,"mfunction");
@@ -315,8 +315,8 @@ Lmfunction()
 /*                                                                      */
 /*  Destructively modifies almost any kind of data.                     */
 
-lispval
-Lreplace()
+lispval 
+Lreplace (void)
         {
         register lispval a1, a2;
         register int t;
@@ -360,17 +360,18 @@ Lreplace()
 
 /* Lvaluep */
 
-lispval
-Lvaluep()
+lispval 
+Lvaluep (void)
         {
         chkarg(1,"valuep");
         if( TYPE(lbot->val) == VALUE ) return(tatom); else return(nil);
         }
 
-CNTTYP() { return; /* HI! COUNT ONE TYPE CALL! */ }
+int 
+CNTTYP (void) { return; /* HI! COUNT ONE TYPE CALL! */ }
 
-lispval
-Lod()
+lispval 
+Lod (void)
         {
         int i;
         chkarg(2,"od");
@@ -384,8 +385,8 @@ Lod()
         dmpport(poport);
         return(nil);
         }
-lispval
-Lfake()
+lispval 
+Lfake (void)
         {
         chkarg(1,"fake");
 
@@ -398,14 +399,14 @@ Lfake()
         /* this used to be Lwhat, but was changed to Lmaknum for maclisp
            compatiblity
         */
-lispval
-Lmaknum()
+lispval 
+Lmaknum (void)
         {
         chkarg(1,"maknum");
         return(inewint((int)(lbot->val)));
         }
-lispval
-Lderef()
+lispval 
+Lderef (void)
         {
         chkarg(1,"deref");
 
@@ -415,8 +416,8 @@ Lderef()
         return(inewint(*(int *)(lbot->val->i)));
         }
 
-lispval
-Lpname()
+lispval 
+Lpname (void)
         {
         chkarg(1,"pname");
         if(TYPE(lbot->val) != ATOM)
@@ -424,8 +425,8 @@ Lpname()
         return((lispval)(lbot->val->a.pname));
         }
 
-lispval
-Larayref()
+lispval 
+Larayref (void)
         {
         chkarg(2,"arrayref");
         if(TYPE((lbot)->val) != ARRAY)
@@ -449,29 +450,29 @@ chek:   while(TYPE(vtemp) != INT)
                         
         }
 
-lispval
-Lptr()
+lispval 
+Lptr (void)
         {
         chkarg(1,"ptr");
         return(inewval(lbot->val));
         }
 
-lispval
-Llctrace()
+lispval 
+Llctrace (void)
         {
         chkarg(1,"lctrace");
         lctrace = (int)(lbot->val->a.clb);
         return((lispval)lctrace);
         }
 
-lispval
-Lslevel()
+lispval 
+Lslevel (void)
         {
         return(inewint(np-orgnp-2));
         }
 
-lispval
-Lsimpld()
+lispval 
+Lsimpld (void)
         {
         register lispval pt;
         register char *cpt = strbuf;
@@ -500,7 +501,7 @@ Lsimpld()
 /*  to do the same thing from inside the system.                        */
 
 lispval 
-Lopval()
+Lopval (void)
 {
         lispval quant;
 

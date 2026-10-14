@@ -18,7 +18,7 @@ static char *rcsid =
 /*  Default garbage collector routine which does nothing.               */
 
 lispval 
-Ngcafter()
+Ngcafter (void)
         {
         return(nil);
         }
@@ -30,7 +30,7 @@ Ngcafter()
 /*  to do the same thing from inside the system.                        */
 
 lispval 
-Nopval()
+Nopval (void)
         {
         lispval quant;
 
@@ -55,8 +55,7 @@ Nopval()
 /*  CNIL, the arguments should be protected somehow in that case.       */
 
 lispval 
-copval(option,value)
-        lispval option, value;
+copval (lispval option, lispval value)
         {
         struct dtpr fake;
         lispval rval;

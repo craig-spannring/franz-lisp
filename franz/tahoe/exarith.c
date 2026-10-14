@@ -15,9 +15,8 @@ struct vl
         long low;
        };
 
-long exarith(mul1,mul2,add,hi,lo)
-long *hi, *lo;
-register long add;
+long 
+exarith (int mul1, int mul2, register long add, long *hi, long *lo)
 {
         register long rlo;
         struct vl work;
