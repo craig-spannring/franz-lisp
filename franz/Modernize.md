@@ -57,7 +57,7 @@ the lisp system may grow. If you change this, you must recompile
 alloc.c and data.c.
 
 
-## Other preprocessor defines
+### Defines used in #ifdefs
 ```
 68k
 AS
