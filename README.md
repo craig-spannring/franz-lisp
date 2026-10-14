@@ -15,8 +15,8 @@ The original code is retrieved from [Franz Lisp Opus 38.93b][op38.93b] at the
 [CMU AI Repository][ai]. According to the page, that is placed in the public
 domain. However, since the origin of the code is the Berkeley Software
 Distribution, it would be safer to treat it as distributed under the term of
-the 4-clause BSD License. Thus, I decided to do so. [Kamil Rytarowski pointed
-it out](https://github.com/omasanori/franz-lisp/issues/1#issuecomment-302843065),
+the 4-clause BSD License. Thus, Masanori Ogino reverted this to the BSD license. 
+[Kamil Rytarowski pointedit out](https://github.com/omasanori/franz-lisp/issues/1#issuecomment-302843065),
 thanks a lot!
 
 Note that UCB has declared that the clause 3 is no longer effective for their
