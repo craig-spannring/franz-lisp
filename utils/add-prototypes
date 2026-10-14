@@ -14,6 +14,12 @@ from textwrap import dedent
 op = os.path
 
 
+includes_rel       = pathlib.Path('.') / '..' / 'franz' / 'h'
+script_dir         = pathlib.Path(__file__).resolve().parent
+includes_dir       = (script_dir / includes_rel).resolve()
+def_prototypes_dir = (includes_dir / 'prototypes')
+
+
 def _parse(args):
     def _ends_with_dot_c(name):
         if not name.endswith(".c"): raise ArgumentTypeError("Not a C source file.")
@@ -34,8 +40,8 @@ def _parse(args):
                        """))
     p.add_argument("files", nargs='+', type=_ends_with_dot_c,
                    help="Name of the C source file(s) to protoize")
-    p.add_argument("-I", dest="include_dir", nargs='?', type=_valid_directory,
-                   default=op.abspath(op.curdir),
+    p.add_argument("-O", dest="prototypes_dir", nargs='?', # type=_valid_directory,
+                   default=def_prototypes_dir,
                    help="Directory for the header files. ")
     p.add_argument("--clobber", "-c", action="store_true")
 
@@ -49,13 +55,6 @@ def _header_name(h_dir, f):
 def _main(args):
     okay = True
 
-    includes_rel   = pathlib.Path('.') / '..' / 'franz' / 'h'
-    script_dir     = pathlib.Path(__file__).resolve().parent
-    includes_dir   = (script_dir / includes_rel).resolve()
-    prototypes_dir = (includes_dir / 'prototypes')
-
-    os.makedirs(prototypes_dir, exist_ok=True)
-
     if not includes_dir.is_dir():
         # 
         # Note- Right now we assume this script is stored in particular
@@ -67,9 +66,10 @@ def _main(args):
               , file=sys.stderr)
         okay = False
     
+    os.makedirs(args.prototypes_dir, exist_ok=True)
 
     for f in args.files:
-        h = _header_name(prototypes_dir, f)
+        h = _header_name(args.prototypes_dir, f)
         if os.path.exists(h):
             okay = okay and args.clobber 
             print(f"Error: File {h} already exists. ", file=sys.stderr)
