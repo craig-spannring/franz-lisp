@@ -43,9 +43,7 @@ struct frame
     lispval larg2;	/* optional */
 };
 
-extern struct frame *errp;
-extern struct frame *Pushframe(int, lispval**, lispval**);
-extern struct frame *Ipushf();
+extern struct frame *errp, *Pushframe(), *Ipushf();
 
 /* stuff for IBM, RIDGE, DEC-VMS CC, maybe Bellmac-32
  *

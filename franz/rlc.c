@@ -10,13 +10,13 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
-#include <unistd.h>
-
+#define TRUE 1
 #include "h/global.h"
-
-extern char holend[];
-extern char end[];
-extern int  usehole;
+#if vax_4_2 | vax_4_3 | tahoe_4_3
+#define brk(p) syscall(17,p)
+#endif
+extern char holend[], end[];
+extern int usehole;
 extern char *curhbeg;
 
 rlc()

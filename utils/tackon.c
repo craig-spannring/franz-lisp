@@ -1,17 +1,6 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include "lconf.h"
 #include "config.h"
-
-
-#if NO_A_OUT
-int main()
-{
-  fprintf(stderr, "do we need to implement this?");  
-  exit(1);
-}
-#else 
-
 #if ! os_unisoft
 #include <sys/types.h>
 #include <a.out.h>
@@ -25,18 +14,15 @@ int main()
  *
  */
 
-
 FILE *map;
 int aout;
 #define NEWSIZ 100000
 char newstrb[NEWSIZ];
 
 #endif
-
-
-
-int 
-main (int argc, char *argv[])
+main(argc, argv)
+int argc;
+char *argv[];
 {
 #if ! os_unisoft
 	char sym[50], svalue[50];
@@ -126,4 +112,3 @@ usage:
 	exit(0);
 #endif
 }
-#endif 

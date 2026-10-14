@@ -10,12 +10,10 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
-#include "franz/inits.h"
 
 #include "global.h"
 #include <signal.h>
 #include "frame.h"
-#include "franz/shims.h"
 
 /* initial
  * initializes the parts of the system that cannot be automatically
@@ -27,16 +25,9 @@ extern char *stabf;
 extern int fvirgin;
 extern int keywait;
 extern sigstruck, sigdelay;
-
-static void makenv (void);
-static re_enable (int signo, int (*handler)(int));
-
-void
-initial (void)
+initial()
 {
-	int sigalrmh(), sigfpeh();
-	int sginth(int);
-
+	int sigalrmh(), sigfpeh(),  sginth();
 	lispval Isstatus(),Istsrch();
 	extern int hashtop;
 
@@ -87,7 +78,8 @@ initial (void)
 
 }
 
-static void makenv (void)
+static
+makenv()
 {
 	register lispval env, temp;
 	register char *p, *q;
@@ -117,7 +109,7 @@ static void makenv (void)
 	np--;
 }
 
-void sginth(int signo){
+sginth(signo){
 	re_enable(signo,sginth);
 	sigstruck |= (1 << signo);
 	/* handle SIGINT differently since it is the only
@@ -133,7 +125,7 @@ void sginth(int signo){
 	       /*putchar('A');*/
 	       fflush(stdout);
 	       sigstruck &= ~(1 << signo);
-	       return 0;
+	       return;
 	    }
 	    else if (sigintcnt == 2)
 	    {  /* the setting of  exception was ignored, we better
@@ -155,10 +147,9 @@ void sginth(int signo){
 	}
 
 	sigcall(signo);
-        return 0; 
 }
-void 
-sigcall (int which)
+sigcall(which)
+register which;
 {
 	extern lispval Lfuncal();
 	Savestack(1);
@@ -186,14 +177,12 @@ sigcall (int which)
 	sigstruck &= ~ (1<<which);
 	Restorestack();
 }
-int 
-delayoff (void){
+delayoff(){
 	sigdelay = FALSE;
 	if(sigstruck)
 		dosig();
 }
-int 
-dosig (void)
+dosig()
 {
 	register int i; int which;
 	if(!sigdelay) 
@@ -203,9 +192,7 @@ dosig (void)
 				sigcall(which);
 		}
 }
-
-void
-badmr (int number)
+badmr(number)
 {
 	signal(number,badmr);
 	fflush(stdout);
@@ -213,7 +200,9 @@ badmr (int number)
 }
 
 #define	mask(s)	(1 << ((s)-1))
-static void re_enable (int signo, int (*handler)(int))
+static
+re_enable(signo,handler)
+int (*handler)();
 {
 #if (os_4_2| os_4_3)
 	sigsetmask(sigblock(0) &~ mask(signo));

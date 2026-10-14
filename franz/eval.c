@@ -22,8 +22,9 @@ static char *rcsid =
  *
  */
 
-lispval 
-eval (lispval actarg)
+lispval
+eval(actarg)
+lispval actarg;
 {
 #define argptr handy
     register lispval a = actarg;
@@ -315,8 +316,9 @@ eval (lispval actarg)
  * knows about the special cases.  bnp is returned pointing to the
  * same place as the argument passed.
  */
-lispval 
-popnames (register struct nament *llimit)
+lispval
+popnames(llimit)
+register struct nament *llimit;
 {
     register struct nament *rnp;
 
@@ -331,8 +333,7 @@ popnames (register struct nament *llimit)
  * from bottom to 5 above np
  * should be put elsewhere
  */
-int 
-dumpnamestack (void)
+dumpnamestack()
 {
     struct argent *newnp;
 
@@ -349,8 +350,8 @@ dumpnamestack (void)
 
 
 
-lispval 
-Lapply (void)
+lispval
+Lapply()
 {
     register lispval a;
     register lispval handy;
@@ -473,10 +474,10 @@ Lapply (void)
 /*
  * Rebind -- rebind formal names
  */
-rebind(
-  lispval argptr,        	/* argptr points to list of atoms */
-  struct argent * workp)        /* workp points to position on stack
-                                   where evaluated args begin */
+rebind(argptr,workp)
+register lispval argptr;        /* argptr points to list of atoms */
+register struct argent * workp;        /* workp points to position on stack
+                       where evaluated args begin */
 {
     register struct nament *namptr = bnp;
 
@@ -506,8 +507,9 @@ rebind(
  * the name of the function to call and lbot points to the first arg.
  * if it is not given, then lbot points to the function to call
  */
-lispval 
-Ifuncal (lispval fcn)
+lispval
+Ifuncal(fcn)
+lispval fcn;
 {
     register lispval a;
     register lispval handy; 
@@ -690,8 +692,8 @@ Ifuncal (lispval fcn)
     }
     /*NOT REACHED*/
 }
-lispval 
-Lfuncal (void)
+lispval   /* this version called from lisp */
+Lfuncal()
 {
 	lispval handy;
 	Savestack(0);
@@ -709,8 +711,7 @@ Lfuncal (void)
 
 /* The following must be the next "function" after Lfuncal, for the
 sake of Levalf.  */
-int 
-fchack (void) {}
+fchack () {}
 
 
 /*
@@ -720,8 +721,8 @@ fchack (void) {}
  * we push those arguments on the stack and call funcall
  *
  */
-lispval 
-Llexfun (void)
+lispval
+Llexfun()
 {
     register lispval handy;
     
@@ -752,7 +753,8 @@ Llexfun (void)
  * pushes the first argument onto namestack, thereby protecting from gc
  */
 lispval
-protect(lispval a)
+protect(a)
+lispval a;
 {
     (np++)->val = a;
        if (np >=  nplim)
@@ -763,14 +765,14 @@ protect(lispval a)
  * returns the top thing on the name stack.  Underflow had better not
  * occur.
  */
-lispval 
-unprot (void)
+lispval
+unprot()
     {
     return((--np)->val);
     }
 
-lispval 
-linterp (void)
+lispval
+linterp()
     {
     error("BYTE INTERPRETER CALLED ERRONEOUSLY",FALSE);
     }
@@ -779,8 +781,9 @@ linterp (void)
     function from compiled code, we print out a message and
     will continue only if returned a symbol (ATOM in C parlance).
 */
-lispval 
-Undeff (lispval atmn)
+lispval
+Undeff(atmn)
+lispval atmn;
 {
     do {atmn =errorh1(Verundef,"Undefined function called from compiled code ",
 				      nil,TRUE,0,atmn);}
@@ -789,8 +792,8 @@ Undeff (lispval atmn)
 }
 
 /* VARARGS1 */
-int 
-bindfix (lispval firstarg)
+bindfix(firstarg)
+lispval firstarg;
 {
     register lispval *argp = &firstarg;
     register struct nament *mybnp = bnp;
