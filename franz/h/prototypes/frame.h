@@ -2,6 +2,9 @@
 #ifndef INC_frame_f29f93e4aec8547b618aac1006b2baba_h
 #define INC_frame_f29f93e4aec8547b618aac1006b2baba_h
 
+#include "structs.h"
+
+
 /* frame.c */
 extern int Inonlocalgo(int class, lispval arg1, lispval arg2);
 extern struct frame *Inlthrow(int class, lispval arg1, lispval arg2);

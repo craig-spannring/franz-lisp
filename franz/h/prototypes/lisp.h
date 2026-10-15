@@ -2,8 +2,10 @@
 #ifndef INC_lisp_eb6d3dd1afccc9b400215e4002abebde_h
 #define INC_lisp_eb6d3dd1afccc9b400215e4002abebde_h
 
+#include "structs.h"
+
+
 /* lisp.c */
-extern int main(int argc, char **argv, char **arge);
 extern lispval Ntpl(void);
 extern int franzexit(int code);
 

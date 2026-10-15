@@ -2,6 +2,9 @@
 #ifndef INC_sysat_cf308f3911cc8627acaba5e56af6b82a_h
 #define INC_sysat_cf308f3911cc8627acaba5e56af6b82a_h
 
+#include "structs.h"
+
+
 /* sysat.c */
 extern int makevals(void);
 extern lispval matom(char *string);

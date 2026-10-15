@@ -2,6 +2,8 @@
 #ifndef INC_divbig_31871f93564200fd865edd27658e6348_h
 #define INC_divbig_31871f93564200fd865edd27658e6348_h
 
+#include "structs.h"
+
 /* divbig.c */
 extern int divbig(lispval dividend, lispval divisor, lispval *quotient, lispval *remainder);
 extern lispval export(register long *top, register long *bot);

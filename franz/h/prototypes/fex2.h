@@ -2,6 +2,8 @@
 #ifndef INC_fex2_d4c332a19cac8babf84db9c2d9e27e58_h
 #define INC_fex2_d4c332a19cac8babf84db9c2d9e27e58_h
 
+#include "structs.h"
+
 /* fex2.c */
 extern lispval Ndo(void);
 extern lispval Nprogv(void);

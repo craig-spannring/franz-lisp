@@ -2,6 +2,9 @@
 #ifndef INC_lam9_56c8a8994874a8896be74b7f4d04c660_h
 #define INC_lam9_56c8a8994874a8896be74b7f4d04c660_h
 
+#include "structs.h"
+
+
 /* lam9.c */
 extern lispval Ltci(void);
 extern lispval Ltcx(void);

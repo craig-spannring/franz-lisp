@@ -2,6 +2,8 @@
 #ifndef INC_fex1_d9674d8617058ba5f9d53a9c2726885f_h
 #define INC_fex1_d9674d8617058ba5f9d53a9c2726885f_h
 
+#include "structs.h"
+
 /* fex1.c */
 extern lispval Nprog(void);
 extern lispval Ncatch(void);

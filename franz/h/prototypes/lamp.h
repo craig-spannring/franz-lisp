@@ -2,9 +2,10 @@
 #ifndef INC_lamp_6a4fef007bf4062789f6fa8516d38336_h
 #define INC_lamp_6a4fef007bf4062789f6fa8516d38336_h
 
+#include "structs.h"
+
+
 /* lamp.c */
 extern lispval Lmonitor(void);
-extern int Lmonitor(void);
-
 
 #endif

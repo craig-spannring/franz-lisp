@@ -14,11 +14,12 @@
 
 /* transfer table structures. */
 
+#include "global.h"
 #define TRENTS 510
 
 struct trent
 {
-    lispval (*fcn)();           /* function to call                     */
+    lispval (*fcn)(void);           /* function to call                     */
     lispval name;       /* symbol which is the function to call */
 };
 

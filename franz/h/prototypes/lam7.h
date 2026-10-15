@@ -2,6 +2,9 @@
 #ifndef INC_lam7_227db2dcd50e5053d3993782860f3d85_h
 #define INC_lam7_227db2dcd50e5053d3993782860f3d85_h
 
+#include "structs.h"
+
+
 /* lam7.c */
 extern lispval Lfork(void);
 extern lispval Lwait(void);

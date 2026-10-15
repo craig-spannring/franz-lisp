@@ -2,6 +2,9 @@
 #ifndef INC_evalf_41ef2f6074493bfc84373238b7e4d1d0_h
 #define INC_evalf_41ef2f6074493bfc84373238b7e4d1d0_h
 
+#include "structs.h"
+
+
 /* evalf.c */
 extern lispval Levalf(void);
 extern struct frame *searchforpdl(struct frame *myfp);

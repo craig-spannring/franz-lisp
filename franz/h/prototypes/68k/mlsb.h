@@ -3,7 +3,7 @@
 #define INC_mlsb_2b7e5bfd573ac434b0834dbd96bf6735_h
 
 /* mlsb.c */
-extern long mlsb(register long *utop, register long *ubot, register long *vtop, register nqhat);
+extern long mlsb(register long *utop, register long *ubot, register long *vtop, int nqhat);
 extern long adback(register long *utop, register long *ubot, register long *vtop);
 extern long dsdiv(register long *top, register long *bot, register long div);
 extern int dsadd1(long *top, long *bot);

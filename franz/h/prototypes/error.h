@@ -2,10 +2,12 @@
 #ifndef INC_error_65bd11e26e9cb1a40692379f80eee61c_h
 #define INC_error_65bd11e26e9cb1a40692379f80eee61c_h
 
+#include "structs.h"
+
 /* error.c */
 extern lispval error(char *mesg, int contvl);
 extern lispval errorh(lispval type, char *message, lispval valret, int contuab, int uniqid);
-extern lispval calhan(register limit, register lispval *work, lispval type, int uniqid, lispval contuab, register char *message, lispval handler);
+extern lispval calhan(int limit, lispval *work, lispval type, int uniqid, lispval contuab, char *message, lispval handler);
 extern int lispend(char mesg[]);
 extern int namerr(void);
 extern int binderr(void);

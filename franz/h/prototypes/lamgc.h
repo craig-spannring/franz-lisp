@@ -2,6 +2,9 @@
 #ifndef INC_lamgc_a0a6533916f5aac8bc12e4d6d0172aca_h
 #define INC_lamgc_a0a6533916f5aac8bc12e4d6d0172aca_h
 
+#include "structs.h"
+
+
 /* lamgc.c */
 extern lispval Lgcstat(void);
 extern int gcdump(void);

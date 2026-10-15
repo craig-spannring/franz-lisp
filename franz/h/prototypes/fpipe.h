@@ -2,6 +2,9 @@
 #ifndef INC_fpipe_c11c6d8cb2f6a942658a0d14734b1ce8_h
 #define INC_fpipe_c11c6d8cb2f6a942658a0d14734b1ce8_h
 
+#include "structs.h"
+
+
 /* fpipe.c */
 extern lispval Nioreset(void);
 extern char *alloca(register int howmuch);

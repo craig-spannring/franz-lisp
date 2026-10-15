@@ -2,6 +2,9 @@
 #ifndef INC_lam4_6ac708226583dc59945e83b6ea109ab8_h
 #define INC_lam4_6ac708226583dc59945e83b6ea109ab8_h
 
+#include "structs.h"
+
+
 /* lam4.c */
 extern lispval Ladd(void);
 extern lispval Lsub(void);

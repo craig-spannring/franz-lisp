@@ -2,6 +2,9 @@
 #ifndef INC_fex4_13063e49c53c6ec91a4eb58f6f4cb4d4_h
 #define INC_fex4_13063e49c53c6ec91a4eb58f6f4cb4d4_h
 
+#include "structs.h"
+
+
 /* fex4.c */
 extern lispval Lsyscall(void);
 extern lispval Nevwhen(void);

@@ -2,6 +2,8 @@
 #ifndef INC_eval_aff06426b6b9c3f51b1e8c55c28eaa71_h
 #define INC_eval_aff06426b6b9c3f51b1e8c55c28eaa71_h
 
+#include "structs.h"
+
 /* eval.c */
 extern lispval eval(lispval actarg);
 extern lispval popnames(register struct nament *llimit);

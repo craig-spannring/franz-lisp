@@ -2,6 +2,9 @@
 #ifndef INC_lam5_91cd1757724aeb8b20effd269942bbbf_h
 #define INC_lam5_91cd1757724aeb8b20effd269942bbbf_h
 
+#include "structs.h"
+
+
 /* lam5.c */
 extern lispval Lexpldx(int kind, int slashify);
 extern lispval Lxpldc(void);

@@ -2,6 +2,8 @@
 #ifndef INC_io_644fbff78c6d90ab6e738ceac4793ff6_h
 #define INC_io_644fbff78c6d90ab6e738ceac4793ff6_h
 
+#include "structs.h"
+
 /* io.c */
 extern lispval readrx(register int code);
 extern int macrox(void);
@@ -13,6 +15,7 @@ extern lispval calcnum(char *strbuf, register char *name, int base);
 extern lispval finatom(register char *name);
 extern char *atomtoolong(char *copyto);
 extern int lfltpr(char *buf, double val);
-
+extern void dmpport(FILE *useport);
+extern void    printr(lispval a, FILE *useport);
 
 #endif

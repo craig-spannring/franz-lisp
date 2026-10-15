@@ -2,6 +2,9 @@
 #ifndef INC_tahoe_d0541163d7c6bd66c9021e573f02dd7c_h
 #define INC_tahoe_d0541163d7c6bd66c9021e573f02dd7c_h
 
+#include "structs.h"
+
+
 /* tahoe.c */
 extern int mmuladd(int a, int b, int c, int m);
 extern int Imuldiv(int a, int b, int c, int d, int e);

@@ -2,6 +2,9 @@
 #ifndef INC_trace_b5927f4e2d38dced4b82c6bb1c1c2996_h
 #define INC_trace_b5927f4e2d38dced4b82c6bb1c1c2996_h
 
+#include "structs.h"
+
+
 /* trace.c */
 extern lispval Leval1(void);
 extern lispval Levalhook(void);

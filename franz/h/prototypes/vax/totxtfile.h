@@ -3,7 +3,6 @@
 #define INC_totxtfile_41f05de10cf343bef9c0ee79c9a5d2cc_h
 
 /* totxtfile.c */
-extern int main(int argc, char *argv[]);
 
 
 #endif

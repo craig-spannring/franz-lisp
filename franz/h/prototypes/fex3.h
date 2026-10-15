@@ -2,6 +2,8 @@
 #ifndef INC_fex3_c671e87bb45a03bc160d3dca71e7720a_h
 #define INC_fex3_c671e87bb45a03bc160d3dca71e7720a_h
 
+#include "structs.h"
+
 /* fex3.c */
 extern lispval Ndumplisp(void);
 extern lispval Ndumplisp(void);

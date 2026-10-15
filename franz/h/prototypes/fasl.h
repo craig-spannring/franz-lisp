@@ -2,6 +2,8 @@
 #ifndef INC_fasl_2c3273d3d3842057c95ac399bf1cbbce_h
 #define INC_fasl_2c3273d3d3842057c95ac399bf1cbbce_h
 
+#include "structs.h"
+
 /* fasl.c */
 extern lispval Lfasl(void);
 extern int compar(int *arg1, int *arg2);

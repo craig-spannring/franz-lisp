@@ -2,6 +2,9 @@
 #ifndef INC_ffasl_aeb7442694422b9710c186c92fc71e4c_h
 #define INC_ffasl_aeb7442694422b9710c186c92fc71e4c_h
 
+#include "structs.h"
+
+
 /* ffasl.c */
 extern lispval dispget(lispval given, char *messg, lispval defult);
 extern lispval Lcfasl(void);

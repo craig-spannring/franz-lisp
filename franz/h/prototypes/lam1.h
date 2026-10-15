@@ -2,6 +2,9 @@
 #ifndef INC_lam1_bdb260c0de4ec9f2d18058d9c1263c1e_h
 #define INC_lam1_bdb260c0de4ec9f2d18058d9c1263c1e_h
 
+#include "structs.h"
+
+
 /* lam1.c */
 extern lispval Leval(void);
 extern lispval Lxcar(void);

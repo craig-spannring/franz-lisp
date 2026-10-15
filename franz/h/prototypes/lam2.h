@@ -2,6 +2,9 @@
 #ifndef INC_lam2_b874887c6d951cc3e9e72a03cab042aa_h
 #define INC_lam2_b874887c6d951cc3e9e72a03cab042aa_h
 
+#include "structs.h"
+
+
 /* lam2.c */
 extern lispval Lflatsi(void);
 extern int Iflatsi(register lispval current);

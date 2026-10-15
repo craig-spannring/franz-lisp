@@ -2,6 +2,9 @@
 #ifndef INC_lamr_42ab0c535fd7380bc0387aca7727f738_h
 #define INC_lamr_42ab0c535fd7380bc0387aca7727f738_h
 
+#include "structs.h"
+
+
 /* lamr.c */
 extern lispval Lalloc(void);
 extern lispval Lsizeof(void);

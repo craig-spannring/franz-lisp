@@ -2,6 +2,9 @@
 #ifndef INC_lam3_b99e08945840f68727855cdb8470e938_h
 #define INC_lam3_b99e08945840f68727855cdb8470e938_h
 
+#include "structs.h"
+
+
 /* lam3.c */
 extern lispval Lalfalp(void);
 extern lispval Lncons(void);

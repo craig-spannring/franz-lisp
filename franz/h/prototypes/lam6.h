@@ -2,6 +2,9 @@
 #ifndef INC_lam6_24a57f088bdbfb899334e4984b860bc3_h
 #define INC_lam6_24a57f088bdbfb899334e4984b860bc3_h
 
+#include "structs.h"
+
+
 /* lam6.c */
 extern lispval Lreadli(void);
 extern lispval Lgetenv(void);

@@ -2,6 +2,8 @@
 #ifndef INC_alloc_e03ca4903c3680ce69cd3d3422d2ddc8_h
 #define INC_alloc_e03ca4903c3680ce69cd3d3422d2ddc8_h
 
+#include "structs.h"
+
 /* alloc.c */
 extern int get_more_space(struct types *type_struct, int purep);
 extern lispval next_one(struct types *type_struct);

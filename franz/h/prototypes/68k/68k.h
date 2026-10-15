@@ -2,6 +2,8 @@
 #ifndef INC_68k_e2500b7eb4e242a7d48c174be424c010_h
 #define INC_68k_e2500b7eb4e242a7d48c174be424c010_h
 
+#include "structs.h"
+
 /* 68k.c */
 extern int mmuladd(long a, long b, long c, long m);
 extern int Imuldiv(long p1, long p2, long add, long dv, long *quo, long *rem);

@@ -2,6 +2,9 @@
 #ifndef INC_vax_d3fd76aea2eebae35793eb04abdd3839_h
 #define INC_vax_d3fd76aea2eebae35793eb04abdd3839_h
 
+#include "structs.h"
+
+
 /* vax.c */
 extern int exarith(int a, int b, int c, int *phi, int *plo);
 extern int mmuladd(int a, int b, int c, int m);

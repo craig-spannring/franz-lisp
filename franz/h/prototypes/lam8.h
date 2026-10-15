@@ -2,6 +2,9 @@
 #ifndef INC_lam8_f8d94fb81639dc6592d2766015959d3d_h
 #define INC_lam8_f8d94fb81639dc6592d2766015959d3d_h
 
+#include "structs.h"
+
+
 /* lam8.c */
 extern lispval Imath(double (*func)(void));
 extern lispval Lsin(void);

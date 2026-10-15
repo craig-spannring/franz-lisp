@@ -5,7 +5,7 @@
 /* inits.c */
 extern int initial(void);
 extern int sginth(int signo);
-extern int sigcall(register which);
+extern int sigcall(int which);
 extern int delayoff(void);
 extern int dosig(void);
 extern int badmr(int number);

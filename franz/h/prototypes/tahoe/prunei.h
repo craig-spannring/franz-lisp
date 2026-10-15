@@ -2,6 +2,9 @@
 #ifndef INC_prunei_6c8b195300800abfa7630e474ffd5dd6_h
 #define INC_prunei_6c8b195300800abfa7630e474ffd5dd6_h
 
+#include "structs.h"
+
+
 /* prunei.c */
 extern int prunei(register lispval what);
 

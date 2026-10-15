@@ -2,6 +2,10 @@
 #ifndef INC_subbig_e6fb3ed88c99f3c4b20286f6994fb0b2_h
 #define INC_subbig_e6fb3ed88c99f3c4b20286f6994fb0b2_h
 
+#include "structs.h"
+
+
+
 /* subbig.c */
 extern lispval subbig(lispval pos, lispval neg);
 
