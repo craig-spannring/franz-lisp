@@ -70,10 +70,11 @@
 .de Lc
 ." .in 0
 .++ RC '\\$1''\\\\\\\\\\\\\\\\n(ch-%'
-.nr % 2
+.nr % 1
 .nr ch \\$2-1
 .+c \\$1
 .fo '''\fR\s-2Printed:\ \*(td\s0\fP'
+.pn 2
 ..
 .de Lf
 .sp 1v
