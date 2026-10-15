@@ -10,8 +10,15 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
-#include        "global.h"
-#include        "frame.h"
+#include "prototypes/inits.h"
+#include "prototypes/io.h"
+
+#include "global.h"
+#include "frame.h"
+
+#include <unistd.h>
+#include <stdlib.h>
+
 
 /* main *****************************************************************/
 /* Execution of the lisp system begins here.  This is the top level     */
