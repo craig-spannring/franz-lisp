@@ -6,15 +6,15 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
- 
-char *brk();
+
+#include <unistd.h>
+
 char *getsp();
 char *pinewstr();
 char *inewstr();
 char *mkmsg();
 char *newstr();
 char *rstore();
-char *sbrk();
 char *xsbrk();
 char *ysbrk();
 int csizeof();
@@ -34,7 +34,7 @@ lispval errorh1();
 lispval errorh2();
 lispval eval();
 lispval gc();
-lispval getatom();
+lispval getatom(int);
 lispval inewval();
 lispval linterp();
 lispval matom();
