@@ -71,12 +71,12 @@ def _main(args):
     for f in args.files:
         h = _header_name(args.prototypes_dir, f)
         if os.path.exists(h):
-            okay = okay and args.clobber 
-            print(f"Error: File {h} already exists. ", file=sys.stderr)
+            okay = okay and args.clobber
+            if not okay: print(f"Error: File {h} already exists. ", file=sys.stderr)
         if okay:
             cmd = ["cproto",
                    "-I", includes_dir,
-                   "-D", "FILE=int",
+                   # "-D", "FILE=int",
                    "-q",                # no msg if #include fails
                    "-a",                # convert func defs to ANSI
                    "-e",                # add extern
