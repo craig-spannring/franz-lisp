@@ -159,7 +159,9 @@ F\s-2RANZ\s0 L\s-2ISP\s0\\$1
 ..
 .de Ap	\" appendix n title  (n is 1 2 3 4  for A B C D etc)
 .++ RA '''\\\\\\\\\\\\\\\\n(ch-%'
+.nr % 1
 .nr ch \\$1-1
 .+c \\$2
 .fo '''\fR\s-2Printed:\ \*(td\s0\fP'
+.pn 2
 ..
