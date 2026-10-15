@@ -9,7 +9,9 @@ static char *rcsid =
  *
  * (c) copyright 1982, Regents of the University of California
  */
- 
+
+#include "prototypes/alloc.h"
+
 # include "global.h"
 # include "structs.h"
 
