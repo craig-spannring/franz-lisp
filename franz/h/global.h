@@ -7,6 +7,8 @@
  * (c) copyright 1982, Regents of the University of California
  */
 
+#ifndef INC_global_601a3ac07da858eff78efaf135a90ae4_h
+#define INC_global_601a3ac07da858eff78efaf135a90ae4_h
 
 #include <stdio.h>
 #include "config.h"
@@ -117,7 +119,9 @@ extern long *xsp, xstack[];
 #define Keepxs() long *oxsp = xsp;
 #define Freexs() xsp = oxsp;
 #else
-extern long *sp(), stack(), unstack();
+// extern long *sp(void);
+// extern long  stack(void);
+// extern long unstack(void);
 #define Keepxs() /* */
 #define Freexs() /* */
 #endif
@@ -231,12 +235,8 @@ union lispobj {
         struct Vectorl vl;
 };
 
-#ifdef lint
-extern lispval Inewint();
-#define inewint(p) Inewint((long)(p))
-#else
-extern lispval inewint();
-#endif
+// extern lispval inewint();
+extern lispval inewint (int n); 
 
 
 #include "sigtab.h"   /* table of all pointers to lisp data */
@@ -406,8 +406,9 @@ extern int itemp;
 #define OR      18
 #define XOR     19
 
-interpt();
-handler();  extern sigdelay, sigstruck;
+void handler(int);
+extern int sigdelay;
+extern int sigstruck;
 
 /* limit of valid data area **************************************/
 
@@ -450,3 +451,5 @@ extern int lctrace;
 
 #define saveonly(n)     asm("#save      n")
 #define snpand(n)       asm("#protect   n")
+
+#endif
