@@ -10,6 +10,7 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "structs.h"
 #include "global.h"
 #include <ctype.h>
 #include "chars.h"
@@ -75,9 +76,7 @@ static char baddot2[]=
 /* readr ****************************************************************/
 /* returns a s-expression read in from the port specified as the first  */
 /* argument.  Handles superbrackets, reader macros.                     */
-lispval
-readr(useport)
-FILE *useport;
+lispval readr(FILE *useport)
 {
         register lispval handy = Vreadtable->a.clb;
 
@@ -99,8 +98,7 @@ FILE *useport;
 /* passed in the first  */
 /* argument.  Does the actual work for readr, including list, dotted    */
 /* pair, and quoted atom detection                                      */
-lispval 
-readrx (register int code)
+lispval readrx (int code)
 {
         register lispval work;
         register lispval *current;
@@ -247,6 +245,7 @@ out:
         Restorestack();
         return(work);
 }
+
 int 
 macrox (void)
 {
@@ -271,8 +270,9 @@ macrox (void)
         Restorestack();
         return;
 }
+
 int 
-imacrox (register lispval current, int inlist)
+imacrox (lispval current, int inlist)
 {
         FILE *svport;
         register lispval work;
@@ -308,8 +308,7 @@ imacrox (register lispval current, int inlist)
 /* this routine returns a pointer to an atom read in from the port given*/
 /* by the first argument                                                */
 lispval
-ratomr(useport)
-register FILE   *useport;
+ratomr(FILE   *useport)
 {
         rdrport = useport;
         switch(Iratom())
@@ -462,7 +461,7 @@ again:  cc = getc(useport);
 }
 
 lispval 
-getnum (register char *name)
+getnum (char *name)
 {
         unsigned char c;
         register lispval result;
@@ -700,9 +699,7 @@ atomtoolong (char *copyto)
  * Last modified Mar 21, 1980 for hunks
  */
 
-printr(a,useport)
-register lispval a;
-register FILE *useport;
+void printr(lispval a, FILE *useport)
 {
         register hsize, i;
         char strflag = 0;
@@ -948,10 +945,7 @@ val_loop:
  * We return TRUE iff we funcalled the function, else we return FALSE
  * to have the standard printing done
  */
-
-vectorpr(vec,port)
-register lispval vec;
-FILE *port;
+void vectorpr(lispval vec, FILE *port)
 {
     register lispval handy;
     int svplevel = plevel;      /* save these global values */
@@ -1009,8 +1003,7 @@ lfltpr (         /* lisp floating point printer */
 /* dmpport ****************************************************************/
 /* outputs buffer indicated by first argument whether full or not       */
 
-dmpport(useport)
-FILE *useport;
+void dmpport(FILE *useport)
 {
         fflush(useport);
 }
