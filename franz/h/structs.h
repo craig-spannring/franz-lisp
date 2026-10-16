@@ -14,8 +14,101 @@
 
 /* transfer table structures. */
 
-#include "global.h"
+#ifndef INC_structs189ce59e8bb2819a5f119e303707393f_h
+#define INC_structs189ce59e8bb2819a5f119e303707393f_h
+
+#include <stdio.h>
+
+// #include "global.h"
+
 #define TRENTS 510
+
+
+#define lispint long                    /* TODO probably wrong, maybe use uintptr_t? */
+#define MAX10LNG 200000000              /* max long divided by 10       */
+
+
+typedef union lispobj *lispval ;
+
+struct dtpr {
+        lispval cdr, car;
+};
+
+struct sdot {
+        int     I;
+        lispval CDR;
+};
+
+
+struct  atom    {
+        lispval         clb;            /* current level binding*/
+        lispval         plist;          /* pointer to prop list */
+#ifndef WILD
+        lispval         fnbnd;          /* function binding     */
+#endif
+        struct  atom    *hshlnk;        /* hash link to next    */
+        char            *pname;         /* print name   */
+        };
+#ifdef WILD
+#define fnbnd clb
+#endif
+
+struct array {
+        lispval accfun,         /*  access function--may be anything  */
+                aux;            /*  slot for dimensions or auxilliary data  */
+        char *data;             /*  pointer to first byte of array    */
+        lispval length, delta;  /* length in items and length of one item */
+};
+
+struct bfun {
+        lispval (*start)();     /*  entry point to routine  */
+        lispval discipline,     /*  argument-passing discipline  */
+                language,       /*  language coded in   */
+                params,         /*  parameter list if relevant  */
+                loctab;         /*  local table  */
+};
+
+struct Hunk {
+        lispval hunk[1];
+};
+
+struct Vector {
+        lispval vector[1];
+};
+
+/* the vectori types */
+struct Vectorb {
+        char vectorb[1];
+};
+
+struct Vectorw {
+       short  vectorw[1];
+};
+
+struct Vectorl {
+    long vectorl[1];
+};
+
+union lispobj {
+        struct atom a;
+        FILE *p;
+        struct dtpr d;
+        long int i;
+        long int *j;
+        double r;
+        lispval (*f)();
+        struct array ar;
+        struct sdot s;
+        char c;
+        lispval l;
+        struct bfun bcd;
+        struct Hunk h;
+        struct Vector v;
+        struct Vectorb vb;
+        struct Vectorw vw;
+        struct Vectorl vl;
+};
+
 
 struct trent
 {
@@ -59,3 +152,4 @@ struct str_x
         char    *next_free;
         int     space_left;
 };
+#endif
