@@ -6,7 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
- 
+
+#ifndef INC_config_d1b2f18af280f183a493e2257dd8e7b5_h
+#define INC_config_d1b2f18af280f183a493e2257dd8e7b5_h
+
 /* 
  * this file contains parameters which each site is likely to modify
  * in order to personalize the configuration of Lisp at their site.
@@ -212,4 +215,6 @@
 #undef TTSIZE
 #define TTSIZE 10216
 #define FREESIZE 512 * 10000
-#endif 
+#endif
+
+#endif

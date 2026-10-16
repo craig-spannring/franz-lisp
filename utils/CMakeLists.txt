@@ -6,7 +6,10 @@ function(add_util name)
   # target_sources(${name} PRIVATE 
   # 
   # )
-  include_directories(${name} ${CMAKE_CURRENT_LIST_DIR}/../franz/h)
+  include_directories(${name}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}/../franz/h
+  )
   # target_link_libraries(${name} gtest_main)
   # target_link_libraries(${name} ArgumentParserCXX)
   
@@ -23,4 +26,9 @@ add_util(divide)
 add_util(tackon)
 target_compile_definitions(tackon PRIVATE
   NO_A_OUT=1
+)
+
+configure_file(
+  ${CMAKE_CURRENT_LIST_DIR}/../franz/h/config.h.in
+  ${CMAKE_CURRENT_BINARY_DIR}/config.h
 )

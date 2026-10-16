@@ -63,6 +63,7 @@ add_compile_definitions(
 # add_subdirectory(tests)
 add_subdirectory(utils)
 add_subdirectory(franz)
+add_subdirectory(liszt)
 add_subdirectory(doc)
 
 

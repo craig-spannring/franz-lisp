@@ -27,9 +27,18 @@ target_compile_definitions(rawlisp PRIVATE
 )
 
 set(BottomSrc "")
-set(MipSrc1   "")
-set(MipSrc2   "")
-set(MipSrc3   "")
+set(MipSrc1
+  low.c
+  lowaux.s
+)
+set(MipSrc2
+  alloc.c
+  data.c
+)
+
+set(MipSrc3
+  rlc.c
+)
 set(MipSrc4
 #  mac          #     tahoe        #     68k              # vax       
 #  ----------------------------------------------------------------------
@@ -75,5 +84,13 @@ target_sources(rawlisp PRIVATE
   ${MipSrc2}
   ${MipSrc3}
   ${MipSrc4}
+)
+target_include_directories(rawlisp PRIVATE
+  ${CMAKE_CURRENT_LIST_DIR}/./h
+  ${CMAKE_CURRENT_BINARY_DIR}
   )
   
+configure_file(
+  ${CMAKE_CURRENT_LIST_DIR}/h/config.h.in
+  ${CMAKE_CURRENT_BINARY_DIR}/config.h
+)
