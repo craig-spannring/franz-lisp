@@ -3,7 +3,7 @@
 # 
 #   - rawlisp  Created by linking 
 #           ${BottomObj}
-#           ${NoHoleObj} or ${HoleObj}
+#           ${NoHoleObj} or ${HoleObj} 
 #           ${MipObj4}
 #           ${CPU_SpecificObj}
 #           ${OsObjs}
@@ -26,19 +26,25 @@ target_compile_definitions(rawlisp PRIVATE
   PORTABLE=1
 )
 
-set(BottomSrc "")
+# Lowest-level startup/runtime.  Must be linked at the beginning of executable
+# note- at one time MipSrc may have refered to machine independent part
 set(MipSrc1
   low.c
   lowaux.s
 )
+
+# Memory allocation and data space setup. 
 set(MipSrc2
   alloc.c
   data.c
 )
 
+# Code positioned between low level support code and the lisp kernel.
 set(MipSrc3
   rlc.c
 )
+
+# Bulk of the lisp run-time and interpreter
 set(MipSrc4
 #  mac          #     tahoe        #     68k              # vax       
 #  ----------------------------------------------------------------------
@@ -77,9 +83,7 @@ set(MipSrc4
    lamgc.c      #     lamgc.c      #     lamgc.c          # lamgc.c   
  )
 
-message("MipSrc4:     ${MipSrc4}")
 target_sources(rawlisp PRIVATE
-  ${BottomSrc}
   ${MipSrc1}
   ${MipSrc2}
   ${MipSrc3}
