@@ -3,7 +3,12 @@
 #include "config.h"
 #if ! os_unisoft
 #include <sys/types.h>
+
+#if HAVE_A_OUT_H
 #include <a.out.h>
+#endif
+
+
 /*
  * $Header: /na/franz/utils/RCS/tackon.c,v 1.4 83/08/22 19:01:17 sklower Exp $
  *
