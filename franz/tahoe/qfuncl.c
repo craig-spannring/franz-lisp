@@ -32,7 +32,7 @@
 #define Profile2
 #endif
 
-#ifdef PORTABLE
+#if PORTABLE
 #define NIL     _nilatom
 #define NP      _np
 #define LBOT    _lbot
@@ -83,7 +83,7 @@ doarray:
         shar    $9,Arrayaccfun(r2),r3   # get access function addr shifted
         cmpb    $/**/BCD,_typetable+1[r3]       # bcd??
         jneq    nolink                  # no, let funcal handle it
-#ifdef PORTABLE
+#if PORTABLE
         movl    NP,r4
         movl    r2,(r4)+                # store array header on stack
         movl    r4,NP
@@ -175,7 +175,7 @@ _qoneplus:
         .word   0
         Profile2
         addl3   (r0),$1,r5
-#ifdef PORTABLE
+#if PORTABLE
         movl    r6,NP
         movl    r6,LBOT
 #endif
@@ -189,7 +189,7 @@ _qoneminus:
         .word   0
         Profile2
         subl3   $1,(r0),r5
-#ifdef PORTABLE
+#if PORTABLE
         movl    r6,NP
         movl    r6,LBOT
 #endif
@@ -244,7 +244,7 @@ storit:
         ret
 
 getnew:
-#ifdef PORTABLE
+#if PORTABLE
         movl    r6,NP
         movab   -8(r6),LBOT
 #endif
@@ -395,7 +395,7 @@ nilpli: movl    _lispsys+64*4,r0 # want nil prop list, get it specially
         ret                     # else fail
         
 notsymb:
-#ifdef PORTABLE
+#if PORTABLE
         movl    r6,NP
         movab   -8(r6),LBOT     # must set up LBOT before calling
 #else

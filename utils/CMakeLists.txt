@@ -1,4 +1,5 @@
 
+include("${CMAKE_CURRENT_LIST_DIR}/../cmake/common.cmake")
 
 function(add_util name)
   # Add utility program
@@ -25,8 +26,11 @@ add_util(append)
 add_util(divide)
 add_util(tackon)
 target_compile_definitions(tackon PRIVATE
-  NO_A_OUT=1
+  HAVE_A_OUT_H=${HAVE_A_OUT_H}
 )
+
+message("HAVE_A_OUT_H=${HAVE_A_OUT_H}")
+
 
 configure_file(
   ${CMAKE_CURRENT_LIST_DIR}/../franz/h/config.h.in

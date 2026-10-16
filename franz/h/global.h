@@ -89,7 +89,7 @@
  * The n refers to the number of register variables declared in this routine.
  * The information is required for the Vax version only.
  */
-#ifdef PORTABLE
+#if PORTABLE
 extern struct atom nilatom, eofatom;
 #define nil     ((lispval) &nilatom)
 #define eofa    ((lispval) &eofatom)
@@ -247,7 +247,7 @@ extern FILE     *piport,                /* standard input port          */
         *errport,               /* port for error messages      */
         *rdrport;               /* temporary port for readr     */
 
-#ifndef RTPORTS
+#if ! RTPORTS
 extern FILE *xports[];          /* page of file *'s for lisp    */
 #define P(p)            ((lispval) (xports +((p)-_iob)))
 #define PN(p)           ((int) ((p)-_iob))

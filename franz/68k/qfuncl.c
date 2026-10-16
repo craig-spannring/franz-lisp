@@ -48,7 +48,7 @@
 #define Profile2
 #endif
 
-#ifdef PORTABLE
+#if PORTABLE
 #define NILtest(p)      cmpl    #/**/OFFSET,p
 #define NILsub(p)       subl    #/**/OFFSET,p
 #else

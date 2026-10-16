@@ -131,7 +131,7 @@ struct ssym { char *fnam;       /* pointer to string containing name */
                              "_np",       (int) &np,      -1,
                              "_lbot",     (int) &lbot,    -1,
 #endif
-#ifndef NILIS0
+#if !NILIS0
                              "_nilatom",  (int) &nilatom, -1,
 #endif
                              "_bnp",      (int) &bnp,     -1,

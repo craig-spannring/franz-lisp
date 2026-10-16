@@ -183,7 +183,7 @@ on1:    cmpl    r2,$4           #if = 4, then can do
         beql    intout
         calls   $0,_newsdot     #get new cell for new bignum
 backfr:
-#ifdef PORTABLE
+#if PORTABLE
         movl    r0,*_np
         addl2   $4,_np
 #else
@@ -201,7 +201,7 @@ loop7:  movl    -(r10),(r0)     #save bigit
         brb     loop7
 Edone:  
         clrl    4(r9)           #indicate end of list with 0
-#ifdef PORTABLE
+#if PORTABLE
         subl2   $4,_np
         movl    *_np,r0
 #else

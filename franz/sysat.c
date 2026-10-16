@@ -341,7 +341,7 @@ makevals (void)
             Isstatus(feature,dom = inewatom(DOMAIN));
             Iaddstat(inewatom("domain"),ST_READ,ST_NO,dom);
             Isstatus(feature,inewatom(MACHINE));
-#ifdef PORTABLE
+#if PORTABLE
             Isstatus(feature,inewatom("portable"));
 #endif
 #ifdef unisoft

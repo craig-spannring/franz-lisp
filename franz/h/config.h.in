@@ -125,36 +125,34 @@
 #define os_unisoft 1
 #endif
 
-/* MACHINE -  this is put on the (status features) list */
-#if m_68k
-#define MACHINE "68k"
-#define PORTABLE
-#endif
 
-/* RTPORTS -- this O.S. allocates FILE *'s at run-time */
-#if os_4_3
+#define MACHINE "${OS_NAME} ${PROCESSOR_NAME}"
+
+#define PORTABLE  1
+
+//
+// RTPORTS -- this O.S. allocates FILE *'s at run-time
+//            Set to 0 if you find some modern oddball
+//            that allocates at compile time. 
 #define RTPORTS 1
-#endif
 
-#if m_vax
-#define MACHINE "vax"
-#define NILIS0  1
-#endif
 
-#if m_tahoe
-#define MACHINE "tahoe"
-#define NILIS0  1
-#endif
+//
+// NILIS0 -- For any UNIX implementation in which the users
+//           address space starts at 0 (like m_vax, above).
+// 
+//           Modern systems don't map the first page (or more) in
+//           order to cause page faults if you reference through a
+//           null pointer.
+//
+#define NILIS0               0
+
+#define HAVE_A_OUT_H         ${HAVE_A_OUT_H}
 
 /*
-** NILIS0 -- for any UNIX implementation in which the users
-**      address space starts at 0 (like m_vax, above). 
-**
 ** NPINREG -- for the verison if lisp that keeps np and lbot in global
 **      registers.  On the 68000, there is a special `hacked' version
 **      of the C compiler that is needed to do this.
-**
-** #define NILIS0               1
 ** #define NPINREG              1
 */
 
@@ -176,28 +174,21 @@
 #define NPINREG         1
 #endif
 
-
-
-
 /* OS -  this is put on the (status features) list */
-#if os_unix
-#define OS      "unix"
-#endif
-#if os_vms
-#define OS      "vms"
-#endif
+#define OS      "${OS_NAME}"
+
 
 /* DOMAIN - this is put on the (status features) list and
  *      is the value of (status domain)
  */
-#define DOMAIN  "ucb"
+#define DOMAIN  "nowhere"
 
 /* SITE - the name of the particular machine this lisp is running on
  *    this value is available via (sys:gethostname).
  *    On 4.1a systems it is possible to determine this dynamically cheaply
  */
 #if ! (os_4_1a || os_4_1c || os_4_2 || os_4_3)
-#define SITE    "unknown-site"
+#define SITE    "${HOSTNAME}"
 #endif
 
 

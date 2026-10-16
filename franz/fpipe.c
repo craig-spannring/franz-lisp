@@ -42,13 +42,13 @@ FILE *info[2];
 
 lispval 
 Nioreset (void) {
-#ifndef RTPORTS
+#if ! RTPORTS
         register FILE *p;
 
         for(p = &_iob[3]; p < _iob + _NFILE; p++) {
                 if(p->_flag & (_IOWRT | _IOREAD)) fclose(p);
                 }
-#else   RTPORTS
+#else   
         lispval NiorUtil();
 
         _fwalk(NiorUtil);
@@ -56,7 +56,7 @@ Nioreset (void) {
         return(nil);
 }
 
-#ifdef RTPORTS
+#if RTPORTS
 FILE FILEdummy;
 
 static lispval

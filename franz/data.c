@@ -18,7 +18,7 @@ static char *rcsid =
 #include        "frame.h"
 #include        <stdio.h>
 
-/*char firstalloc[NBPG] = { 'x' };      /* first thing allocated in file */
+//char firstalloc[NBPG] = { 'x' };      /* first thing allocated in file */
 lispval lispsys[SIGNIF];        /* lisp data used by system */
 
 lispval gftab[GFTABLEN];        /* global function table for interpreter */
@@ -40,7 +40,7 @@ char    keybin =        FALSE;          /* logical flag: using keyboard */
 char    protflag =      FALSE;          /* logical flag: want protocall */
 char    rbktf;                          /* logical flag: ] mode         */
 
-#ifdef RTPORTS
+#if RTPORTS
 lispval ioname[128];            /* strings of names of files currently open     */
 #else 
 lispval ioname[_NFILE];         /* strings of names of files currently open     */
