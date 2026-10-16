@@ -113,4 +113,9 @@ add_custom_target(install-manual
   COMMENT "Install manual.pdf to ${DOCS_OUTPUT_DIR}"
 )
 
+message("  DEPENDS ${SM_PDF}  ${SM_PDF}")
+# convenience target to create all docs. 
+add_custom_target(docs
+  DEPENDS "${SM_PDF}" "${UM_PDF}"
+)
 
