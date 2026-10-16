@@ -29,6 +29,9 @@ unix or vms
 
 for any UNIX implementation in which the users
 adress space starts at 0 (like m_vax, above). 
+modern systems don't map the first page (or 
+more) in order to cause page faults if you 
+reference through a null pointer. 
 
 ### NPINREG
 
