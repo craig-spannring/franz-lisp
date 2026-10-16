@@ -13,7 +13,8 @@
 #
 add_executable(rawlisp)
 
-set(rawlisp_cc_flags "")
+message("fl_cc_flags:  ${fl_cc_flags}")
+# set(rawlisp_cc_flags ${fl_cc_flags} "-Wno-error=implicit-function-declaration -w")
 
 target_compile_options(rawlisp PRIVATE ${rawlisp_cc_flags})
 target_include_directories(rawlisp PRIVATE
@@ -22,8 +23,6 @@ target_include_directories(rawlisp PRIVATE
 # target_link_libraries(rawlisp PRIVATE )
 
 target_compile_definitions(rawlisp PRIVATE
-  HOLE=2097152
-  PORTABLE=1
 )
 
 # Lowest-level startup/runtime.  Must be linked at the beginning of executable
