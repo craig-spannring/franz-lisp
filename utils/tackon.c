@@ -1,13 +1,24 @@
 #include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "lconf.h"
 #include "config.h"
 #if ! os_unisoft
 #include <sys/types.h>
-
-#if HAVE_A_OUT_H
-#include <a.out.h>
 #endif
 
+#if !HAVE_A_OUT_H
+int main()
+{
+  printf("TODO- implement this.\n");  
+  return 1;
+}
+
+#else 
+
+#include <a.out.h>
 
 /*
  * $Header: /na/franz/utils/RCS/tackon.c,v 1.4 83/08/22 19:01:17 sklower Exp $
@@ -24,7 +35,7 @@ int aout;
 #define NEWSIZ 100000
 char newstrb[NEWSIZ];
 
-#endif
+
 main(argc, argv)
 int argc;
 char *argv[];
@@ -117,3 +128,5 @@ usage:
         exit(0);
 #endif
 }
+#endif
+
