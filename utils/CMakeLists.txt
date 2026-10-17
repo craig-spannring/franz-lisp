@@ -32,6 +32,7 @@ target_compile_definitions(tackon PRIVATE
 message("HAVE_A_OUT_H=${HAVE_A_OUT_H}")
 
 
+message("PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 configure_file(
   ${CMAKE_CURRENT_LIST_DIR}/../franz/h/config.h.in
   ${CMAKE_CURRENT_BINARY_DIR}/config.h
