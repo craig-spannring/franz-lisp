@@ -1,3 +1,4 @@
+#line 2 "@PROJECT_SOURCE_DIR@/franz/h/config.h.in"
 /*                                      -[Thu Mar  3 15:57:51 1983 by jkf]-
  *      config.h                        $Locker:  $
  * configuration dependent info
