@@ -13,8 +13,8 @@ inewint (int n)
         return(ip);
 }
 int 
-blzero (register char *where, int howmuch)
+blzero (void *where, int howmuch)
 {
-        register char *p;
+        char *p;
         for(p = where + howmuch; p > where; ) *--p = 0;
 }

@@ -6,7 +6,7 @@
 
 /* eval.c */
 extern lispval eval(lispval actarg);
-extern lispval popnames(register struct nament *llimit);
+extern lispval popnames(struct nament *llimit);
 extern int dumpnamestack(void);
 extern lispval Lapply(void);
 extern lispval Ifuncal(lispval fcn);

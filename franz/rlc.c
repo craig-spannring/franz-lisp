@@ -19,8 +19,7 @@ extern char holend[], end[];
 extern int usehole;
 extern char *curhbeg;
 
-int 
-rlc (void)
+void rlc (void)
 {
         char *cp, *dp;
         

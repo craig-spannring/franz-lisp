@@ -7,6 +7,8 @@
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "structs.h"
+
 /*  these are the tables of global lispvals known to the interpreter    */
 /*  and compiler.  They are not used by the garbage collector.          */
 #define GFTABLEN 200

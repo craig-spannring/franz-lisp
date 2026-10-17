@@ -497,6 +497,11 @@ struct ftab {
         lispval *discip;
 };
 
+static dofuns(void)
+{
+  mftab(cfuns);
+}
+
 lispval 
 mftab (register struct ftab *table)
 {
@@ -791,5 +796,4 @@ static struct ftab cfuns[] = {
   {"gcafter", Ngcafter, &(nlambda)},    /* garbage collection wind-up */
   {0}
 };
-static 
-dofuns (void){mftab(cfuns);}
+

@@ -11,6 +11,12 @@ static char *rcsid =
  */
 
 #include "prototypes/alloc.h"
+#include "prototypes/error.h"
+#include "prototypes/io.h"
+#include "prototypes/fex3.h"
+#include "prototypes/eval.h"
+#include "prototypes/inewint.h"
+#include "prototypes/lisp.h"
 
 # include "global.h"
 # include "structs.h"
@@ -20,35 +26,42 @@ static char *rcsid =
 #ifdef METER
 #include <sys/vtimes.h>
 #endif
- 
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <assert.h>
+
 # define NUMWORDS TTSIZE * 128  /*  max number of words in P0 space  */
 # define BITQUADS TTSIZE * 2    /*  length of bit map in quad words  */
 # define BITLONGS TTSIZE * 4    /*  length of bit map in long words  */
 
-# ifdef vax
-# define ftstbit        asm("   ashl    $-2,r11,r3");\
-                        asm("   bbcs    r3,_bitmapi,1f");\
-                        asm("   ret"); \
-                        asm("1:");
+#ifdef vax
+  #define ftstbit        asm("   ashl    $-2,r11,r3");\
+                         asm("   bbcs    r3,_bitmapi,1f");\
+                         asm("   ret"); \
+                         asm("1:");
 
-/* setbit is a fast way of setting a bit, it is like ftstbit except it
- * always continues on to the next instruction
- */
-# define setbit         asm("   ashl    $-2,r11,r0"); \
-                        asm("   bbcs    r0,_bitmapi,$0");
-# endif
-
-# if m_68k
-# define ftstbit        {if(Itstbt()) return;}
-# define setbit         Itstbt()
-# endif
-
-# ifdef tahoe
-# define ftstbit        if( readbit(p) ) return; oksetbit;
-# define setbit         {bitmapi[(int)p>>7] |= bitmsk[((int)p >> 2)&31];}
-# define readbit(p)     ((int)bitmapi[r=(int)p>>7] & (s=bitmsk[((int)p>>2)&31]))
-# define oksetbit       {bitmapi[r] |= s;}
-# endif
+  /* setbit is a fast way of setting a bit, it is like ftstbit except it
+   * always continues on to the next instruction
+   */
+  #define setbit         asm("   ashl    $-2,r11,r0"); \
+                         asm("   bbcs    r0,_bitmapi,$0");
+#elif m_68k
+  #define ftstbit        {if(Itstbt()) return;}
+  #define setbit         Itstbt()
+#elif tahoe
+  #define ftstbit        if( readbit(p) ) return; oksetbit;
+  #define setbit         {bitmapi[(int)p>>7] |= bitmsk[((int)p >> 2)&31];}
+  #define readbit(p)     ((int)bitmapi[r=(int)p>>7] & (s=bitmsk[((int)p>>2)&31]))
+  #define oksetbit       {bitmapi[r] |= s;}
+#else
+  // todo check for word length probs
+  #define ftstbit        if( readbit(p) ) return; oksetbit;
+  #define setbit         {/*_Static_assert(sizeof(p)==4, "this code assume 4 byte ints");*/ \
+                            bitmapi[(int)p>>7] |= bitmsk[((int)p >> 2)&31];}
+  #define readbit(p)     ((int)bitmapi[r=(int)p>>7] & (s=bitmsk[((int)p>>2)&31]))
+  #define oksetbit       {bitmapi[r] |= s;}
+#endif 
 
 /*      Unused bit macros
 # define lookbit(p)     (bbitmap[(int)p>>5] & bitmsk[((int)p>>2) & 7])
@@ -100,8 +113,6 @@ int bitmsk[32]={1,2,4,8,16,32,64,128,   /*  used by bit-marking macros  */
                 0x10000000, 0x20000000, 0x40000000, 0x80000000}; 
 extern int  *bind_lists;                /*  lisp data for compiled code */
 
-char *xsbrk();
-char *gethspace();
 
 
 extern struct types atom_str, strng_str, int_str, dtpr_str, doub_str,
@@ -167,7 +178,6 @@ get_more_space (struct types *type_struct, int purep)
         char *start;
         int *loop, *temp;
         lispval p;
-        extern char holend[];
 
         if( (int) datalim >= TTSIZE*LBPG+OFFSET ) return(2);
 
@@ -385,7 +395,7 @@ newatom (int pure) {
 
 char *
 newstr (int purep) {
-        char *save, *strcpy();
+        char *save;
         int atmlen;
         register struct str_x *p = str_current + purep;
 
@@ -721,7 +731,7 @@ Ngc (void)
 int printall = 0;
 lispval 
 gc (struct types *type_struct)
-        {
+{
         lispval save;
         struct tms begin, finish;
         extern int gctime;
@@ -759,7 +769,7 @@ gc (struct types *type_struct)
                 gctime += (finish.tms_utime - begin.tms_utime);
         }
         return(save);   /*  return result of gcafter  */
-        }
+}
 
         
 
@@ -770,16 +780,18 @@ gc (struct types *type_struct)
 int 
 gc1 (void)
 {
-        int j, k;
-        register int *start,bvalue,type_len; 
-        register struct types *s;
+        int  j;
+        int  k;
+        int *start;
+        int  bvalue;
+        int  type_len;        
+        struct types *s;
         int *point,i,freecnt,itemstogo,bits,bindex,type,bytestoclear;
         int usedcnt;
         char *pindex;
         struct argent *loop2;
         struct nament *loop3;
         struct atom *symb;
-        int markdp();
         extern int hashtop;
 
         pagerand(); 
@@ -815,9 +827,9 @@ gc1 (void)
             bytestoclear > 0;)
             {
                 if(bytestoclear > MAXCLEAR)
-                        blzero((int)start,MAXCLEAR);
+                        blzero(start,MAXCLEAR);
                 else
-                        blzero((int)start,bytestoclear);
+                        blzero(start,bytestoclear);
                 start = (int *) (MAXCLEAR + (int) start);
                 bytestoclear -= MAXCLEAR;
             }
@@ -1173,8 +1185,9 @@ alloc (lispval tname, long npages)
 lispval 
 csegment (int typecode, int nitems, int useholeflag)
 {
-        register int ii, jj;
-        register char *charadd;
+        int   ii;
+        int   jj;
+        char *charadd;
 
         ii = typecode;
 
@@ -1205,14 +1218,14 @@ csegment (int typecode, int nitems, int useholeflag)
         for(jj=0; jj<nitems; jj=jj+512) {
                 SETTYPE(charadd+jj, ii,30);
         }
-        ii = (int) charadd;
+        char *ptr = charadd;
         while(nitems > MAXCLEAR)
         {
-            blzero(ii,MAXCLEAR);
+            blzero(ptr,MAXCLEAR);
             nitems -= MAXCLEAR;
-            ii += MAXCLEAR;
+            ptr += MAXCLEAR;
         }
-        blzero(ii,nitems);
+        blzero(ptr,nitems);
         return((lispval)charadd);
 }
 
@@ -1241,7 +1254,7 @@ chek:   for(ii=0; ii<NUMSPACES; ++ii)
 char *
 gethspace (int segsiz, int type)
 {
-        extern usehole; extern char holend[]; extern char *curhbeg;
+        extern char holend[];
         register char *value;
 
         if(usehole) {   
@@ -1297,10 +1310,14 @@ markit (lispval *p) { markdp(*p); }
  *  An iterative method is used to mark list structure, to avoid
  *  excessive recursion.
  */
-int 
+void 
 markdp (register lispval p)
-        {
-#ifdef tahoe
+{
+
+#if m_68k || vax
+#elif tahoe
+        register int r, s;      /* (goes with non-asm readbit, oksetbit) */
+#else
         register int r, s;      /* (goes with non-asm readbit, oksetbit) */
 #endif
 /*      register hsize, hcntr;                                           */
@@ -1611,6 +1628,8 @@ hashfcn (register char *symb)
 lispval 
 LImemory (void)
 {
+    extern char holend[];
+
     int nextadr, pagesinuse;
     
     printf("Memory report. max pages = %d (0x%x) = %d Bytes\n",

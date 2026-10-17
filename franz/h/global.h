@@ -13,6 +13,9 @@
 #include <stdio.h>
 #include "config.h"
 #include "ltypes.h"
+#include "gtabs.h"
+
+
 #ifdef UNIXTS
 #include "tsfix.h"
 #endif
@@ -150,90 +153,6 @@ extern char typetable[];  /*  the table with types for each page  */
 
 
 /* some types ***********************************************************/
-#define lispint long
-#define MAX10LNG 200000000              /* max long divided by 10       */
-
-
-typedef union lispobj *lispval ;
-
-struct dtpr {
-        lispval cdr, car;
-};
-
-struct sdot {
-        int     I;
-        lispval CDR;
-};
-
-
-struct  atom    {
-        lispval         clb;            /* current level binding*/
-        lispval         plist;          /* pointer to prop list */
-#ifndef WILD
-        lispval         fnbnd;          /* function binding     */
-#endif
-        struct  atom    *hshlnk;        /* hash link to next    */
-        char            *pname;         /* print name   */
-        };
-#ifdef WILD
-#define fnbnd clb
-#endif
-
-struct array {
-        lispval accfun,         /*  access function--may be anything  */
-                aux;            /*  slot for dimensions or auxilliary data  */
-        char *data;             /*  pointer to first byte of array    */
-        lispval length, delta;  /* length in items and length of one item */
-};
-
-struct bfun {
-        lispval (*start)();     /*  entry point to routine  */
-        lispval discipline,     /*  argument-passing discipline  */
-                language,       /*  language coded in   */
-                params,         /*  parameter list if relevant  */
-                loctab;         /*  local table  */
-};
-
-struct Hunk {
-        lispval hunk[1];
-};
-
-struct Vector {
-        lispval vector[1];
-};
-
-/* the vectori types */
-struct Vectorb {
-        char vectorb[1];
-};
-
-struct Vectorw {
-       short  vectorw[1];
-};
-
-struct Vectorl {
-    long vectorl[1];
-};
-
-union lispobj {
-        struct atom a;
-        FILE *p;
-        struct dtpr d;
-        long int i;
-        long int *j;
-        double r;
-        lispval (*f)();
-        struct array ar;
-        struct sdot s;
-        char c;
-        lispval l;
-        struct bfun bcd;
-        struct Hunk h;
-        struct Vector v;
-        struct Vectorb vb;
-        struct Vectorw vw;
-        struct Vectorl vl;
-};
 
 // extern lispval inewint();
 extern lispval inewint (int n); 
@@ -406,7 +325,7 @@ extern int itemp;
 #define OR      18
 #define XOR     19
 
-void handler(int);
+extern void handler(int);
 extern int sigdelay;
 extern int sigstruck;
 
@@ -451,5 +370,182 @@ extern int lctrace;
 
 #define saveonly(n)     asm("#save      n")
 #define snpand(n)       asm("#protect   n")
+
+
+/* from data.c */
+
+extern lispval lispsys[SIGNIF];        /* lisp data used by system */
+extern lispval gftab[GFTABLEN];        /* global function table for interpreter */
+extern lispval gctab[GCTABLEN];        /* global constant table for interpreter */
+
+
+
+/* Port definitions *****************************************************/
+extern FILE    *piport;                /* standard input port          */
+extern FILE    *poport;                /* standard output port         */
+extern FILE    *errport;               /* port for error messages      */
+extern FILE    *rdrport;               /* temporary port for readr     */
+extern FILE    *proport;               /* port for protocal            */
+extern int     lineleng;               /* line length desired          */
+extern int     rlevel;                 /* used to indicate depth of recursion
+                                          in reader.  No longer really necessary */
+extern char    keybin;                 /* logical flag: using keyboard */
+extern char    protflag;               /* logical flag: want protocall */
+extern char    rbktf;                  /* logical flag: ] mode         */
+
+#if RTPORTS
+extern lispval ioname[128];            /* strings of names of files currently open     */
+#else 
+extern lispval ioname[_NFILE];         /* strings of names of files currently open     */
+#endif
+
+/* name stack ***********************************************************/
+extern struct argent    *orgnp;           /* used by top level to reset to start  */
+extern struct argent    *namptr;          /* temporary pointer    */
+#ifndef NPINREG
+extern struct argent    *lbot;            /* beginning of frame   */
+extern struct argent    *np;              /* first free entry     */
+#endif
+extern struct argent    *nplim;           /* don't have this = np */
+struct nament           *bnp;             /* top of bind stack    */
+struct nament           *orgbnp;          /* absolute bottom of ""*/
+struct nament           *bnplim;          /* absolute top of ""   */
+
+
+
+/* hashing things *******************************************************/
+extern int     hash;                   /* set by ratom         */
+extern int     atmlen;                 /* length of atom including final null  */
+
+
+/* big string buffer for whomever needs it ******************************/
+static char     i_strbuf[600];
+extern char    *strbuf; 
+extern char    *endstrb;
+
+/* in the case we can't use the C stack for extending automatics */
+#ifdef SPISFP
+extern long xstack[16384];
+extern long *xsp;
+extern long *exsp;
+#endif
+
+/* strings needed by the two hand crafted atoms, nil and eof */
+extern char nilpname[];
+extern char eofpname[];
+
+/* set by sstatus commands */
+extern int uctolc;      /* when set, uc chars in atoms go to lc */
+                        /* default mode for dumplisp 
+                           (note this is decimal not octal) */
+#if os_unisoft || os_unix_ts
+extern int dmpmode;
+#else
+extern int dmpmode;
+#endif
+
+/* break and error declarations *****************************************/
+extern int     depth;                 /* depth of nested breaks               */
+extern lispval contval;                /* the value being returned up          */
+extern int     retval;                 /* used by each error/prog call         */
+extern lispval lispretval;             /* used by non-local goto's             */
+extern int     rsetsw;                 /* when set, trace frames built         */
+extern int     bcdtrsw;                /* when set with rsetsw, trace bcd too  */
+extern int     evalhcallsw;            /* when set will not evalhook next eval */
+extern int     funhcallsw;             /* when set will not funcallhook next eval */
+
+
+/* exception handling stuff *********************************************/
+extern int exception;                  /* true if an exception is pending */
+extern int sigintcnt;                  /* number of SIGINT's pending      */
+
+/* current state of the hole (for fasling into) *************************/
+#ifndef HOLE
+#define HOLE 0
+#endif
+extern char holbeg[];
+extern char *curhbeg;                   /* next location to fasl into */
+extern int usehole;                     /* if TRUE, fasl tries to use hole */
+extern int holesize;                    /* This avoids an ifdef in dumplisp */
+extern char holend[];
+
+/* other stuff **********************************************************/
+extern lispval ftemp;
+extern lispval vtemp;
+extern lispval argptr;
+extern lispval ttemp;           /* temporaries: use briefly     */
+extern int     itemp;
+extern lispval sigacts[16];     /* for catching interrupts      */
+extern int     sigstruck;
+extern int     sigdelay;        /* for catching interrupts      */
+extern lispval stattab[16];     /* miscelleneous options        */
+extern lispval Vprintsym;       /* value is the symbol 'print'  */
+
+/*  interpreter globals    */
+
+extern int lctrace;
+extern int fvirgin;                /* set to 1 initially                   */
+extern int gctime;
+extern struct frame *errp;             /* stack of error frames                */
+
+
+/* global pointers to the transfer tables */
+
+
+extern struct trtab *trhead;           /* first in list of transfer tables        */
+extern struct trent *trcur;            /* next entry to allocate                  */
+extern int trleft;                     /* number of entries left in current table */
+
+/* globals from sysat.c  */
+
+extern int *beginsweep;                /* place for sweeper to begin           */
+extern int initflag;            /* inhibit gcing initially              */
+extern int tgcthresh;
+extern int page_limit;
+extern int ttsize;
+
+
+/* global used in io.c */
+
+extern lispval lastrtab;
+
+/* globals from [VT]alloc.c  */
+
+
+extern char purepage[TTSIZE];
+extern int fakettsize;
+extern int gcstrings;                          /*  Do we mark and sweep strings? */
+extern int  *bind_lists;        /*  lisp data for compiled code */
+
+extern struct str_x str_current[2];            /*  next free string spaces */
+
+extern struct types  atom_str;
+extern struct types  strng_str;
+extern struct types  int_str;
+extern struct types  dtpr_str;
+extern struct types  doub_str;
+extern struct types  array_str;
+extern struct types  other_str;
+extern struct types  sdot_str;
+extern struct types  val_str;
+extern struct types  funct_str;
+extern struct types  vect_str;
+extern struct types  vecti_str;
+extern struct types  hunk_str[7];
+
+// extern struct readtable;
+extern unsigned char *ctable;
+extern int gensymcounter;
+
+extern int hashtop;
+extern int xcycle;         /* used by xsbrk   */
+extern struct  atom *hasht[HASHTOP];
+extern lispval datalim;        /* pointer to next location to allocate */
+
+extern char typetable[TTSIZE + 1];
+
+/* this must be the last thing allocated in this file   */
+extern char lsbrkpnt;
+extern char zfreespace;
 
 #endif

@@ -12,11 +12,14 @@ static char *rcsid =
 
 
 
+#include        "prototypes/data.h" 
 #include        "global.h"
 #include        "gtabs.h"
 #include        "structs.h"
 #include        "frame.h"
-#include        <stdio.h>
+#include <stdio.h>
+#include <string.h>
+
 
 //char firstalloc[NBPG] = { 'x' };      /* first thing allocated in file */
 lispval lispsys[SIGNIF];        /* lisp data used by system */
@@ -116,12 +119,16 @@ int usehole = HOLE;                     /* if TRUE, fasl tries to use hole */
 int holesize = HOLE;                    /* This avoids an ifdef in dumplisp */
 
 /* other stuff **********************************************************/
-lispval ftemp,vtemp,argptr,ttemp;       /* temporaries: use briefly     */
-int itemp;
-lispval sigacts[16];                    /* for catching interrupts      */
-int sigstruck,sigdelay;                 /* for catching interrupts      */
-lispval stattab[16];                    /* miscelleneous options        */
-lispval Vprintsym;                      /* value is the symbol 'print'  */
+lispval ftemp;
+lispval vtemp;
+lispval argptr;
+lispval ttemp;           /* temporaries: use briefly     */
+int     itemp;
+lispval sigacts[16];     /* for catching interrupts      */
+int     sigstruck;
+int     sigdelay;        /* for catching interrupts      */
+lispval stattab[16];     /* miscelleneous options        */
+lispval Vprintsym;       /* value is the symbol 'print'  */
 
 /*  interpreter globals    */
 

@@ -25,6 +25,9 @@ extern char *stabf;
 extern int fvirgin;
 extern int keywait;
 extern sigstruck, sigdelay;
+
+static makenv(void);
+
 int 
 initial (void)
 {

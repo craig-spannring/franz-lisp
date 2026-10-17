@@ -46,7 +46,7 @@ extern int typenum(lispval tname);
 extern char *gethspace(int segsiz, int type);
 extern int gcrebear(void);
 extern int markit(lispval *p);
-extern int markdp(register lispval p);
+extern void markdp(register lispval p);
 extern char *xsbrk(int n);
 extern char *ysbrk(int pages, int type);
 extern lispval getatom(int purep);
