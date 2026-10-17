@@ -12,6 +12,7 @@ static char *rcsid =
 
 #include "prototypes/inits.h"
 #include "prototypes/io.h"
+#include "prototypes/eval.h"
 
 #include "global.h"
 #include "frame.h"
@@ -37,8 +38,6 @@ main (int argc, char **argv, char **arge)
 {
         lispval matom(), Lapply();
         extern struct frame *errp;
-        extern int holbeg,holend,usehole;
-        extern int *curhbeg;
         pbuf pb;
         
         environ = arge;
