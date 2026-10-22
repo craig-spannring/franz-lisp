@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 3.20)
 
+find_program(GROFF_EXECUTABLE groff)
+if(GROFF_EXECUTABLE)
+  message(STATUS "Found groff: ${GROFF_EXECUTABLE}")
+else()
+  message(WARNING "groff executable not found")
+endif()
+
 # User-configurable settings
-set(GROFF_EXECUTABLE "groff" CACHE PATH "Path to groff executable")
 # TODO the install path for DOCS_OUTPUT_DIR should be set at the top level CMakeLists.txt file
 set(DOCS_OUTPUT_DIR "/tmp/usr/lib/lisp" CACHE PATH "Where to install the generated PDF") 
 
@@ -55,11 +61,15 @@ add_custom_command(
   COMMAND /bin/sh -c "\"${GROFF_EXECUTABLE}\" -C -t -me -z ${CMAKE_CURRENT_SOURCE_DIR}/lmacs ${UM_CHAPTER_SRC_STR} 2>> \"${UM_IDX}\""
   COMMAND grep -E "^\.I" ${UM_IDX} > ${CMAKE_CURRENT_BINARY_DIR}/cha.n
   
-  DEPENDS ${UM_CHAPTER_SRC_LST} "${CMAKE_CURRENT_SOURCE_DIR}/lmacs"
+  # DEPENDS ${UM_CHAPTER_SRC_LST} "${CMAKE_CURRENT_SOURCE_DIR}/lmacs"
+  DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/lmacs"
   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
   COMMENT "Creating Appendix A"
   VERBATIM
 )
+add_custom_target(appendix-a DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/cha.n)
+
+
 
 # Build the user's manual PDF
 #
@@ -80,7 +90,7 @@ add_custom_command(
 
 # Create the user's manual
 add_custom_target(user-manual
-  DEPENDS "${UM_PDF}"
+  DEPENDS "${UM_PDF}" appendix-a
   COMMENT "Creating the manual PDF."
 )
 
@@ -100,22 +110,21 @@ add_custom_command(
 
 # Create the user's manual
 add_custom_target(internals-manual
-  DEPENDS "${SM_PDF}"
+  DEPENDS "${SM_PDF}" appendix-a
   COMMENT "Creating the internals manual PDF."
 )
 
 # Install the generated PDFs into ${DOCS_OUTPUT_DIR}
 add_custom_target(install-manual
-  DEPENDS "${UM_PDF}" "${SM_PDF}"
+  DEPENDS internals-manual user-manual 
   COMMAND ${CMAKE_COMMAND} -E make_directory "${DOCS_OUTPUT_DIR}"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${UM_PDF}" "${DOCS_OUTPUT_DIR}/FRANZ_LISP_Manual.pdf"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SM_PDF}" "${DOCS_OUTPUT_DIR}/FRANZ_LISP_Internals.pdf"
   COMMENT "Install manual.pdf to ${DOCS_OUTPUT_DIR}"
 )
 
-message("  DEPENDS ${SM_PDF}  ${SM_PDF}")
 # convenience target to create all docs. 
 add_custom_target(docs
-  DEPENDS "${SM_PDF}" "${UM_PDF}"
+  DEPENDS appendix-a internals-manual user-manual 
 )
 
