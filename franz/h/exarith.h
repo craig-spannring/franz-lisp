@@ -3,7 +3,7 @@
 #define INC_exarith_ba9a054c877af998e11c25133611ece0_h
 
 /* exarith.c */
-extern long exarith(int mul1, int mul2, register long add, long *hi, long *lo);
+extern long exarith(int mul1, int mul2, long add, long *hi, long *lo);
 
 
 #endif
