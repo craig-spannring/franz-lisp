@@ -11,16 +11,28 @@
 #              functions/macros/etc dumped. 
 # nlisp is copied into the install directory.
 #
-add_executable(rawlisp)
 
-message("fl_cc_flags:  ${fl_cc_flags}")
-# set(rawlisp_cc_flags ${fl_cc_flags} "-Wno-error=implicit-function-declaration -w")
+# Find the termcap or tinfo library on Unix-like systems
+find_library(TERMCAP_LIBRARY NAMES termcap tinfo curses ncurses)
+find_path(TERMCAP_INCLUDE_DIR NAMES termcap.h)
+
+if(TERMCAP_LIBRARY AND TERMCAP_INCLUDE_DIR)
+    message(STATUS "Found termcap: ${TERMCAP_LIBRARY}")
+else()
+    message(FATAL_ERROR "Termcap library or header not found!")
+endif()
+
+
+
+add_executable(rawlisp)
 
 target_compile_options(rawlisp PRIVATE ${rawlisp_cc_flags})
 target_include_directories(rawlisp PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/./h
-  )
-# target_link_libraries(rawlisp PRIVATE )
+  ${TERMCAP_INCLUDE_DIR}
+)
+target_link_libraries(rawlisp PRIVATE ${TERMCAP_LIBRARY})
+
 
 target_compile_definitions(rawlisp PRIVATE
 )
