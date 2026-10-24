@@ -10,15 +10,15 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
-#include "prototypes/error.h" 
-
+#include "prototypes/error.h"
 #include "global.h"
+
+#include <alloca.h>
 
 
 void pbignum(lispval current, FILE *useport)    
 {
         long  *top, *bot, *work, negflag = 0;
-        char *alloca();
         register int *digitp;
         Keepxs();
 
