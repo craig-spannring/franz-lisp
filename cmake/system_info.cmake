@@ -2,12 +2,6 @@ include(CheckIncludeFile)
 
 
 check_include_file("a.out.h" HAVE_A_OUT_H)
-if(HAVE_A_OUT_H)
-  message("a.out.h found")  
-else()
-  message("a.out.h not found HAVE_A_OUT_H = ${HAVE_A_OUT_H}")
-  set(HAVE_A_OUT_H 0)
-endif()
 
 
 

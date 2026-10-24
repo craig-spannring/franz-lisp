@@ -10,6 +10,10 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lamp.h"
+#include "prototypes/error.h"
+#include "prototypes/io.h"
+
 #include "global.h"
 
 #ifdef PROF
@@ -48,8 +52,8 @@ Lmonitor (void)
 short   pbuf[8];
 
 /* data space for fasl to put counters */
-int mcnts[1];
-int mcntp = (int) mcnts;
+int mcnts[1] = {0};
+int *mcntp = mcnts;
 int doprof = FALSE;
 
 lispval

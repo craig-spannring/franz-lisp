@@ -4,18 +4,25 @@
 
 #include "structs.h"
 
+extern int keywait;
+extern int plevel;        /* contains maximum list recursion count        */
+extern int plength;       /* maximum number of list elements printed  */
+
+
 /* io.c */
-extern lispval readrx(register int code);
-extern int macrox(void);
-extern int imacrox(register lispval current, int inlist);
-extern int Iratom(void);
-extern lispval getnum(register char *name);
-extern lispval dopow(register char *part2, int base);
-extern lispval calcnum(char *strbuf, register char *name, int base);
-extern lispval finatom(register char *name);
-extern char *atomtoolong(char *copyto);
-extern int lfltpr(char *buf, double val);
-extern void dmpport(FILE *useport);
-extern void    printr(lispval a, FILE *useport);
+extern lispval  readr(FILE *useport);
+extern lispval  readrx(register int code);
+extern void     macrox(void);
+extern void     imacrox(register lispval current, int inlist);
+extern int      Iratom(void);
+extern lispval  getnum(register char *name);
+extern lispval  dopow(register char *part2, int base);
+extern lispval  calcnum(char *strbuf, register char *name, int base);
+extern lispval  finatom(register char *name);
+extern char    *atomtoolong(char *copyto);
+extern void     lfltpr(char *buf, double val);
+extern void     dmpport(FILE *useport);
+extern void     printr(lispval a, FILE *useport);
+extern lispval  ratomr(FILE   *useport);
 
 #endif

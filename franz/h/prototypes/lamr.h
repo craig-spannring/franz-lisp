@@ -33,7 +33,7 @@ extern lispval Lputloc(void);
 extern lispval Lmfunction(void);
 extern lispval Lreplace(void);
 extern lispval Lvaluep(void);
-extern int CNTTYP(void);
+extern void    CNTTYP(void);
 extern lispval Lod(void);
 extern lispval Lfake(void);
 extern lispval Lmaknum(void);

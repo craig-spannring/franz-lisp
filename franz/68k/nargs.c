@@ -1,15 +1,23 @@
 /* Copyright (c) 1982, Regents, University of California */
+
+#include "nargs.h"
+
+#include <assert.h>
+
 #define ADDQ 5
 #define ADD 13
 #define IMMED 074
+
 /* These structures are here for looks, only */
 struct add { short op:4, reg:3, mode:3, ea:6; } x;
 struct addq { short op:4, data:3, size:3, ea:6; } y;
+
 int 
 nargs (
     long arg /* this is only here for address calculation */
 )
 {
+        _Static_assert(0, "need to figure out how to code this for standard C.");   
         register long *a5;
         register handy;
         register char reg, mode, ea;

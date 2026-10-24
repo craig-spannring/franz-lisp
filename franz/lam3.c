@@ -10,9 +10,24 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
-# include "global.h"
-# include "chars.h"
-# include "chkrtab.h"
+#include "prototypes/lam3.h"
+#include "prototypes/lam4.h"
+#include "prototypes/lam2.h"
+
+#include "prototypes/divbig.h"
+#include "prototypes/io.h"
+#include "prototypes/error.h"
+#include "prototypes/ffasl.h"
+#include "prototypes/alloc.h"
+
+
+#include "global.h"
+#include "chars.h"
+#include "chkrtab.h"
+
+#include <string.h>
+#include <stdbool.h>
+
 
 lispval 
 Lalfalp (void)
@@ -157,8 +172,9 @@ Llessp (void)
 lispval 
 Ldiff (void)
 {
-        register lispval arg1,arg2; 
-        register handy = 0;
+        lispval arg1;
+        lispval arg2;
+        long handy = 0;
 
 
         chkarg(2,"Ldiff");
@@ -302,7 +318,7 @@ lispval
 Lnegp (void)
 {
         register lispval handy = np[-1].val, work;
-        register flag = 0;
+        bool flag = false;
 
 loop:
         switch(TYPE(handy)) {
@@ -403,7 +419,11 @@ Lsetsyn (void)
 {
         register lispval s, c;
         register struct argent *mynp;
-        register index;
+#if !IGNORE_STATIC_ASSERT
+        _Static_assert(0, "index is used as a pointer, an integer, or a char.  "
+                          "Figure out how to handle it.")
+#endif            
+        int  index;
         lispval x   /*  ,debugmode  */;
         extern unsigned char *ctable;
         extern lispval Istsrch();

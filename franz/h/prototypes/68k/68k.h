@@ -13,7 +13,6 @@ extern lispval Lpolyev(void);
 extern lispval Lrot(void);
 extern int myfrexp(void);
 extern int syscall(void);
-extern int prunei(register lispval what);
 extern lispval Lshostk(void);
 extern lispval Lbaktrace(void);
 extern lispval LIshowstack(void);

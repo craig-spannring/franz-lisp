@@ -2,6 +2,12 @@
 static char *sccsid = "%W% %G%";
 #endif
 
+#include "prototypes/evalf.h"
+#include "prototypes/alloc.h"
+#include "prototypes/frame.h"
+#include "prototypes/error.h"
+#include "prototypes/sysat.h"
+
 #include "global.h"
 #include "frame.h"
 
@@ -70,7 +76,7 @@ Levalf (void)
      */
     result->d.car = matom (evaltype ? "eval" : "apply"); 
     result->d.cdr = (handy = newdot());
-    handy->d.car = inewint(myfp); /* The frame pointer as a lisp int */
+    handy->d.car = inewint((int)myfp); /* The frame pointer as a lisp int */
     handy->d.cdr = newdot();
     handy = handy->d.cdr;
     if (evaltype)
@@ -135,14 +141,14 @@ searchforpdl (struct frame *myfp)
  * vfypdlp :: verify pdl pointer as existing,  do not return unless
  * it is valid
  */
-int 
+void 
 vfypdlp (register struct frame *curfp)
 {
     register struct frame *myfp;
 
     for (myfp = errp; myfp != (struct frame *)0 ; myfp = myfp->olderrp)
         if(myfp == curfp) return;
-    errorh1(Vermisc,"Invalid pdl pointer given: ",nil,FALSE,0,inewint(curfp));
+    errorh1(Vermisc,"Invalid pdl pointer given: ",nil,FALSE,0,inewint((int)curfp));
 }
 
 lispval 

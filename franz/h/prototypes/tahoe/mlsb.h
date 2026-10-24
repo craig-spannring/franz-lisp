@@ -4,8 +4,8 @@
 
 /* mlsb.c */
 extern long mlsb(long *utop, long *ubot, long *vtop, int nqhat);
-extern long adback(long *utop, long *ubot, register long *vtop);
-extern long dsdiv(long *top, long *bot, register long div);
+extern long adback(long *utop, long *ubot, long *vtop);
+extern long dsdiv(long *top, long *bot, long div);
 extern int dsadd1(long *top, long *bot);
 extern long dsrsh(long *top, long *bot, long ncnt, long mask1);
 

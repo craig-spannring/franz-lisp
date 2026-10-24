@@ -10,10 +10,23 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
-# include "global.h"
-# include <sgtty.h>
-# include "chkrtab.h"
-# include "frame.h"
+#include "prototypes/lam1.h"
+#include "prototypes/lam8.h"
+
+#include "prototypes/frame.h"
+#include "prototypes/alloc.h"
+#include "prototypes/ffasl.h"
+#include "prototypes/fex2.h"
+#include "prototypes/io.h"
+
+#include "global.h"
+#include "prototypes/error.h"
+#include "prototypes/eval.h"
+#include "chkrtab.h"
+#include "frame.h"
+
+#include <sgtty.h>
+#include <string.h>
 
 lispval 
 Leval (void)
@@ -332,7 +345,7 @@ lispval
 Linfile (void)
 {
         FILE *port;
-        register lispval name;
+        lispval name;
 
         chkarg(1,"infile");
         name = lbot->val;
@@ -438,9 +451,9 @@ Ltruename (void)
 lispval 
 Lnwritn (void)
 {
-        register FILE *port;
-        register value;
-        register lispval handy;
+        FILE   *port;
+        int     value = 0;
+        lispval handy;
 
         if(lbot==np) handy = nil;
         else 
@@ -449,8 +462,11 @@ Lnwritn (void)
             handy = lbot->val;
         }
 
-        port = okport(handy,okport(Vpoport->a.clb,stdout));
+#if !IGNORE_STATIC_ASSERT
+        _Static_assert(0, "need to replace with something portable.");        
+        port = okport(handy, okport(Vpoport->a.clb, stdout));
         value = port->_ptr - port->_base;
+#endif         
         return(inewint(value));
 }
 
@@ -468,6 +484,9 @@ Ldrain (void)
             chkarg(1,"nwritn");
             handy = lbot->val;
         }
+#if !IGNORE_STATIC_ASSERT
+        _Static_assert(0, "need to replace with something portable.");        
+        
         port = okport(handy, okport(Vpoport->a.clb,stdout));
         if(port->_flag & _IOWRT) {
                 fflush(port);
@@ -477,7 +496,8 @@ Ldrain (void)
         port->_cnt = 0;
         port->_ptr = port->_base;
         iodes = fileno(port);
-        if(gtty(iodes,&arg) != -1) stty(iodes,&arg);
+        if (gtty(iodes, &arg) != -1) stty(iodes, &arg);
+#endif         
         return(P(port));
 }
 
@@ -641,7 +661,8 @@ lispval
 Lequal (void)
 {
         register lispval first, second;
-        register type1, type2;
+        int    type1;
+        int    type2;
         lispval Lsub(),Lzerop();
         long *oldsp;
         Keepxs();
@@ -711,6 +732,7 @@ Lequal (void)
         }
         {Freexs(); return(tatom);}
 }
+
 lispval 
 oLequal (void)
 {
@@ -723,7 +745,8 @@ oLequal (void)
 int 
 Iequal (register lispval first, register lispval second)
 {
-        register type1, type2;
+        int type1;
+        int type2;
         lispval Lsub(),Lzerop();
 
         if(first==second)
@@ -768,7 +791,8 @@ lispval
 Zequal (void)
 {
         register lispval first, second;
-        register type1, type2;
+        int              type1;
+        int              type2;
         lispval Lsub(),Lzerop();
         long *oldsp;
         Keepxs();

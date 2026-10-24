@@ -3,12 +3,12 @@
 #define INC_inits_09b6ad6778d27d7d892a5c35e55edffb_h
 
 /* inits.c */
-extern int initial(void);
-extern int sginth(int signo);
-extern int sigcall(int which);
-extern int delayoff(void);
-extern int dosig(void);
-extern int badmr(int number);
+extern void initial(void);
+extern void sginth(int signo);
+extern int  sigcall(int which);
+extern int  delayoff(void);
+extern int  dosig(void);
+extern void badmr(int number);
 
 
 #endif

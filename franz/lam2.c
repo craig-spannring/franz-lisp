@@ -10,19 +10,32 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
-# include "global.h"
-# include <signal.h>
-# include "structs.h"
-# include "chars.h"
-# include "chkrtab.h"
+#include "prototypes/lam2.h"
+#include "prototypes/lam1.h"
+#include "prototypes/io.h"
+#include "prototypes/frame.h"
+#include "prototypes/inits.h"
+#include "prototypes/eval.h"
+#include "prototypes/error.h"
+#include "prototypes/alloc.h"
+
+#include "global.h"
+#include "structs.h"
+#include "bigmath.h"
+#include "chars.h"
+#include "chkrtab.h"
+#include "pbignum.h"
+
+#include <string.h> 
+#include <signal.h>
+
 /*
  * (flatc 'thing ['max]) returns the smaller of max and the number of chars
  * required to print thing linearly.
  * if max argument is not given, we assume the second arg is infinity
  */
-static flen; /*Internal to this module, used as a running counter of flatsize*/
-static fmax; /*used for maximum for quick reference */
-char *strcpy();
+static int flen; /*Internal to this module, used as a running counter of flatsize*/
+static int fmax; /*used for maximum for quick reference */
 
 lispval 
 Lflatsi (void)
@@ -53,7 +66,7 @@ Lflatsi (void)
 /*
  * Iflatsi does the real work of the calculation for flatc
  */
-int 
+void
 Iflatsi (register lispval current)
 {
 
@@ -110,7 +123,7 @@ lispval
 r (int op)
 {
         unsigned char c; register lispval result;
-        register cc;
+        int cc;
         int orlevel; extern int rlevel;
         FILE *ttemp;
         struct nament *oldbnp = bnp;
@@ -289,6 +302,8 @@ Iconcat (int unintern)
                  break;
 
             case SDOT: {
+#if !IGNORE_STATIC_ASSERT
+                _Static_assert(0, "need to figure out howto replace this with something portable");
                 struct _iobuf _myiob;
                 register lispval handy = cur;
 
@@ -304,6 +319,7 @@ Iconcat (int unintern)
                 pbignum(cur,&_myiob);
                 cp = _myiob._ptr;
                 *cp = 0;
+#endif
                 break; }
                     
             default:
@@ -523,10 +539,10 @@ Lmapcrx (
     int join               /* 0 = the above, 1 = s/car/can/ */
 )
 {
-        register struct argent *namptr;
-        register index;
-        register lispval temp;
-        register lispval current;
+        struct argent *namptr;
+        int            index;
+        lispval        temp;
+        lispval        current;
 
         struct argent *first, *last;
         int count;
@@ -611,8 +627,8 @@ Lmapcx (
     int maptyp             /* 0= mapc   , 1= map  */
 )
 {
-        register struct argent *namptr;
-        register index;
+        struct argent   *namptr;
+        int              index;
         register lispval temp;
         register lispval result;
 

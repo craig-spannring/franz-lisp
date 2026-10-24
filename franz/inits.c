@@ -10,10 +10,20 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
-
+#include "prototypes/inits.h"
 #include "global.h"
-#include <signal.h>
 #include "frame.h"
+
+#include "prototypes/fasl.h"
+#include "prototypes/sysat.h"
+#include "prototypes/inits.h"
+#include "prototypes/fpipe.h"
+#include "prototypes/alloc.h"
+#include "prototypes/error.h"
+
+#include <signal.h>
+
+
 
 /* initial
  * initializes the parts of the system that cannot be automatically
@@ -24,15 +34,18 @@ int reborn=0;   /*  flag to tell whether we are in fast-load version  */
 extern char *stabf;
 extern int fvirgin;
 extern int keywait;
-extern sigstruck, sigdelay;
 
-static makenv(void);
 
-int 
+static void makenv(void);
+static void re_enable(int signo, void (*handler)(int));
+
+
+void 
 initial (void)
 {
-        int sigalrmh(), sigfpeh(),  sginth();
-        lispval Isstatus(),Istsrch();
+        lispval Isstatus();
+        lispval Istsrch();
+        
         extern int hashtop;
 
         /* clear any memory of pending SIGINT's */
@@ -82,8 +95,7 @@ initial (void)
 
 }
 
-static 
-makenv (void)
+static void makenv (void)
 {
         register lispval env, temp;
         register char *p, *q;
@@ -113,7 +125,7 @@ makenv (void)
         np--;
 }
 
-int 
+void
 sginth (int signo){
         re_enable(signo,sginth);
         sigstruck |= (1 << signo);
@@ -153,8 +165,8 @@ sginth (int signo){
 
         sigcall(signo);
 }
-int 
-sigcall (register which)
+
+int sigcall (int which)
 {
         extern lispval Lfuncal();
         Savestack(1);
@@ -199,7 +211,7 @@ dosig (void)
                                 sigcall(which);
                 }
 }
-int 
+void
 badmr (int number)
 {
         signal(number,badmr);
@@ -208,8 +220,7 @@ badmr (int number)
 }
 
 #define mask(s) (1 << ((s)-1))
-static 
-re_enable (int signo, int (*handler)(void))
+static void re_enable (int signo, void (*handler)(int))
 {
 #if (os_4_2| os_4_3)
         sigsetmask(sigblock(0) &~ mask(signo));

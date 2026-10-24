@@ -46,9 +46,6 @@ add_compile_definitions(
   # DOMAIN="nowhere"
   # define DOMAIN  "ucb"
   
-  SITE="unknown-site"
-  #define SITE    "unknown-site"
-  
   #TTSIZE=10216  
   #define TTSIZE 10216  /* sun_4_2 || sun_4_2beta || HOLE */
   #define TTSIZE 6120

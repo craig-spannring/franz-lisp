@@ -14,6 +14,7 @@
 #include "config.h"
 #include "ltypes.h"
 #include "gtabs.h"
+#include "structs.h"
 
 
 #ifdef UNIXTS
@@ -22,7 +23,13 @@
 
 #define AD 0
 
-#define peekc(p)        (p->_cnt>0? *(p)->_ptr&0377:_filbuf(p)==-1?-1:((p)->_cnt++,*--(p)->_ptr&0377))
+#if !IGNORE_STATIC_ASSERT
+_Static_assert(0, "need to figure out how to code this");
+#endif
+#define peekc(p) (0)
+// #define peekc(p)        (p->_cnt>0? *(p)->_ptr&0377:_filbuf(p)==-1?-1:((p)->_cnt++,*--(p)->_ptr&0377))
+
+
 
 #define FALSE   0
 #define TRUE    1
@@ -192,15 +199,10 @@ extern unsigned char *ctable;           /* Character table in current use */
 */
 #define NAMINC 25
 
-extern struct nament {
-        lispval val,
-                atm;
-}       *bnp,                   /* first free bind entry*/
-        *bnplim;                /* limit of bindstack   */
 
-struct argent {
-        lispval val;
-};
+extern struct nament       *bnp;                   /* first free bind entry*/
+extern struct nament       *bnplim;                /* limit of bindstack   */
+
 extern struct argent *lbot, *np, *namptr;
 extern struct nament    *bnp;                   /* first free bind entry*/
 extern struct argent *nplim;            /* don't have this = np */

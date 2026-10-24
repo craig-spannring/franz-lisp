@@ -10,11 +10,31 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/io.h"
+#include "prototypes/error.h"
+#include "prototypes/alloc.h"
+#include "prototypes/lam2.h"
+#include "prototypes/lam7.h"
+#include "prototypes/lam8.h"
+#include "prototypes/eval.h"
+#include "prototypes/io.h"
+#include "prototypes/sysat.h"
+
 #include "structs.h"
 #include "global.h"
-#include <ctype.h>
-#include "chars.h"
 #include "chkrtab.h"
+#include "bigmath.h"
+#include "pbignum.h"
+#include "chars.h"
+
+
+#include <ctype.h>
+#include <stdbool.h>
+#include <stdio.h>
+
+
+static bool vectorpr(lispval vec, FILE *port);
+
 
 struct readtable {
 unsigned char   ctable[132];
@@ -246,7 +266,7 @@ out:
         return(work);
 }
 
-int 
+void
 macrox (void)
 {
         FILE *svport;
@@ -271,7 +291,7 @@ macrox (void)
         return;
 }
 
-int 
+void
 imacrox (lispval current, int inlist)
 {
         FILE *svport;
@@ -701,7 +721,7 @@ atomtoolong (char *copyto)
 
 void printr(lispval a, FILE *useport)
 {
-        register hsize, i;
+        int hsize, i;
         char strflag = 0;
         char Idqc = 0;
         char *chstr;
@@ -945,7 +965,7 @@ val_loop:
  * We return TRUE iff we funcalled the function, else we return FALSE
  * to have the standard printing done
  */
-void vectorpr(lispval vec, FILE *port)
+static bool vectorpr(lispval vec, FILE *port)
 {
     register lispval handy;
     int svplevel = plevel;      /* save these global values */
@@ -978,13 +998,13 @@ void vectorpr(lispval vec, FILE *port)
 
 
 
-int 
+void
 lfltpr (         /* lisp floating point printer */
     char *buf,
     double val
 )
 {
-        register char *cp1;
+        char *cp1;
 
         sprintf(buf,(char *)Vfloatformat->a.clb,val);
         for(cp1 = buf; *cp1; cp1++)

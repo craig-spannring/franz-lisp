@@ -11,6 +11,11 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/fex2.h"
+#include "prototypes/eval.h"
+#include "prototypes/error.h"
+#include "prototypes/frame.h"
+
 #include "global.h"
 #define NDOVARS 30
 #include "frame.h"

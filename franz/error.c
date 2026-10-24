@@ -10,10 +10,20 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/error.h"
+
+#include "prototypes/frame.h"
+#include "prototypes/sysat.h"
+#include "prototypes/io.h"
+#include "prototypes/alloc.h"
+#include "prototypes/eval.h"
+#include "prototypes/frame.h"
+#include "prototypes/lisp.h"
 
 #include "global.h"
 #include "frame.h"
 #include "catchfram.h"
+
 
 static lispval  IEargs[5];
 static int      IElimit;
@@ -277,11 +287,15 @@ errorh (lispval type, char *message, lispval valret, int contuab, int uniqid)
         /* NOTREACHED */
 }
 
-lispval
-errorh1(type,message,valret,contuab,uniqid,arg1)
-lispval type,valret,arg1;
-int uniqid,contuab;
-char *message;
+lispval errorh1(lispval          type,
+                char            *message,
+                lispval          valret,
+                int              contuab,
+                int              uniqid,
+                lispval          arg1)
+//lispval type,valret,arg1;
+//int uniqid,contuab;
+// char *message;
 {
         IElimit = 1;
         IEargs[0] = arg1;
@@ -289,11 +303,17 @@ char *message;
         /* NOTREACHED */
 }
 
-lispval
-errorh2(type,message,valret,contuab,uniqid,arg1,arg2)
-lispval type,valret,arg1,arg2;
-int uniqid,contuab;
-char *message;
+lispval errorh2( // type,message,valret,contuab,uniqid,arg1,arg2)
+  lispval          type,
+  char            *message,
+  lispval          valret,
+  int              contuab,
+  int              uniqid,
+  lispval          arg1,                 
+  lispval          arg2)                 
+// lispval type,valret,arg1,arg2;
+// int uniqid,contuab;
+// char *message;
 {
         IElimit = 2;
         IEargs[0] = arg1;
@@ -303,7 +323,7 @@ char *message;
 }
 
 lispval 
-calhan (register limit, register lispval *work, lispval type, int uniqid, lispval contuab, register char *message, lispval handler)
+calhan (int limit, register lispval *work, lispval type, int uniqid, lispval contuab, register char *message, lispval handler)
 {
             register lispval handy;
             Savestack(4);

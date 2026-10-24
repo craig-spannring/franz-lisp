@@ -5,7 +5,6 @@ int
 prunei (register lispval what)
 {
         extern struct types int_str;
-        int gstart();
         
         if(((long)what) > ((long) gstart)) {
                 --(int_items->i);

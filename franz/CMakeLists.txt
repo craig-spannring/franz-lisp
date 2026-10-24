@@ -83,11 +83,16 @@ set(MipSrc4
  )
 
 target_sources(rawlisp PRIVATE
+  # ${MipSrc1}
+  # ${MipSrc2}
+  # ${MipSrc3}
+  ${MipSrc4}
+
   ${MipSrc1}
   ${MipSrc2}
   ${MipSrc3}
-  ${MipSrc4}
 )
+target_compile_definitions(rawlisp PUBLIC IGNORE_STATIC_ASSERT=1)
 target_include_directories(rawlisp PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/./h
   ${CMAKE_CURRENT_BINARY_DIR}

@@ -10,6 +10,10 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/fex4.h"
+#include "prototypes/alloc.h"
+#include "prototypes/error.h"
+#include "prototypes/sysat.h"
 
 #include "global.h"
 #include "lfuncs.h"
@@ -33,7 +37,6 @@ Lsyscall (void) {
         register lispval temp;
         register struct argent *aptr;
         register int acount = 1;
-        extern syscall();
         int args[50];
         Savestack(3);
 
@@ -72,7 +75,7 @@ Lsyscall (void) {
 
         Restorestack();
         args[0] = acount - 1;
-        return(inewint(callg_(syscall,args)));
+        return(inewint(callg_((callg_fx)syscall,args)));
 }
 
 /* eval-when: this has the form (eval-when <list> <form1> <form2> ...)
@@ -287,7 +290,8 @@ Isstatus (lispval curnam, lispval curval)
 {
         register lispval curitm,head;
         lispval Istsrch(),Iaddstat();
-        int badmr(),clrtt();
+        void (*badmr)(int);
+        int              clrtt();
         extern int uctolc, dmpmode, bcdtrsw, gcstrings;
 
         curitm = Istsrch(curnam);

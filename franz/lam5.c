@@ -10,10 +10,24 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam5.h"
+#include "prototypes/alloc.h"
+#include "prototypes/error.h"
+#include "prototypes/io.h"
+#include "prototypes/ffasl.h"
+#include "prototypes/divbig.h"
+
+#include "bigmath.h"
+#include "myfrexpr.h"
+
+#include "bigmath.h"
 #include "global.h"
 #include "chkrtab.h"
 #include <ctype.h>
-char *strcpy();
+#include <stdlib.h>
+#include <string.h>
+#include <signal.h>
+
 
 /*===========================================
 -
@@ -35,7 +49,7 @@ Lexpldx (
 )
 {
         int typ, i;
-        char ch, *strb, strbb[BUFSIZ], *alloca();  /* temporary string buffer */
+        char ch, *strb, strbb[BUFSIZ];  /* temporary string buffer */
         register lispval last, handy;
         extern int uctolc;
         register char *cp;
@@ -136,6 +150,8 @@ Lexpldx (
                 break;
         case SDOT:
         {
+#if !IGNORE_STATIC_ASSERT
+                _Static_assert(0, "need to figure out portable way to do this"); 
                 struct _iobuf _strbuf;
                 int count;
                 for((handy = lbot->val), count = 12;
@@ -147,7 +163,8 @@ Lexpldx (
                 _strbuf._ptr = strb;
                 _strbuf._cnt = count;
                 pbignum(lbot->val,&_strbuf);
-                putc(0,&_strbuf);
+                putc(0, &_strbuf);
+#endif                 
                 break;
         }
         default:
@@ -308,8 +325,8 @@ Lascii (void)
  */
 lispval 
 Lboole (void){
-        register x, y;
-        register struct argent *mynp;
+        int            x, y;
+        struct argent *mynp;
         int k;
 
         if(np - lbot < 3)
@@ -358,8 +375,8 @@ Lboole (void){
 lispval 
 Lfact (void)
 {
-        register lispval result, handy;
-        register itemp;
+        lispval result, handy;
+        int     itemp;
         Savestack(3); /* fixup entry mask */
 
         result = lbot->val;
@@ -425,7 +442,10 @@ Lfrexp (void)
         Savestack(2);
         chkarg(1,"frexp");
 
+#if !IGNORE_STATIC_ASSERT
+        _Static_assert(0, "need to figure out portable way to do this");
         myfrexp(lbot->val->r, &exp, &hi, &lo);
+#endif         
         if(lo < 0) {
                 /* normalize for bignum */
                 lo &= ~ 0xC0000000;

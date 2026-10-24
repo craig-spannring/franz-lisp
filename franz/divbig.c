@@ -10,17 +10,24 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/divbig.h"
+#include "prototypes/alloc.h"
+#include "prototypes/error.h"
+#include "prototypes/divbig.h"
 
 #include "global.h"
+#include "dfuncs.h"
+
+#include <stdlib.h>
 
 #define b 0x40000000
 #define toint(p) ((int) (p))
 
-int 
+void 
 divbig (lispval dividend, lispval divisor, lispval *quotient, lispval *remainder)
-{
-        register *ujp, *vip;
-        int *alloca(), d, negflag = 0, m, n, carry, rem, qhat, j;
+{ 
+        long *ujp;
+        int d, negflag = 0, m, n, carry, rem, qhat, j;
         int borrow, negrem = 0;
         long *utop = sp(), *ubot, *vbot, *qbot;
         register lispval work; lispval export();
@@ -214,9 +221,9 @@ export (register long *top, register long *bot)
 #define MAXINT 0x80000000L
 
 int 
-Ihau (register int fix)
+Ihau (int fix)
 {
-        register count;
+        int count;
         if(fix==MAXINT)
                 return(32);
         if(fix < 0)
@@ -228,9 +235,8 @@ Ihau (register int fix)
 lispval 
 Lhau (void)
 {
-        register count;
+        int    count;
         register lispval handy;
-        register dum1,dum2;
         lispval Labsval();
 
         handy = lbot->val;
@@ -255,11 +261,11 @@ top:
 lispval 
 Lhaipar (void)
 {
-        register lispval work;
-        register n;
-        register int *top = sp() - 1;
-        register int *bot;
-        int mylen;
+        lispval work;
+        int     n;
+        int    *top = sp() - 1;
+        int    *bot;
+        int     mylen;
 
         /*chkarg(2);*/
         work = lbot->val;
@@ -324,10 +330,10 @@ done:
 lispval 
 Ibiglsh (lispval bignum, lispval count, int mode)
 {
-        register lispval work;
-        register n;
-        register int *top = sp() - 1;
-        register int *bot;
+        lispval work;
+        int     n;
+        int *top = sp() - 1;
+        int *bot;
         int mylen, guard = 0, sticky = 0, round = 0;
         lispval export();
 

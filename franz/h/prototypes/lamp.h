@@ -4,6 +4,9 @@
 
 #include "structs.h"
 
+extern int  mcnts[];
+extern int *mcntp;
+extern int  doprof;
 
 /* lamp.c */
 extern lispval Lmonitor(void);

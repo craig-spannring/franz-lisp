@@ -11,6 +11,11 @@ static char *rcsid =
  */
 
 
+#include "prototypes/fexr.h"
+#include "prototypes/error.h"
+#include "prototypes/eval.h"
+#include "prototypes/alloc.h"
+
 #include "global.h"
 
 /* Ngcafter *************************************************************/

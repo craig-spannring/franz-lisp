@@ -10,8 +10,20 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam4.h"
+#include "prototypes/alloc.h"
+#include "prototypes/error.h"
+#include "prototypes/frame.h"
+#include "prototypes/divbig.h"
 
 #include "global.h"
+#include "prunei.h"
+#include "bigmath.h"
+#include "exarith.h"
+
+#include <signal.h>
+
+
 lispval adbig(),subbig(),mulbig();
 double Ifloat();
 lispval 
@@ -653,7 +665,7 @@ out:
 lispval 
 Lfp (void)
 {
-        register temp = 0;
+        int temp = 0;
         register struct argent *argp; 
 
         for(argp = lbot; argp < np; argp++)
@@ -668,8 +680,8 @@ Lfp (void)
 lispval 
 Lfm (void)
 {
-        register temp;
-        register struct argent *argp;
+        int temp;
+        struct argent *argp;
 
         if(lbot==np)return(inewint(0));
            if(TYPE(lbot->val) != INT)
@@ -690,7 +702,7 @@ Lfm (void)
 lispval 
 Lft (void)
 {
-        register temp = 1;
+        int temp = 1;
         register struct argent *argp;
 
         for(argp = lbot; argp < np; argp++)
@@ -705,8 +717,8 @@ Lft (void)
 lispval 
 Lflessp (void)
 {
-        register struct argent *argp = lbot;
-        register old, new;
+        struct argent *argp = lbot;
+        int    old, new;
 
         if(np < argp + 2) return(nil);
         old = argp->val->i; argp++;
@@ -725,7 +737,7 @@ Lflessp (void)
 lispval 
 Lfd (void)
 {
-        register temp = 0;
+        int    temp = 0;
         register struct argent *argp;
 
         if(lbot==np)return(inewint(1));
@@ -767,8 +779,12 @@ Lfexpt (void)
     
     chkarg(2,"^");
     if((TYPE(lbot[0].val) != INT ) || (TYPE(lbot[1].val) != INT))
-      errorh2(Vermisc,"^: non fixnum arguments", nil,0,
-                lbot[0].val,lbot[1].val);
+      errorh1(Vermisc,                    // lispval    type,    
+              "^: non fixnum arguments",  // char      *message, 
+              nil,                        // lispval    valret,  
+              0,                          // int        contuab, 
+              (int)lbot[0].val,           // int        uniqid,  
+              lbot[1].val);               // lispval    arg1);   
                 
     base = lbot[0].val->i;
     exp = lbot[1].val->i;

@@ -10,7 +10,6 @@ extern int makevals(void);
 extern lispval matom(char *string);
 extern lispval mstr(char *string);
 extern lispval mfun(char *string, lispval (*start)(void), lispval discip);
-extern lispval mftab(register struct ftab *table);
-
+// extern lispval mftab(struct ftab *table);
 
 #endif

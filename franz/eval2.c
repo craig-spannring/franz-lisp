@@ -11,8 +11,17 @@ static char *rcsid =
  */
 
 
+#include "prototypes/eval2.h"
+
+#include "prototypes/nargs.h"
+#include "prototypes/eval.h"
+#include "prototypes/error.h"
+#include "prototypes/alloc.h"
 #include "global.h"
 #include "frame.h"
+
+#include <stdlib.h>
+
 
 /* Iarray - handle array call.
  *  fun - array object
@@ -62,8 +71,6 @@ dumpmydata (int thing)
 lispval 
 Ifcall (lispval a)
 {
-        char *alloca();
-        long callg_();
         register int *arglist;
         register int index;
         register struct argent *mynp;
@@ -167,7 +174,7 @@ Ifcall (lispval a)
         switch(kind) {
                 case 'i': /* integer-function */
                 case 'c': /* C-function */
-                        ltemp = inewint(callg_(a->bcd.start,arglist));
+                  ltemp = inewint(callg_((callg_fx)a->bcd.start,arglist));
                         break;
 
                 case 'r': /* real-function*/
@@ -181,11 +188,11 @@ Ifcall (lispval a)
                         break;
 
                 case 'f':  /* function */
-                        ltemp = (lispval) callg_(a->bcd.start,arglist);
+                       ltemp = (lispval) callg_((callg_fx)a->bcd.start,arglist);
                         break;
 
                 case 'v': /* C function returning a structure */
-                        ap = (long *) callg_(a->bcd.start,arglist);
+                        ap = (long *) callg_((callg_fx)a->bcd.start,arglist);
                         ltemp = (--lbot)->val;
                         mysize = ltemp->vl.vectorl[-2];
                         mysize = sizeof(long) * VecTotSize(mysize);
@@ -194,7 +201,7 @@ Ifcall (lispval a)
 
                 default:
                 case 's': /* subroutine */
-                        callg_(a->bcd.start,arglist);
+                        callg_((callg_fx)a->bcd.start,arglist);
                         ltemp = tatom;
         }
         errp = Popframe();
@@ -202,8 +209,8 @@ Ifcall (lispval a)
         return(ltemp);
 }
 
-int 
-xbcopy (register char *to, register char *from, register size)
+void
+xbcopy (register char *to, register char *from, size_t size)
 {
         while(--size >= 0) *to++ = *from++;
 }
@@ -217,7 +224,14 @@ ftolsp_ (lispval arg1)
         pbuf pb;
         Savestack(1);
 
-        if((count = nargs())==0) return;;
+        if ((count = nargs()) == 0)
+        {
+#if !IGNORE_STATIC_ASSERT
+          _Static_assert(0, "figure out what to return here.");
+#endif          
+          // original was jsut return;
+          return NULL; 
+        }          
 
         if(errp->class==F_TO_FORT)
                 np = errp->svnp;

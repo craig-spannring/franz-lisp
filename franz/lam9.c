@@ -10,26 +10,39 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam9.h"
+
+#include "prototypes/error.h"
+#include "prototypes/frame.h"
+#include "prototypes/alloc.h"
+#include "prototypes/ffasl.h"
+
 #include "global.h"
+
 /*
  * These routines writen in C will allow use of the termcap file
  * by any lisp program. They are very basic routines which initialize
  * termcap and allow the lisp to execute any of the termcap functions.
  */
 
+#include <stdlib.h>
 #include <stdio.h>              /*add definations for I/O and bandrate */
 #include <sgtty.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <pwd.h>
+#include <curses.h>
+#include <term.h>
+#include <string.h>
+
 
 
 #undef putchar
-int     putchar();              /* functions used from the termlib */
-int     tgetflag();
-char    *getenv();
-char    *tgoto();
-char    *tgetstr();
+// int     putchar();              /* functions used from the termlib */
+// int     tgetflag();
+// char    *getenv();
+// char    *tgoto();
+// char    *tgetstr();
 
 char    bpbuf[1024];
 char    tstrbuf[100];
@@ -37,6 +50,8 @@ extern short    ospeed;
 extern char     PC;
 extern char   *BC;
 extern char   *UP;
+
+static int show (char *option, int *line, int *colum);
 
 /*
 /*      This routine will initialize the termcap for the lisp programs.
@@ -98,8 +113,7 @@ Ltcx (void)
 }
 
 
-static 
-show (char *option, int *line, int *colum)
+static int show (char *option, int *line, int *colum)
 {
 int found;
 char clbuf[20];

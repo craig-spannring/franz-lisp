@@ -10,10 +10,20 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#ifdef errorh1
+???
+#endif   
+
+#include "prototypes/eval.h"
+#include "prototypes/error.h"
+#include "prototypes/inits.h"
+#include "prototypes/alloc.h"
+#include "prototypes/io.h"
+
 #include "global.h"
-#include <signal.h>
 #include "frame.h"
 
+#include <signal.h>
 
 
 /*
@@ -472,11 +482,10 @@ Lapply (void)
 
 /*
  * Rebind -- rebind formal names
+ *    argptr points to list of atoms
+ *    workp  points to position on stack where evaluated args begin
  */
-rebind(argptr,workp)
-register lispval argptr;        /* argptr points to list of atoms */
-register struct argent * workp;        /* workp points to position on stack
-                       where evaluated args begin */
+void rebind(lispval argptr,struct argent * workp)
 {
     register struct nament *namptr = bnp;
 
@@ -791,8 +800,12 @@ Undeff (lispval atmn)
 
 /* VARARGS1 */
 int 
-bindfix (lispval firstarg)
+bindfix (lispval firstarg, lispval x, lispval y)
 {
+#if ! IGNORE_STATIC_ASSERT
+    _Static_assert(0, "need to figure out how to implement bindfix in portable C.\n"
+                   "It is called as if it has varargs.");
+#endif   
     register lispval *argp = &firstarg;
     register struct nament *mybnp = bnp;
     while(*argp != nil) {

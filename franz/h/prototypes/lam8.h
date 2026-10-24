@@ -6,7 +6,7 @@
 
 
 /* lam8.c */
-extern lispval Imath(double (*func)(void));
+extern lispval Imath(double (*func)(double));
 extern lispval Lsin(void);
 extern lispval Lcos(void);
 extern lispval Lasin(void);

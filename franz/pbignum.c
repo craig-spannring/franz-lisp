@@ -10,11 +10,12 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/error.h" 
+
 #include "global.h"
 
-pbignum(current, useport)
-register lispval current;
-register FILE *useport;
+
+void pbignum(lispval current, FILE *useport)    
 {
         long  *top, *bot, *work, negflag = 0;
         char *alloca();

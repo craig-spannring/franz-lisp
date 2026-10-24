@@ -11,8 +11,18 @@ static char *rcsid =
  */
 
 
+#include "prototypes/fex1.h"
+#include "prototypes/alloc.h"
+#include "prototypes/fex1.h"
+#include "prototypes/error.h"
+#include "prototypes/frame.h"
+#include "prototypes/ffasl.h"
+#include "prototypes/eval.h"
+#include "prototypes/io.h"
+
 #include "global.h"
 #include "frame.h"
+#include "dfuncs.h"
 
 /* Nprog ****************************************************************/
 /* This first sets the local variables to nil while saving their old    */

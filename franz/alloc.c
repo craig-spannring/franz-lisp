@@ -461,7 +461,10 @@ newfunct (void)
         register lispval temp;
         lispval Badcall();
         temp = next_one(&funct_str);
+#if !IGNORE_STATIC_ASSERT
+        _Static_assert(0, "figure out how we handle the weak typing");
         temp->bcd.start = Badcall;
+#endif 
         temp->bcd.discipline = nil;
         return(temp);
         }

@@ -7,7 +7,7 @@
 
 /* lam2.c */
 extern lispval Lflatsi(void);
-extern int Iflatsi(register lispval current);
+extern void    Iflatsi(register lispval current);
 extern lispval Lread(void);
 extern lispval Lratom(void);
 extern lispval Lreadc(void);

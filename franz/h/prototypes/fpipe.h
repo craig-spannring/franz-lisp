@@ -7,7 +7,6 @@
 
 /* fpipe.c */
 extern lispval Nioreset(void);
-extern char *alloca(register int howmuch);
 
 
 #endif

@@ -3,7 +3,16 @@
 #define INC_nargs_086fd9dcc80a4aa529e574a0445dd78a_h
 
 /* nargs.c */
-extern int nargs(long arg);
+
+
+// extern int nargs(long arg);
+
+/*
+ * nargs does funky stuff stuff with the stack and return addresses.
+ * Extremly machine and compiler dependent. 
+ */ 
+
+extern int nargs();
 
 
 #endif

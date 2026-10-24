@@ -4,11 +4,13 @@
 
 #include "structs.h"
 
+#include <stddef.h>
+
 /* eval2.c */
 extern lispval Iarray(lispval fun, lispval args, int evalp);
 extern int dumpmydata(int thing);
 extern lispval Ifcall(lispval a);
-extern int xbcopy(register char *to, register char *from, int size);
+extern void xbcopy(register char *to, register char *from, size_t size);
 extern lispval ftolsp_(lispval arg1);
 extern lispval ftlspn_(lispval func, register long *arglist);
 extern lispval Ifclosure(register lispval clos, int funcallp);

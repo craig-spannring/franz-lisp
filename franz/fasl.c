@@ -10,12 +10,26 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/fasl.h"
+#include "prototypes/ffasl.h"
+#include "prototypes/error.h"
+#include "prototypes/eval.h"
+#include "prototypes/frame.h"
+#include "prototypes/sysat.h"
+#include "prototypes/alloc.h"
+#include "prototypes/io.h"
+
 #include "global.h"
 #include <sys/types.h>
 #include "lispo.h"
 #include "chkrtab.h"
 #include "structs.h"
 #include "frame.h"
+
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
 
 /* fasl  -  fast loader                         j.k.foderaro
  * this loader is tuned for the lisp fast loading application
@@ -76,16 +90,17 @@ static char *rcsid =
 
 /* external functions called or referenced */
 
-lispval qcons(),qlinker(),qget();
-int _qf0(), _qf1(), _qf2(), _qf3(), _qf4(), _qfuncl(), svkludg(),qnewint();
-int qnewdoub(),qoneplus(),qoneminus(), wnaerr();
-lispval Lread(), Lcons(), Lminus(), Ladd1(), Lsub1(), Lplist(), Lputprop();
-lispval Lprint(), Lpatom(), Lconcat(), Lget(), Lmapc(), Lmapcan();
-lispval Llist(), Ladd(), Lgreaterp(), Lequal(), Ltimes(), Lsub(), Ipurcopy();
-lispval Lncons(), Ibindvars(), Iunbindvars(),error();
-int Inonlocalgo();
-lispval Istsrch();
-int mcount(), qpushframe();
+extern lispval qcons(),qlinker(),qget();
+extern int     _qf0(), _qf1(), _qf2(), _qf3(), _qf4(), _qfuncl(), svkludg(),qnewint();
+extern int     qnewdoub(),qoneplus(),qoneminus(), wnaerr();
+extern lispval Lread(), Lcons(), Lminus(), Ladd1(), Lsub1(), Lplist(), Lputprop();
+extern lispval Lprint(), Lpatom(), Lconcat(), Lget(), Lmapc(), Lmapcan();
+extern lispval Llist(), Ladd(), Lgreaterp(), Lequal(), Ltimes(), Lsub(), Ipurcopy();
+extern lispval Lncons(), Ibindvars(), Iunbindvars(),error();
+extern int     Inonlocalgo();
+extern lispval Istsrch();
+extern int     mcount();
+extern int     qpushframe();
 extern int mcnts[],mcntp,doprof;
 
 extern lispval *tynames[];
@@ -94,49 +109,49 @@ extern char _erthrow[];
 
 extern int initflag;            /* when TRUE, inhibits gc */
 
-char *alloca();                 /* stack space allocator */
 
 /* mini symbol table, contains the only external symbols compiled code
    is allowed to reference
  */
 
 
-struct ssym { char *fnam;       /* pointer to string containing name */
-              int  floc;        /* address of symbol */
-              int  ord;         /* ordinal number within cur sym tab */
+struct ssym { char  *fnam;       /* pointer to string containing name */
+              //   int  floc;        /* address of symbol */
+              void  *floc;        /* address of symbol */  
+              int    ord;         /* ordinal number within cur sym tab */
 
               } Symbtb[] 
                           = {
-                             "trantb",  0,      -1,   /* must be first */
-                             "linker",  0,      -1,   /* must be second */
-                             "mcount",    (int) mcount,   -1,
-                             "mcnts",     (int) mcnts,  -1,
-                             "_wnaerr",   (int) wnaerr, -1,
-                             "_qnewint",   (int) qnewint,  -1,
-                             "_qnewdoub",   (int) qnewdoub,  -1,
-                             "_qcons",    (int) qcons,    -1,
-                             "_qoneplus", (int) qoneplus, -1,
-                             "_qoneminus", (int) qoneminus, -1,
-                             "_typetable",  (int) typetable,  -1,
-                             "_tynames",  (int) tynames,  -1,
-                             "_qget",     (int) qget,     -1,
-                             "_errp",     (int) &errp,          -1,
-                             "_Inonlocalgo",  (int) Inonlocalgo, -1,
-                             "__erthrow",  (int) _erthrow,      -1,
-                             "_error",    (int) error,          -1,
-                             "_qpushframe",  (int) qpushframe,  -1,
-                             "_retval",         (int)&retval,   -1,
-                             "_lispretval",     (int)&lispretval,-1,
-#ifndef NPINREG
-                             "_np",       (int) &np,      -1,
-                             "_lbot",     (int) &lbot,    -1,
-#endif
-#if !NILIS0
-                             "_nilatom",  (int) &nilatom, -1,
-#endif
-                             "_bnp",      (int) &bnp,     -1,
-                             "_Ibindvars", (int) Ibindvars, -1,
-                             "_Iunbindvars", (int) Iunbindvars, -1
+                             "trantb",        0,            -1,              /* must be first */
+                             "linker",        0,            -1,              /* must be second */
+                             "mcount",        mcount,       -1,
+                             "mcnts",         mcnts,        -1,
+                             "_wnaerr",       wnaerr,       -1,
+                             "_qnewint",      qnewint,      -1,
+                             "_qnewdoub",     qnewdoub,     -1,
+                             "_qcons",        qcons,        -1,
+                             "_qoneplus",     qoneplus,     -1,
+                             "_qoneminus",    qoneminus,    -1,
+                             "_typetable",    typetable,    -1,
+                             "_tynames",      tynames,      -1,
+                             "_qget",         qget,         -1,
+                             "_errp",         &errp,        -1,
+                             "_Inonlocalgo",  Inonlocalgo,  -1,
+                             "__erthrow",     _erthrow,     -1,
+                             "_error",        error,        -1,
+                             "_qpushframe",   qpushframe,   -1,
+                             "_retval",       &retval,       -1,
+                             "_lispretval",   &lispretval,   -1,
+#ifndef NPINREG                               
+                             "_np",           &np,          -1,
+                             "_lbot",         &lbot,        -1,
+#endif                                        
+#if !NILIS0                                   
+                             "_nilatom",      &nilatom,     -1,
+#endif                                        
+                             "_bnp",          &bnp,         -1,
+                             "_Ibindvars",    Ibindvars,    -1,
+                             "_Iunbindvars",  Iunbindvars,  -1
                              };
 
 #define SYMMAX ((sizeof Symbtb) / (sizeof (struct ssym)))
@@ -178,7 +193,7 @@ struct trent *gettran();        /* function to allocate entries */
 lispval 
 Lfasl (void)
 {
-        extern int holend,usehole;
+        extern int usehole;
         extern int uctolc;
         extern char *curhbeg;
         struct argent *svnp;
@@ -223,8 +238,6 @@ Lfasl (void)
         lispval currtab,curibase;
         char ch,*filnm,*nfilnm;
         char tempfilbf[100];
-        char *strcat();
-        long lseek();
         Keepxs();
         
 
@@ -413,7 +426,7 @@ Lfasl (void)
         if(debug)printf("lin_cor_org: %x, link_cor_end %x\n",
                                       lc_org,
                                       lc_end);
-        Symbtb[1].floc = (int) (lc_org + 4);
+        Symbtb[1].floc = (lc_org + 4);
 
         /* set the linker table to all -1's so we can put in the gc table */
         for( iptr = (int *)(lc_org + 4 ); 
@@ -445,7 +458,7 @@ Lfasl (void)
         if(trans_size > 0)
         {
             tranloc = gettran(trans_size);
-            Symbtb[0].floc = (int) tranloc;
+            Symbtb[0].floc = tranloc;
         }
 
         /* now relocate the necessary symbols in the text segment */
@@ -483,7 +496,7 @@ Lfasl (void)
                             }
                         } else
                             add_offset((int *)(code_core_org + reloc.r_address),
-                                        Symbtb[j].floc - offset(reloc)); 
+                                       (int)Symbtb[j].floc - offset(reloc)); 
                           
                         break;
                       
@@ -505,11 +518,14 @@ Lfasl (void)
 
         p = fstopen((char *) literal_core_org, lit_end - lit_org, "r");
 
+#if !IGNORE_STATIC_ASSERT
+        _Static_assert(0, "make this portable");         
         if(debug)printf("lit_org %d, charstrt  %d\n",lit_org, p->_base);
-        /* the first forms we wish to read are those literals in the 
+        /* the first forms we wish to read are those literals in the
          * literal table, that is those forms referenced by an offset
          * from r8 in  compiled code
          */
+#endif         
 
         /* to read in the forms correctly, we must set up the read table
          */
@@ -703,10 +719,12 @@ clrtt (int flag)
         for (temptt = trhead; temptt != 0 ; temptt = temptt->nxtt)
         { 
             for(tement = &temptt->trentrs[0] ; tement->fcn != 0 ; tement++)
-            {   if(flag == 0 || TYPE(fnb=tement->name->a.fnbnd) != BCD
+            {
+              if(flag == 0 || TYPE(fnb=tement->name->a.fnbnd) != BCD
                              || TYPE(fnb->bcd.discipline) == STRNG)
-                tement->fcn =  qlinker;
-                else tement->fcn = fnb->bcd.start;
+                   tement->fcn =  qlinker;
+              else
+                tement->fcn = fnb->bcd.start;
             }
         }
 }

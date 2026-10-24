@@ -10,8 +10,21 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam7.h"
+
+#include "prototypes/error.h"
+#include "prototypes/frame.h"
+#include "prototypes/alloc.h"
+#include "prototypes/ffasl.h"
+#include "prototypes/lisp.h"
+#include "prototypes/eval.h"
+
 #include "global.h"
 #include <signal.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 
 lispval 
@@ -154,7 +167,7 @@ Lprocess (void)
         char *command, *p;
         int writep, readp;
         int itemp;
-        int (*handler)(), (*signal())();
+        void (*handler)(int);
         FILE *bufs[2],*obufs[2], *fpipe();
         Savestack(0);
 
@@ -282,18 +295,7 @@ Lgensym (void)
         return((lispval)newatom(0));
 }
 
-extern struct types {
-char    *next_free;
-int     space_left,
-        space,
-        type,
-        type_len;                       /*  note type_len is in units of int */
-lispval *items,
-        *pages,
-        *type_name;
-struct heads
-        *first;
-} atom_str ;
+extern struct types atom_str ;
 
 lispval 
 Lremprop (void)
@@ -562,7 +564,7 @@ Ibindvars (void)
     vars = lbot[0].val;
     vals = lbot[1].val;
 
-    if(vars == nil) return(inewint(oldbnp));
+    if(vars == nil) return(inewint((int)oldbnp));
 
     if(TYPE(vars) != DTPR)
       errorh1(Vermisc,"progv (int:bindvars): bad first argument ", nil,
@@ -579,7 +581,7 @@ Ibindvars (void)
                 nil,FALSE,0,handy);
        PUSHDOWN(handy,vals->d.car);
    }
-   return(inewint(oldbnp));
+   return(inewint((int)oldbnp));
 }
 
 
@@ -623,7 +625,7 @@ Ltymestr (void)
                 break;
         case 1: while (TYPE(lbot[0].val) != INT)
                   lbot[0].val =
-                     errorh(Vermisc,"time-string: non fixnum argument ",
+                     errorh1(Vermisc,"time-string: non fixnum argument ",
                                 nil,TRUE,0,lbot[0].val);
                 timevalue = lbot[0].val->i;
                 break;

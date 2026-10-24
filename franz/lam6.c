@@ -10,13 +10,23 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam6.h"
+#include "prototypes/lam2.h"
+#include "prototypes/alloc.h"
+#include "prototypes/error.h"
+#include "prototypes/inits.h"
+#include "prototypes/ffasl.h"
+
 #include "global.h"
+#include "chkrtab.h"
+#include "chars.h"
 #include "frame.h"
+
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/times.h>
-#include "chkrtab.h"
-#include "chars.h"
+#include <stdlib.h>
+#include <signal.h>
 
 
 lispval 
@@ -24,7 +34,7 @@ Lreadli (void)
 {
         register lispval work, handy;
         register FILE *p;
-        register char *string; char *alloca();
+        register char *string;
         FILE *fstopen();
         lispval Lread();
         int count;
@@ -173,7 +183,7 @@ Lsignal (void)
 {
         register lispval handy, old, routine;
         int i;
-        int sginth();
+        // int sginth();
 
         switch(np-lbot) {
 
@@ -233,7 +243,9 @@ Lkilcopy (void)
 lispval 
 Larg (void)
 {
-        register lispval handy; register offset, count;
+        register lispval handy;
+        int offset;
+        long count;
 
         handy = lexpr_atom->a.clb;
         if(handy==CNIL || TYPE(handy)!=DTPR)
@@ -249,8 +261,8 @@ Larg (void)
 lispval 
 Lsetarg (void)
 {
-        register lispval handy, work;
-        register limit, index;
+        lispval handy, work;
+        int     limit, index;
 
         chkarg(2,"setarg");
         handy = lexpr_atom->a.clb;
@@ -464,8 +476,9 @@ Imkrtab (int current)
         if(current == 0)
                 *(struct rtab *)nextfree = initread;
         else
-        {
-                register index = 0; register char *cp = nextfree;
+         {
+                int index = 0;
+                char *cp = nextfree;
                 lispval c;
 
                 *(struct rtab *)cp = *(struct rtab *)ctable;

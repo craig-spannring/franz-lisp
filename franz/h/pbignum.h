@@ -2,7 +2,12 @@
 #ifndef INC_pbignum_c4a1c5b393eb044316fe0e181b4b5f65_h
 #define INC_pbignum_c4a1c5b393eb044316fe0e181b4b5f65_h
 
+#include "structs.h"
+#include <stdio.h>
+
 /* pbignum.c */
+
+void pbignum(lispval current, FILE *useport);
 
 
 #endif

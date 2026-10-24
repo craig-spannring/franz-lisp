@@ -10,9 +10,12 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lamgc.h"
+#include "prototypes/error.h"
 #include "global.h"
 #include "gc.h"
 #include <sys/types.h>
+#include <fcntl.h>
 #ifdef METER
 #include <sys/vtimes.h>
 #endif
@@ -93,9 +96,11 @@ char *bitmapc = (char *)bitmapi;
 int 
 gcdump (void)
 {
-#ifdef
+#if !IGNORE_STATIC_ASSERT  
         extern struct vtimes premark,presweep,alldone;
-        int nbytes, recsize;
+        int                  nbytes, recsize;
+        _Static_assert(0, "figure out how we're going to print all of these.");
+        
         /* 16 bytes/page in the bitmap */
         nbytes = (((int) datalim - (int) beginsweep) >> 9) * 16;
         recsize = nbytes + 6*sizeof(int) + 3*sizeof(struct vtimes);

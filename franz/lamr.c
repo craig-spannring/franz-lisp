@@ -10,7 +10,14 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lamr.h"
+
 # include "global.h"
+#include "prototypes/alloc.h"
+
+#include "prototypes/error.h"
+#include "prototypes/io.h"
+
 
 /*
  *
@@ -367,8 +374,7 @@ Lvaluep (void)
         if( TYPE(lbot->val) == VALUE ) return(tatom); else return(nil);
         }
 
-int 
-CNTTYP (void) { return; /* HI! COUNT ONE TYPE CALL! */ }
+void CNTTYP (void) { return; /* HI! COUNT ONE TYPE CALL! */ }
 
 lispval 
 Lod (void)

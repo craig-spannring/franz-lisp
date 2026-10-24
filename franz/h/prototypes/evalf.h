@@ -8,7 +8,8 @@
 /* evalf.c */
 extern lispval Levalf(void);
 extern struct frame *searchforpdl(struct frame *myfp);
-extern int vfypdlp(register struct frame *curfp);
+extern void          vfypdlp(struct frame *curfp);
+
 extern lispval Lfretn(void);
 
 

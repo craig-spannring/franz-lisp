@@ -10,6 +10,9 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include <assert.h>
+
+
 #define TRUE 1
 #include "h/global.h"
 #if vax_4_2 | vax_4_3 | tahoe_4_3
@@ -22,7 +25,10 @@ extern char *curhbeg;
 void rlc (void)
 {
         char *cp, *dp;
-        
+
+#if !IGNORE_STATIC_ASSERT
+        _Static_assert(0, "need to implement this in modern C");
+
         brk(end);
         dp = holend;
         cp = dp - HOLE;
@@ -30,4 +36,5 @@ void rlc (void)
                 *dp++ = *cp++;
         curhbeg = holend - HOLE;        /* set up the hole */
         usehole = TRUE;
+#endif
 }

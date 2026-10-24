@@ -10,6 +10,9 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/subbig.h"
+#include "prototypes/error.h"
+
 #include "global.h"
 
 /*

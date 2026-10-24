@@ -11,9 +11,13 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/fpipe.h"
+#include "prototypes/alloc.h"
+#include "prototypes/error.h"
 
 #include "global.h"
 #include <signal.h>
+#include <stdlib.h>
 
 FILE *fpipe(info)
 FILE *info[2];
@@ -40,8 +44,10 @@ FILE *info[2];
 }
 /* Nioreset *************************************************************/
 
-lispval 
-Nioreset (void) {
+lispval Nioreset(void)
+{
+#if ! IGNORE_STATIC_ASSERT
+        _Static_assert(0, "need a portable way of doing this")
 #if ! RTPORTS
         register FILE *p;
 
@@ -52,7 +58,8 @@ Nioreset (void) {
         lispval NiorUtil();
 
         _fwalk(NiorUtil);
-#endif  RTPORTS
+#endif RTPORTS
+#endif                 
         return(nil);
 }
 
@@ -104,23 +111,32 @@ FILE *p;
 #endif  RTPORTS
 
 FILE *
-fstopen(base,count,flag)
-char *base;
-char *flag;
+fstopen(char* base, int count, char *flag)
+// char *base;
+// char *flag;
 {
-        register FILE *p = fdopen(0,flag);
+        FILE *p = fdopen(0,flag);
+#if !IGNORE_STATIC_ASSERT
+        _Static_assert(0, "need to write this in a portable manner");    
 
         p->_flag |= _IOSTRG;
         p->_cnt = count;
         p->_ptr = p->_base = base;
         p->_file = -1;
+#endif         
         return(p);
 }
+
+#if !IGNORE_STATIC_ASSERT
+_Static_assert(0, "think through the memory layouts and allocations");
 
 #ifdef SPISFP
 char *
 alloca (register int howmuch)
 {
+#if !IGNORE_STATIC_ASSERT
+        _Static_assert(0, "We should be able to use the standard library here.");
+#endif 
         howmuch += 3 ;
         howmuch >>= 2;
         xsp -= howmuch;
@@ -130,4 +146,5 @@ alloca (register int howmuch)
         }
         return((char *) xsp);
 }
+#endif
 #endif

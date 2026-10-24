@@ -10,16 +10,26 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/ffasl.h"
+#include "prototypes/error.h" 
+#include "prototypes/alloc.h"
+
 
 #include "global.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <aout.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <string.h> 
+
+
 #define round(x,s) ((((x)-1) & ~((s)-1)) + (s))
 
-char *stabf = 0, *strcpy(), *Ilibdir();
+char *stabf = 0, *Ilibdir();
 extern int fvirgin;
-static seed=0, mypid = 0;
+static int seed = 0;
 static char myname[100];
 lispval verify();
 
@@ -61,7 +71,7 @@ Lcfasl (void){
         register int fildes, totsize;
         int readsize;
         lispval csegment();
-        char *sbrk(), *currend, *tfile, cbuf[6000], *mytemp(), *gstab();
+        char *currend, *tfile, cbuf[6000], *mytemp(), *gstab();
         char ostabf[128];
         struct exec header;
         char *largs;
@@ -352,9 +362,9 @@ verify (register lispval in, char *error)
                          */
 
 /* copy a block of data from one file to another of size size */
-copyblock(f1,f2,size)
-FILE *f1, *f2;
-long size;
+void copyblock(FILE* f1,FILE* f2, long size)
+//FILE *f1, *f2;
+//long size;
 {
         char block[BUFSIZ];
 
@@ -387,7 +397,7 @@ Lrmadd (void){
         char *gstab();
         char ostabf[128];
         char *nstabf,*mytemp();
-        char *strtbl,*alloca();
+        char *strtbl;
         int i2, n, m, nargleft, savem;
         FILE *f, *fa;
         FILE *fnew;
@@ -557,8 +567,11 @@ Lrmadd (void){
                                           strtbl+q->n_un.n_strx-4)!=0)
                                                 continue;
 #else
+#if !IGNORE_STATIC_ASSERT
+                                _Static_assert(0, "figure out portable way");                           
                                 if(strncmp((char *)mlbot->val,
                                            q->n_name,8)!=0)
+#endif
                                                 continue;
 #endif
                                 change = 1;

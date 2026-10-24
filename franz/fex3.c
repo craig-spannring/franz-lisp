@@ -9,7 +9,19 @@ static char *rcsid = "$Header: fex3.c,v 1.15 85/03/13 17:18:29 sklower Exp $";
  */
 
 
+#include "prototypes/fex3.h"
+#include "prototypes/error.h"
+#include "prototypes/frame.h"
+#include "prototypes/alloc.h"
+
 #include "global.h"
+#include "frame.h"
+
+#include <stdlib.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <string.h>
+
 extern char *gstab();
 static int pagsiz, pagrnd;
 
@@ -33,7 +45,7 @@ Ndumplisp (void)
         int descrip, des2, ax,mode;
         extern int holesize;
         char tbuf[BUFSIZ];
-        long count, lseek();
+        long count = 0;
 
 
         pageseql();
@@ -477,8 +489,12 @@ pagenorm (void) { }
 #define STASSGN(p,q) (NTABLE[p].N_name = (q))
 #endif
 
-lispval 
-Lgetaddress (void){
+lispval Lgetaddress(void)
+{
+#if IGNORE_STATIC_ASSERT
+  return nil;
+#else
+        _Static_assert(0, "need to figure out how to rewrite this without stack tricks");  
         register struct argent *mlbot = lbot;
         register lispval work;
         register int numberofargs, i;
@@ -520,7 +536,8 @@ Lgetaddress (void){
                 }
             };
         Restorestack();
-        return(lbot[1].val->a.fnbnd);
+        return (lbot[1].val->a.fnbnd);
+#endif         
 };
 
 int 

@@ -10,17 +10,29 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam8.h"
+
+#include "prototypes/error.h"
+#include "prototypes/alloc.h"
+#include "prototypes/frame.h"
+#include "prototypes/ffasl.h"
+
 #include "global.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "frame.h"
+#include "dfuncs.h"
+
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+
 
 /* various functions from the c math library */
-double sin(),cos(),asin(),acos(),atan2(),sqrt(), log(), exp();
-extern int current;
+// extern int current;
 
 lispval 
-Imath (double (*func)(void))
+Imath (double (*func)(double))
 {
         register lispval handy;
         register double res;
@@ -123,8 +135,7 @@ Latan (void)
 lispval 
 Lrandom (void)
 {
-        register int curval;
-        float pow();
+        int curval;
 
         curval = rand();        /* get numb from 0 to 2**31-1 */
 
@@ -714,7 +725,11 @@ Lsprintf (void)
                                                 FALSE);
                         }
                 }
+#if !IGNORE_STATIC_ASSERT
+                _Static_assert(0, "this code is messed up");
+
                 sprintf(sbuf);
+#endif                
                 for (j = 0; j < np-lbot; j++)
                         unstack();
         } else

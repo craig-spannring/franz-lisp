@@ -10,6 +10,12 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/frame.h"
+#include "prototypes/alloc.h"
+#include "prototypes/io.h"
+#include "prototypes/error.h"
+#include "prototypes/eval.h"
+#include "prototypes/eval2.h"
 
 #include "global.h"
 #include "frame.h"

@@ -10,8 +10,17 @@ static char *rcsid =
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/sysat.h"
+#include "prototypes/sysat.h"
+#include "prototypes/alloc.h"
+#include "prototypes/lam6.h"
+
 #include "global.h"
 #include "lfuncs.h"
+
+#include <string.h>
+
+
 #define FIDDLE(z,b,c,y) z->a.clb=newdot(); (z->a.clb->d.car=newint())->i=b->i; \
         z->a.clb->d.cdr=newdot(); (z->a.clb->d.cdr->d.car=newint())->i=c->i; \
         z->a.clb->d.cdr->d.cdr=newdot(); (z->a.clb->d.cdr->d.cdr->d.car=newint())->i=y; \
@@ -33,9 +42,20 @@ extern int page_limit;  /* begin warning messages about running out of space */
 extern char purepage[]; /* which pages should not be swept by gc */
 extern int ttsize;      /* need to know how much of pagetable to set to other */
 
-extern lispval Iaddstat(), Isstatus();
-lispval inewatom();
+struct ftab {
+        char *string;
+        lispval (*start)();
+        lispval *discip;
+};
 
+extern lispval mftab(register struct ftab *table);
+
+extern lispval Iaddstat();
+extern lispval Isstatus();
+lispval inewatom();
+static void dofuns(void);
+
+    
 int 
 makevals (void)
         {
@@ -139,7 +159,7 @@ makevals (void)
         other_name = inewatom("other");
 
         {
-            char name[6], *strcpy();
+            char name[6];
 
             strcpy(name, "hunk0");
             for (i=0; i< 7; i++) {
@@ -486,21 +506,11 @@ mfun (char *string, lispval (*start)(void), lispval discip)
         lispval v;
         v = inewatom(string);
         v->a.fnbnd = newfunct();
-        v->a.fnbnd->bcd.start = start;
+        v->a.fnbnd->bcd.start = (bfun_start_fx)start;
         v->a.fnbnd->bcd.discipline = discip;
         return(v);
         }
 
-struct ftab {
-        char *string;
-        lispval (*start)();
-        lispval *discip;
-};
-
-static dofuns(void)
-{
-  mftab(cfuns);
-}
 
 lispval 
 mftab (register struct ftab *table)
@@ -514,286 +524,291 @@ mftab (register struct ftab *table)
         }
 }
 
-static struct ftab cfuns[] = {
-  {"car", Lcar, &(lambda)},
-  {"cdr", Lcdr, &(lambda)},
-  {"eval", Leval1, &(lambda)},
-  {"asin", Lasin, &(lambda)},
-  {"acos", Lacos, &(lambda)},
-  {"atan", Latan, &(lambda)},
-  {"cos", Lcos, &(lambda)},
-  {"sin", Lsin, &(lambda)},
-  {"sqrt", Lsqrt, &(lambda)},
-  {"exp", Lexp, &(lambda)},
-  {"log", Llog, &(lambda)},
-  {"lsh", Llsh, &(lambda)},
-  {"bignum-leftshift", Lbiglsh, &(lambda)},
-  {"sticky-bignum-leftshift", Lsbiglsh, &(lambda)},
-  {"frexp", Lfrexp, &(lambda)},
-  {"rot", Lrot, &(lambda)},
-  {"random", Lrandom, &(lambda)},
-  {"atom", Latom, &(lambda)},
-  {"apply", Lapply, &(lambda)},
-  {"funcall", Lfuncal, &(lambda)},
-  {"lexpr-funcall", Llexfun, &(lambda)},
-  {"return", Lreturn, &(lambda)},
-/*      MK("cont",Lreturn,lambda),  */
-  {"cons", Lcons, &(lambda)},
-  {"scons", Lscons, &(lambda)},
-  {"bignum-to-list", Lbigtol, &(lambda)},
-  {"cadr", Lcadr, &(lambda)},
-  {"caar", Lcaar, &(lambda)},
-  {"cddr", Lc02r, &(lambda)},
-  {"caddr", Lc12r, &(lambda)},
-  {"cdddr", Lc03r, &(lambda)},
-  {"cadddr", Lc13r, &(lambda)},
-  {"cddddr", Lc04r, &(lambda)},
-  {"caddddr", Lc14r, &(lambda)},
-  {"nthelem", Lnthelem, &(lambda)},
-  {"eq", Leq, &(lambda)},
-  {"equal", Lequal, &(lambda)},
-/**     MK("zqual",Zequal,lambda),      */
-  {"numberp", Lnumberp, &(lambda)},
-  {"dtpr", Ldtpr, &(lambda)},
-  {"bcdp", Lbcdp, &(lambda)},
-  {"portp", Lportp, &(lambda)},
-  {"arrayp", Larrayp, &(lambda)},
-  {"valuep", Lvaluep, &(lambda)},
-  {"get_pname", Lpname, &(lambda)},
-  {"ptr", Lptr, &(lambda)},
-  {"arrayref", Larayref, &(lambda)},
-  {"marray", Lmarray, &(lambda)},
-  {"getlength", Lgetl, &(lambda)},
-  {"putlength", Lputl, &(lambda)},
-  {"getaccess", Lgeta, &(lambda)},
-  {"putaccess", Lputa, &(lambda)},
-  {"getdelta", Lgetdel, &(lambda)},
-  {"putdelta", Lputdel, &(lambda)},
-  {"getaux", Lgetaux, &(lambda)},
-  {"putaux", Lputaux, &(lambda)},
-  {"getdata", Lgetdata, &(lambda)},
-  {"putdata", Lputdata, &(lambda)},
-  {"mfunction", Lmfunction, &(lambda)},
-  {"getentry", Lgtentry, &(lambda)},
-  {"getdisc", Lgetdisc, &(lambda)},
-  {"putdisc", Lputdisc, &(lambda)},
-  {"segment", Lsegment, &(lambda)},
-  {"rplaca", Lrplca, &(lambda)},
-  {"rplacd", Lrplcd, &(lambda)},
-  {"set", Lset, &(lambda)},
-  {"replace", Lreplace, &(lambda)},
-  {"infile", Linfile, &(lambda)},
-  {"outfile", Loutfile, &(lambda)},
-  {"terpr", Lterpr, &(lambda)},
-  {"print", Lprint, &(lambda)},
-  {"close", Lclose, &(lambda)},
-  {"patom", Lpatom, &(lambda)},
-  {"pntlen", Lpntlen, &(lambda)},
-  {"read", Lread, &(lambda)},
-  {"ratom", Lratom, &(lambda)},
-  {"readc", Lreadc, &(lambda)},
-  {"truename", Ltruename, &(lambda)},
-  {"implode", Limplode, &(lambda)},
-  {"maknam", Lmaknam, &(lambda)},
-  {"deref", Lderef, &(lambda)},
-  {"concat", Lconcat, &(lambda)},
-  {"uconcat", Luconcat, &(lambda)},
-  {"putprop", Lputprop, &(lambda)},
-  {"monitor", Lmonitor, &(lambda)},
-  {"get", Lget, &(lambda)},
-  {"getd", Lgetd, &(lambda)},
-  {"putd", Lputd, &(lambda)},
-  {"prog", Nprog, &(nlambda)},
-  {"quote", Nquote, &(nlambda)},
-  {"function", Nfunction, &(nlambda)},
-  {"go", Ngo, &(nlambda)},
-  {"*catch", Ncatch, &(nlambda)},
-  {"errset", Nerrset, &(nlambda)},
-  {"status", Nstatus, &(nlambda)},
-  {"sstatus", Nsstatus, &(nlambda)},
-  {"err-with-message", Lerr, &(lambda)},
-  {"*throw", Nthrow, &(lambda)},        /* this is a lambda now !! */
-  {"reset", Nreset, &(nlambda)},
-  {"break", Nbreak, &(nlambda)},
-  {"exit", Lexit, &(lambda)},
-  {"def", Ndef, &(nlambda)},
-  {"null", Lnull, &(lambda)},
-                /*{"framedump", Lframedump, &(lambda)},*/
-  {"and", Nand, &(nlambda)},
-  {"or", Nor, &(nlambda)},
-  {"setq", Nsetq, &(nlambda)},
-  {"cond", Ncond, &(nlambda)},
-  {"list", Llist, &(lambda)},
-  {"load", Lload, &(lambda)},
-  {"nwritn", Lnwritn, &(lambda)},
-  {"*process", Lprocess, &(lambda)},    /*  execute a shell command  */
-  {"allocate", Lalloc, &(lambda)},      /*  allocate a page  */
-  {"sizeof", Lsizeof, &(lambda)},       /*  size of one item of a data type  */
-  {"dumplisp", Ndumplisp, &(nlambda)},  /*  NEW save the world  */
-  {"top-level", Ntpl, &(nlambda)},      /*  top level eval-print read loop  */
-  {"mapcar", Lmpcar, &(lambda)},
-  {"maplist", Lmaplist, &(lambda)},
-  {"mapcan", Lmapcan, &(lambda)},
-  {"mapcon", Lmapcon, &(lambda)},
-  {"assq", Lassq, &(lambda)},
-  {"mapc", Lmapc, &(lambda)},
-  {"map", Lmap, &(lambda)},
-  {"flatc", Lflatsi, &(lambda)},
-  {"alphalessp", Lalfalp, &(lambda)},
-  {"drain", Ldrain, &(lambda)},
-  {"killcopy", Lkilcopy, &(lambda)}, /*  forks aand aborts for adb */
-  {"opval", Lopval, &(lambda)}, /*  sets and retrieves system variables  */
-  {"ncons", Lncons, &(lambda)},
-  {"remob", Lforget, &(lambda)},        /*  function to take atom out of hash table  */
-  {"not", Lnull, &(lambda)},
-  {"plus", Ladd, &(lambda)},
-  {"add", Ladd, &(lambda)},
-  {"times", Ltimes, &(lambda)},
-  {"difference", Lsub, &(lambda)},
-  {"quotient", Lquo, &(lambda)},
-  {"+", Lfp, &(lambda)},
-  {"-", Lfm, &(lambda)},
-  {"*", Lft, &(lambda)},
-  {"/", Lfd, &(lambda)},
-  {"1+", Lfadd1, &(lambda)},
-  {"1-", Lfsub1, &(lambda)},
-  {"^", Lfexpt, &(lambda)},
-  {"double-to-float", Ldbtofl, &(lambda)},
-  {"float-to-double", Lfltodb, &(lambda)},
-  {"<", Lflessp, &(lambda)},
-  {"mod", Lmod, &(lambda)},
-  {"minus", Lminus, &(lambda)},
-  {"absval", Labsval, &(lambda)},
-  {"add1", Ladd1, &(lambda)},
-  {"sub1", Lsub1, &(lambda)},
-  {"greaterp", Lgreaterp, &(lambda)},
-  {"lessp", Llessp, &(lambda)},
-  {"any-zerop", Lzerop, &(lambda)},   /* used when bignum arg possible */
-  {"zerop", Lzerop, &(lambda)},
-  {"minusp", Lnegp, &(lambda)},
-  {"onep", Lonep, &(lambda)},
-  {"sum", Ladd, &(lambda)},
-  {"product", Ltimes, &(lambda)},
-  {"do", Ndo, &(nlambda)},
-  {"progv", Nprogv, &(nlambda)},
-  {"progn", Nprogn, &(nlambda)},
-  {"prog2", Nprog2, &(nlambda)},
-  {"oblist", Loblist, &(lambda)},
-  {"baktrace", Lbaktrace, &(lambda)},
-  {"tyi", Ltyi, &(lambda)},
-  {"tyipeek", Ltyipeek, &(lambda)},
-  {"untyi", Luntyi, &(lambda)},
-  {"tyo", Ltyo, &(lambda)},
-  {"termcapinit", Ltci, &(lambda)},
-  {"termcapexe", Ltcx, &(lambda)},
-  {"int:setsyntax", Lsetsyn, &(lambda)},        /* an internal function */
-  {"int:getsyntax", Lgetsyntax, &(lambda)},
-  {"int:showstack", LIshowstack, &(lambda)},
-  {"int:franz-call", LIfranzcall, &(lambda)},
-  {"makereadtable", Lmakertbl, &(lambda)},
-  {"zapline", Lzapline, &(lambda)},
-  {"aexplode", Lxplda, &(lambda)},
-  {"aexplodec", Lxpldc, &(lambda)},
-  {"aexploden", Lxpldn, &(lambda)},
-  {"hashtabstat", Lhashst, &(lambda)},
+static struct ftab cfuns[] = {{"car", Lcar, &(lambda)},
+                              {"cdr", Lcdr, &(lambda)},
+                              {"eval", Leval1, &(lambda)},
+                              {"asin", Lasin, &(lambda)},
+                              {"acos", Lacos, &(lambda)},
+                              {"atan", Latan, &(lambda)},
+                              {"cos", Lcos, &(lambda)},
+                              {"sin", Lsin, &(lambda)},
+                              {"sqrt", Lsqrt, &(lambda)},
+                              {"exp", Lexp, &(lambda)},
+                              {"log", Llog, &(lambda)},
+                              {"lsh", Llsh, &(lambda)},
+                              {"bignum-leftshift", Lbiglsh, &(lambda)},
+                              {"sticky-bignum-leftshift", Lsbiglsh, &(lambda)},
+                              {"frexp", Lfrexp, &(lambda)},
+                              {"rot", Lrot, &(lambda)},
+                              {"random", Lrandom, &(lambda)},
+                              {"atom", Latom, &(lambda)},
+                              {"apply", Lapply, &(lambda)},
+                              {"funcall", Lfuncal, &(lambda)},
+                              {"lexpr-funcall", Llexfun, &(lambda)},
+                              {"return", Lreturn, &(lambda)},
+                              /*      MK("cont",Lreturn,lambda),  */
+                              {"cons", Lcons, &(lambda)},
+                              {"scons", Lscons, &(lambda)},
+                              {"bignum-to-list", Lbigtol, &(lambda)},
+                              {"cadr", Lcadr, &(lambda)},
+                              {"caar", Lcaar, &(lambda)},
+                              {"cddr", Lc02r, &(lambda)},
+                              {"caddr", Lc12r, &(lambda)},
+                              {"cdddr", Lc03r, &(lambda)},
+                              {"cadddr", Lc13r, &(lambda)},
+                              {"cddddr", Lc04r, &(lambda)},
+                              {"caddddr", Lc14r, &(lambda)},
+                              {"nthelem", Lnthelem, &(lambda)},
+                              {"eq", Leq, &(lambda)},
+                              {"equal", Lequal, &(lambda)},
+                              /**     MK("zqual",Zequal,lambda),      */
+                              {"numberp", Lnumberp, &(lambda)},
+                              {"dtpr", Ldtpr, &(lambda)},
+                              {"bcdp", Lbcdp, &(lambda)},
+                              {"portp", Lportp, &(lambda)},
+                              {"arrayp", Larrayp, &(lambda)},
+                              {"valuep", Lvaluep, &(lambda)},
+                              {"get_pname", Lpname, &(lambda)},
+                              {"ptr", Lptr, &(lambda)},
+                              {"arrayref", Larayref, &(lambda)},
+                              {"marray", Lmarray, &(lambda)},
+                              {"getlength", Lgetl, &(lambda)},
+                              {"putlength", Lputl, &(lambda)},
+                              {"getaccess", Lgeta, &(lambda)},
+                              {"putaccess", Lputa, &(lambda)},
+                              {"getdelta", Lgetdel, &(lambda)},
+                              {"putdelta", Lputdel, &(lambda)},
+                              {"getaux", Lgetaux, &(lambda)},
+                              {"putaux", Lputaux, &(lambda)},
+                              {"getdata", Lgetdata, &(lambda)},
+                              {"putdata", Lputdata, &(lambda)},
+                              {"mfunction", Lmfunction, &(lambda)},
+                              {"getentry", Lgtentry, &(lambda)},
+                              {"getdisc", Lgetdisc, &(lambda)},
+                              {"putdisc", Lputdisc, &(lambda)},
+                              {"segment", Lsegment, &(lambda)},
+                              {"rplaca", Lrplca, &(lambda)},
+                              {"rplacd", Lrplcd, &(lambda)},
+                              {"set", Lset, &(lambda)},
+                              {"replace", Lreplace, &(lambda)},
+                              {"infile", Linfile, &(lambda)},
+                              {"outfile", Loutfile, &(lambda)},
+                              {"terpr", Lterpr, &(lambda)},
+                              {"print", Lprint, &(lambda)},
+                              {"close", Lclose, &(lambda)},
+                              {"patom", Lpatom, &(lambda)},
+                              {"pntlen", Lpntlen, &(lambda)},
+                              {"read", Lread, &(lambda)},
+                              {"ratom", Lratom, &(lambda)},
+                              {"readc", Lreadc, &(lambda)},
+                              {"truename", Ltruename, &(lambda)},
+                              {"implode", Limplode, &(lambda)},
+                              {"maknam", Lmaknam, &(lambda)},
+                              {"deref", Lderef, &(lambda)},
+                              {"concat", Lconcat, &(lambda)},
+                              {"uconcat", Luconcat, &(lambda)},
+                              {"putprop", Lputprop, &(lambda)},
+                              {"monitor", Lmonitor, &(lambda)},
+                              {"get", Lget, &(lambda)},
+                              {"getd", Lgetd, &(lambda)},
+                              {"putd", Lputd, &(lambda)},
+                              {"prog", Nprog, &(nlambda)},
+                              {"quote", Nquote, &(nlambda)},
+                              {"function", Nfunction, &(nlambda)},
+                              {"go", Ngo, &(nlambda)},
+                              {"*catch", Ncatch, &(nlambda)},
+                              {"errset", Nerrset, &(nlambda)},
+                              {"status", Nstatus, &(nlambda)},
+                              {"sstatus", Nsstatus, &(nlambda)},
+                              {"err-with-message", Lerr, &(lambda)},
+                              {"*throw", Nthrow, &(lambda)}, /* this is a lambda now !! */
+                              {"reset", Nreset, &(nlambda)},
+                              {"break", Nbreak, &(nlambda)},
+                              {"exit", Lexit, &(lambda)},
+                              {"def", Ndef, &(nlambda)},
+                              {"null", Lnull, &(lambda)},
+                              /*{"framedump", Lframedump, &(lambda)},*/
+                              {"and", Nand, &(nlambda)},
+                              {"or", Nor, &(nlambda)},
+                              {"setq", Nsetq, &(nlambda)},
+                              {"cond", Ncond, &(nlambda)},
+                              {"list", Llist, &(lambda)},
+                              {"load", Lload, &(lambda)},
+                              {"nwritn", Lnwritn, &(lambda)},
+                              {"*process", Lprocess, &(lambda)},   /*  execute a shell command  */
+                              {"allocate", Lalloc, &(lambda)},     /*  allocate a page  */
+                              {"sizeof", Lsizeof, &(lambda)},      /*  size of one item of a data type  */
+                              {"dumplisp", Ndumplisp, &(nlambda)}, /*  NEW save the world  */
+                              {"top-level", Ntpl, &(nlambda)},     /*  top level eval-print read loop  */
+                              {"mapcar", Lmpcar, &(lambda)},
+                              {"maplist", Lmaplist, &(lambda)},
+                              {"mapcan", Lmapcan, &(lambda)},
+                              {"mapcon", Lmapcon, &(lambda)},
+                              {"assq", Lassq, &(lambda)},
+                              {"mapc", Lmapc, &(lambda)},
+                              {"map", Lmap, &(lambda)},
+                              {"flatc", Lflatsi, &(lambda)},
+                              {"alphalessp", Lalfalp, &(lambda)},
+                              {"drain", Ldrain, &(lambda)},
+                              {"killcopy", Lkilcopy, &(lambda)}, /*  forks aand aborts for adb */
+                              {"opval", Lopval, &(lambda)},      /*  sets and retrieves system variables  */
+                              {"ncons", Lncons, &(lambda)},
+                              {"remob", Lforget, &(lambda)}, /*  function to take atom out of hash table  */
+                              {"not", Lnull, &(lambda)},
+                              {"plus", Ladd, &(lambda)},
+                              {"add", Ladd, &(lambda)},
+                              {"times", Ltimes, &(lambda)},
+                              {"difference", Lsub, &(lambda)},
+                              {"quotient", Lquo, &(lambda)},
+                              {"+", Lfp, &(lambda)},
+                              {"-", Lfm, &(lambda)},
+                              {"*", Lft, &(lambda)},
+                              {"/", Lfd, &(lambda)},
+                              {"1+", Lfadd1, &(lambda)},
+                              {"1-", Lfsub1, &(lambda)},
+                              {"^", Lfexpt, &(lambda)},
+                              {"double-to-float", Ldbtofl, &(lambda)},
+                              {"float-to-double", Lfltodb, &(lambda)},
+                              {"<", Lflessp, &(lambda)},
+                              {"mod", Lmod, &(lambda)},
+                              {"minus", Lminus, &(lambda)},
+                              {"absval", Labsval, &(lambda)},
+                              {"add1", Ladd1, &(lambda)},
+                              {"sub1", Lsub1, &(lambda)},
+                              {"greaterp", Lgreaterp, &(lambda)},
+                              {"lessp", Llessp, &(lambda)},
+                              {"any-zerop", Lzerop, &(lambda)}, /* used when bignum arg possible */
+                              {"zerop", Lzerop, &(lambda)},
+                              {"minusp", Lnegp, &(lambda)},
+                              {"onep", Lonep, &(lambda)},
+                              {"sum", Ladd, &(lambda)},
+                              {"product", Ltimes, &(lambda)},
+                              {"do", Ndo, &(nlambda)},
+                              {"progv", Nprogv, &(nlambda)},
+                              {"progn", Nprogn, &(nlambda)},
+                              {"prog2", Nprog2, &(nlambda)},
+                              {"oblist", Loblist, &(lambda)},
+                              {"baktrace", Lbaktrace, &(lambda)},
+                              {"tyi", Ltyi, &(lambda)},
+                              {"tyipeek", Ltyipeek, &(lambda)},
+                              {"untyi", Luntyi, &(lambda)},
+                              {"tyo", Ltyo, &(lambda)},
+                              {"termcapinit", Ltci, &(lambda)},
+                              {"termcapexe", Ltcx, &(lambda)},
+                              {"int:setsyntax", Lsetsyn, &(lambda)}, /* an internal function */
+                              {"int:getsyntax", Lgetsyntax, &(lambda)},
+                              {"int:showstack", LIshowstack, &(lambda)},
+                              {"int:franz-call", LIfranzcall, &(lambda)},
+                              {"makereadtable", Lmakertbl, &(lambda)},
+                              {"zapline", Lzapline, &(lambda)},
+                              {"aexplode", Lxplda, &(lambda)},
+                              {"aexplodec", Lxpldc, &(lambda)},
+                              {"aexploden", Lxpldn, &(lambda)},
+                              {"hashtabstat", Lhashst, &(lambda)},
 #ifdef METER
-  {"gcstat", Lgcstat, &(lambda)},
+                              {"gcstat", Lgcstat, &(lambda)},
 #endif
-  {"argv", Largv, &(lambda)},
-  {"arg", Larg, &(lambda)},
-  {"setarg", Lsetarg, &(lambda)},
-  {"showstack", Lshostk, &(lambda)},
-  {"freturn", Lfretn, &(lambda)},
-  {"*rset", Lrset, &(lambda)},
-  {"eval1", Leval1, &(lambda)},
-  {"evalframe", Levalf, &(lambda)},
-  {"evalhook", Levalhook, &(lambda)},
-  {"funcallhook", Lfunhook, &(lambda)},
-  {"int:fclosure-stack-stuff", LIfss, &(lambda)},
-  {"resetio", Nioreset, &(nlambda)},
-  {"chdir", Lchdir, &(lambda)},
-  {"ascii", Lascii, &(lambda)},
-  {"boole", Lboole, &(lambda)},
-  {"type", Ltype, &(lambda)},   /* returns type-name of argument */
-  {"fix", Lfix, &(lambda)},
-  {"float", Lfloat, &(lambda)},
-  {"fact", Lfact, &(lambda)},
-  {"cpy1", Lcpy1, &(lambda)},
-  {"Divide", LDivide, &(lambda)},
-  {"Emuldiv", LEmuldiv, &(lambda)},
-  {"readlist", Lreadli, &(lambda)},
-  {"plist", Lplist, &(lambda)}, /* gives the plist of an atom */
-  {"setplist", Lsetpli, &(lambda)},     /* get plist of an atom  */
-  {"eval-when", Nevwhen, &(nlambda)},
-  {"syscall", Lsyscall, &(lambda)},
-  {"intern", Lntern, &(lambda)},
-  {"ptime", Lptime, &(lambda)}, /* return process user time */
-  {"fork", Lfork, &(lambda)},   /* turn on fork and wait */
-  {"wait", Lwait, &(lambda)},
-/*      MK("pipe",Lpipe,lambda),        */
-/*      MK("fdopen",Lfdopen,lambda), */
-  {"exece", Lexece, &(lambda)},
-  {"gensym", Lgensym, &(lambda)},
-  {"remprop", Lremprop, &(lambda)},
-  {"bcdad", Lbcdad, &(lambda)},
-  {"symbolp", Lsymbolp, &(lambda)},
-  {"stringp", Lstringp, &(lambda)},
-  {"rematom", Lrematom, &(lambda)},
-/**     MK("prname",Lprname,lambda),    */
-  {"getenv", Lgetenv, &(lambda)},
-  {"I-throw-err", Lctcherr, &(lambda)}, /* directly force a throw or error */
-  {"makunbound", Lmakunb, &(lambda)},
-  {"haipart", Lhaipar, &(lambda)},
-  {"haulong", Lhau, &(lambda)},
-  {"signal", Lsignal, &(lambda)},
-  {"fasl", Lfasl, &(lambda)},   /* NEW - new fasl loader */
-  {"cfasl", Lcfasl, &(lambda)}, /* read in compiled C file */
-  {"getaddress", Lgetaddress, &(lambda)},
-  {"removeaddress", Lrmadd, &(lambda)},         /* unbind symbols    */
-  {"make-c-thunk", Lmkcth, &(lambda)},  /* make wrappers    */
-  {"boundp", Lboundp, &(lambda)},       /* tells if an atom is bound */
-  {"fake", Lfake, &(lambda)},   /* makes a fake lisp pointer */
-/***    MK("od",Lod,lambda),            /* dumps info */
-  {"maknum", Lmaknum, &(lambda)},       /* converts a pointer to an integer */
-  {"*mod", LstarMod, &(lambda)},                /* return fixnum modulus */
-  {"*invmod", Lstarinvmod, &(lambda)},  /* return fixnum modulus ^-1 */
-  {"fseek", Lfseek, &(lambda)}, /* seek to a specific byte in a file */
-  {"fileopen",  Lfileopen, &( lambda)},
-  {"pv%", Lpolyev, &(lambda)},  /* polynomial evaluation instruction*/
-  {"cprintf", Lcprintf, &(lambda)},  /* formatted print                     */
-  {"sprintf", Lsprintf, &(lambda)},  /* formatted print to string           */
-  {"copyint*", Lcopyint, &(lambda)},    /* copyint*  */
-  {"purcopy", Lpurcopy, &(lambda)},     /* pure copy */
-  {"purep", Lpurep, &(lambda)}, /* check if pure */
-  {"int:memreport", LImemory, &(lambda)}, /* dump memory stats */
-/*
- * Hunk stuff
- */
-  {"*makhunk", LMakhunk, &(lambda)},            /* special hunk creater */
-  {"hunkp", Lhunkp, &(lambda)},         /* test a hunk */
-  {"cxr", Lcxr, &(lambda)},                     /* cxr of a hunk */
-  {"rplacx", Lrplcx, &(lambda)},                /* replace element of a hunk */
-  {"*rplacx", Lstarrpx, &(lambda)},             /* rplacx used by hunk */
-  {"hunksize", Lhunksize, &(lambda)},   /* size of a hunk */
-  {"hunk-to-list", Lhtol, &(lambda)},   /* hunk to list */
-  {"new-vector", Lnvec, &(lambda)},
-  {"new-vectori-byte", Lnvecb, &(lambda)},
-  {"new-vectori-word", Lnvecw, &(lambda)},
-  {"new-vectori-long", Lnvecl, &(lambda)},
-  {"vectorp", Lvectorp, &(lambda)},
-  {"vectorip", Lpvp, &(lambda)},
-  {"int:vref", LIvref, &(lambda)},
-  {"int:vset", LIvset, &(lambda)},
-  {"int:vsize", LIvsize, &(lambda)},
-  {"vsetprop", Lvsp, &(lambda)},
-  {"vprop", Lvprop, &(lambda)},
-  {"probef", Lprobef, &(lambda)},       /* test file existance */
-  {"substring", Lsubstring, &(lambda)},
-  {"substringn", Lsstrn, &(lambda)},
-  {"character-index", Lcharindex, &(lambda)}, /* index of char in string */
-  {"time-string", Ltymestr, &(lambda)},
-  {"gc", Ngc, &(nlambda)},
-  {"gcafter", Ngcafter, &(nlambda)},    /* garbage collection wind-up */
-  {0}
-};
+                              {"argv", Largv, &(lambda)},
+                              {"arg", Larg, &(lambda)},
+                              {"setarg", Lsetarg, &(lambda)},
+                              {"showstack", Lshostk, &(lambda)},
+                              {"freturn", Lfretn, &(lambda)},
+                              {"*rset", Lrset, &(lambda)},
+                              {"eval1", Leval1, &(lambda)},
+                              {"evalframe", Levalf, &(lambda)},
+                              {"evalhook", Levalhook, &(lambda)},
+                              {"funcallhook", Lfunhook, &(lambda)},
+                              {"int:fclosure-stack-stuff", LIfss, &(lambda)},
+                              {"resetio", Nioreset, &(nlambda)},
+                              {"chdir", Lchdir, &(lambda)},
+                              {"ascii", Lascii, &(lambda)},
+                              {"boole", Lboole, &(lambda)},
+                              {"type", Ltype, &(lambda)}, /* returns type-name of argument */
+                              {"fix", Lfix, &(lambda)},
+                              {"float", Lfloat, &(lambda)},
+                              {"fact", Lfact, &(lambda)},
+                              {"cpy1", Lcpy1, &(lambda)},
+                              {"Divide", LDivide, &(lambda)},
+                              {"Emuldiv", LEmuldiv, &(lambda)},
+                              {"readlist", Lreadli, &(lambda)},
+                              {"plist", Lplist, &(lambda)},     /* gives the plist of an atom */
+                              {"setplist", Lsetpli, &(lambda)}, /* get plist of an atom  */
+                              {"eval-when", Nevwhen, &(nlambda)},
+                              {"syscall", Lsyscall, &(lambda)},
+                              {"intern", Lntern, &(lambda)},
+                              {"ptime", Lptime, &(lambda)}, /* return process user time */
+                              {"fork", Lfork, &(lambda)},   /* turn on fork and wait */
+                              {"wait", Lwait, &(lambda)},
+                              /*      MK("pipe",Lpipe,lambda),        */
+                              /*      MK("fdopen",Lfdopen,lambda), */
+                              {"exece", Lexece, &(lambda)},
+                              {"gensym", Lgensym, &(lambda)},
+                              {"remprop", Lremprop, &(lambda)},
+                              {"bcdad", Lbcdad, &(lambda)},
+                              {"symbolp", Lsymbolp, &(lambda)},
+                              {"stringp", Lstringp, &(lambda)},
+                              {"rematom", Lrematom, &(lambda)},
+                              /**     MK("prname",Lprname,lambda),    */
+                              {"getenv", Lgetenv, &(lambda)},
+                              {"I-throw-err", Lctcherr, &(lambda)}, /* directly force a throw or error */
+                              {"makunbound", Lmakunb, &(lambda)},
+                              {"haipart", Lhaipar, &(lambda)},
+                              {"haulong", Lhau, &(lambda)},
+                              {"signal", Lsignal, &(lambda)},
+                              {"fasl", Lfasl, &(lambda)},   /* NEW - new fasl loader */
+                              {"cfasl", Lcfasl, &(lambda)}, /* read in compiled C file */
+                              {"getaddress", Lgetaddress, &(lambda)},
+                              {"removeaddress", Lrmadd, &(lambda)}, /* unbind symbols    */
+                              {"make-c-thunk", Lmkcth, &(lambda)},  /* make wrappers    */
+                              {"boundp", Lboundp, &(lambda)},       /* tells if an atom is bound */
+                              {"fake", Lfake, &(lambda)},           /* makes a fake lisp pointer */
+                                                                    /***    MK("od",Lod,lambda),            /* dumps info */
+                              {"maknum", Lmaknum, &(lambda)},       /* converts a pointer to an integer */
+                              {"*mod", LstarMod, &(lambda)},        /* return fixnum modulus */
+                              {"*invmod", Lstarinvmod, &(lambda)},  /* return fixnum modulus ^-1 */
+                              {"fseek", Lfseek, &(lambda)},         /* seek to a specific byte in a file */
+                              {"fileopen", Lfileopen, &(lambda)},
+                              {"pv%", Lpolyev, &(lambda)},            /* polynomial evaluation instruction*/
+                              {"cprintf", Lcprintf, &(lambda)},       /* formatted print                     */
+                              {"sprintf", Lsprintf, &(lambda)},       /* formatted print to string           */
+                              {"copyint*", Lcopyint, &(lambda)},      /* copyint*  */
+                              {"purcopy", Lpurcopy, &(lambda)},       /* pure copy */
+                              {"purep", Lpurep, &(lambda)},           /* check if pure */
+                              {"int:memreport", LImemory, &(lambda)}, /* dump memory stats */
+                                                                      /*
+                                                                       * Hunk stuff
+                                                                       */
+                              {"*makhunk", LMakhunk, &(lambda)},      /* special hunk creater */
+                              {"hunkp", Lhunkp, &(lambda)},           /* test a hunk */
+                              {"cxr", Lcxr, &(lambda)},               /* cxr of a hunk */
+                              {"rplacx", Lrplcx, &(lambda)},          /* replace element of a hunk */
+                              {"*rplacx", Lstarrpx, &(lambda)},       /* rplacx used by hunk */
+                              {"hunksize", Lhunksize, &(lambda)},     /* size of a hunk */
+                              {"hunk-to-list", Lhtol, &(lambda)},     /* hunk to list */
+                              {"new-vector", Lnvec, &(lambda)},
+                              {"new-vectori-byte", Lnvecb, &(lambda)},
+                              {"new-vectori-word", Lnvecw, &(lambda)},
+                              {"new-vectori-long", Lnvecl, &(lambda)},
+                              {"vectorp", Lvectorp, &(lambda)},
+                              {"vectorip", Lpvp, &(lambda)},
+                              {"int:vref", LIvref, &(lambda)},
+                              {"int:vset", LIvset, &(lambda)},
+                              {"int:vsize", LIvsize, &(lambda)},
+                              {"vsetprop", Lvsp, &(lambda)},
+                              {"vprop", Lvprop, &(lambda)},
+                              {"probef", Lprobef, &(lambda)}, /* test file existance */
+                              {"substring", Lsubstring, &(lambda)},
+                              {"substringn", Lsstrn, &(lambda)},
+                              {"character-index", Lcharindex, &(lambda)}, /* index of char in string */
+                              {"time-string", Ltymestr, &(lambda)},
+                              {"gc", Ngc, &(nlambda)},
+                              {"gcafter", Ngcafter, &(nlambda)}, /* garbage collection wind-up */
+                              {0}};
+
+static void dofuns(void)
+{
+  mftab(cfuns);
+}
+
+
 
