@@ -114,3 +114,8 @@ configure_file(
   ${CMAKE_CURRENT_LIST_DIR}/h/config.h.in
   ${CMAKE_CURRENT_BINARY_DIR}/config.h
 )
+
+
+add_custom_command(TARGET rawlisp POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE:rawlisp> ${CMAKE_CURRENT_LIST_DIR}/rawlisp
+    COMMENT "creating symlink")
