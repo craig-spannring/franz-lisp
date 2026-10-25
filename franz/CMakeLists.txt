@@ -26,6 +26,9 @@ endif()
 
 add_executable(rawlisp)
 
+
+list(APPEND rawlisp_cc_flags "${fl_cc_flags}")
+
 target_compile_options(rawlisp PRIVATE ${rawlisp_cc_flags})
 target_include_directories(rawlisp PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/./h
