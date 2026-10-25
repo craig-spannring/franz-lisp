@@ -20,6 +20,8 @@ static char *rcsid =
 #include "prototypes/frame.h"
 #include "prototypes/lisp.h"
 
+#include "lfuncs.h"
+
 #include "global.h"
 #include "frame.h"
 #include "catchfram.h"
@@ -46,11 +48,8 @@ static int      IElimit;
 lispval 
 error (char *mesg, int contvl)
 {
-    lispval errorh();
-
     return(errorh(Vermisc,mesg,nil,contvl,0));
 }
-
 
 /* new error handler, works with errset 
  * 
@@ -61,9 +60,6 @@ error (char *mesg, int contvl)
  * valret is the value to return to an errset if one is found,
  * and contuab is non nil if this error is continuable.
  */
- 
-
-/* VARARGS5 */
 static lispval 
 Ierrorh (lispval type, char *message, lispval valret, int contuab, int uniqid)
 {
