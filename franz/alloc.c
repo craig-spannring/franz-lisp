@@ -1635,7 +1635,8 @@ LImemory (void)
 {
     extern char holend[];
 
-    int nextadr, pagesinuse;
+    int nextadr;
+    int pagesinuse;
     
     printf("Memory report. max pages = %d (0x%x) = %d Bytes\n",
                 TTSIZE,TTSIZE,TTSIZE*LBPG);

@@ -1,6 +1,9 @@
 #ifndef STUBS_a5cc0adf90fa1d41bd52eaf166bc83d4_h
 #define STUBS_a5cc0adf90fa1d41bd52eaf166bc83d4_h
 
+#include "frame.h"
+
+
 extern char    holbeg[];
 extern char    holend[];
 extern char    _sobuf[];
@@ -47,7 +50,6 @@ extern int          qpushframe(void);
 extern void         qretfromfr(void);                    
 extern int          callg_(lispval (*funct)(int, ...), int *arglist);
 extern long         adback(long *utop, long *ubot, long *vtop);
-struct Foo{}; 
 extern struct frame *Ipushf(int,lispval,lispval,struct pframe*);
 
 #endif
