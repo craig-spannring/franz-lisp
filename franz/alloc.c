@@ -31,6 +31,8 @@ static char *rcsid =
 #include <stdint.h>
 #include <assert.h>
 
+#include "stubs.h"
+
 # define NUMWORDS TTSIZE * 128  /*  max number of words in P0 space  */
 # define BITQUADS TTSIZE * 2    /*  length of bit map in quad words  */
 # define BITLONGS TTSIZE * 4    /*  length of bit map in long words  */

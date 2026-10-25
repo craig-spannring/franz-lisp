@@ -22,6 +22,7 @@ static char *rcsid =
 
 #include <stdlib.h>
 
+#include "stubs.h"
 
 /* Iarray - handle array call.
  *  fun - array object

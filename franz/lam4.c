@@ -23,8 +23,9 @@ static char *rcsid =
 
 #include <signal.h>
 
+#include "stubs.h"
 
-lispval adbig(),subbig(),mulbig();
+// lispval adbig(),subbig(),mulbig();
 double Ifloat();
 lispval 
 Ladd (void)

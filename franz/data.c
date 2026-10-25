@@ -20,6 +20,7 @@ static char *rcsid =
 #include <stdio.h>
 #include <string.h>
 
+#include "stubs.h"
 
 //char firstalloc[NBPG] = { 'x' };      /* first thing allocated in file */
 lispval lispsys[SIGNIF];        /* lisp data used by system */

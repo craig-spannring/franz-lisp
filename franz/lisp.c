@@ -13,6 +13,8 @@ static char *rcsid =
 #include "prototypes/inits.h"
 #include "prototypes/io.h"
 #include "prototypes/eval.h"
+#include "prototypes/sysat.h"
+#include "prototypes/frame.h"
 
 #include "global.h"
 #include "frame.h"
@@ -20,6 +22,7 @@ static char *rcsid =
 #include <unistd.h>
 #include <stdlib.h>
 
+#include "stubs.h"
 
 /* main *****************************************************************/
 /* Execution of the lisp system begins here.  This is the top level     */
@@ -36,7 +39,7 @@ extern char **environ;
 int 
 main (int argc, char **argv, char **arge)
 {
-        lispval matom(), Lapply();
+        lispval Lapply();
         extern struct frame *errp;
         pbuf pb;
         

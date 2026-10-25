@@ -20,6 +20,7 @@ static char *rcsid =
 
 #include <string.h>
 
+#include "stubs.h"
 
 #define FIDDLE(z,b,c,y) z->a.clb=newdot(); (z->a.clb->d.car=newint())->i=b->i; \
         z->a.clb->d.cdr=newdot(); (z->a.clb->d.cdr->d.car=newint())->i=c->i; \
@@ -43,7 +44,7 @@ extern char purepage[]; /* which pages should not be swept by gc */
 extern int ttsize;      /* need to know how much of pagetable to set to other */
 
 struct ftab {
-        char *string;
+        char    *string;
         lispval (*start)();
         lispval *discip;
 };

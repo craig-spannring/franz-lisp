@@ -27,11 +27,12 @@ static char *rcsid =
 #include "pbignum.h"
 #include "chars.h"
 
-
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 
+
+#include "stubs.h"
 
 static bool vectorpr(lispval vec, FILE *port);
 

@@ -21,5 +21,8 @@ extern lispval Lfsub1(void);
 extern lispval Ldbtofl(void);
 extern lispval Lfltodb(void);
 
+extern lispval adbig(lispval, lispval);
+extern lispval subbig(lispval, lispval);
+extern lispval mulbig(lispval, lispval);
 
 #endif

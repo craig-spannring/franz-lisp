@@ -28,6 +28,7 @@ static char *rcsid =
 #include <string.h>
 #include <signal.h>
 
+#include "stubs.h"
 
 /*===========================================
 -

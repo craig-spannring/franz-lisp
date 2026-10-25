@@ -15,6 +15,8 @@ static char *rcsid =
 
 #include <alloca.h>
 
+#include "stubs.h"
+
 
 void pbignum(lispval current, FILE *useport)    
 {

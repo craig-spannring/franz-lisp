@@ -23,6 +23,7 @@ static char *rcsid =
 
 #include <signal.h>
 
+#include "stubs.h"
 
 
 /* initial

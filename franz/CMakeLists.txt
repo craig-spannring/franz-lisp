@@ -103,6 +103,8 @@ target_sources(rawlisp PRIVATE
   ${MipSrc1}
   ${MipSrc2}
   ${MipSrc3}
+
+  stubs.c
 )
 target_compile_definitions(rawlisp PUBLIC IGNORE_STATIC_ASSERT=1)
 target_include_directories(rawlisp PRIVATE

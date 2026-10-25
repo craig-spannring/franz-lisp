@@ -20,6 +20,8 @@ static char *rcsid =
 #include "global.h"
 #include "frame.h"
 
+#include "stubs.h"
+
 /* 
  * This is a collection of routines for manipulating evaluation frames.
  * Such frames are generated to mark the state of execution at a certain

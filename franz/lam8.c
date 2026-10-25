@@ -27,6 +27,7 @@ static char *rcsid =
 #include <math.h>
 #include <string.h>
 
+#include "stubs.h"
 
 /* various functions from the c math library */
 // extern int current;

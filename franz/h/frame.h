@@ -6,7 +6,11 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
- 
+#ifndef FRAME_19a7ba4737962a3137ad78dc829c1583_h
+#define FRAME_19a7ba4737962a3137ad78dc829c1583_h
+
+
+
 /* classes of frames: */
 #define F_PROG          1
 #define F_CATCH         2
@@ -43,8 +47,6 @@ struct frame
     lispval larg2;      /* optional */
 };
 
-extern struct frame *errp, *Pushframe(), *Ipushf();
-
 /* stuff for IBM, RIDGE, DEC-VMS CC, maybe Bellmac-32
  *
  * The non obvious requirement is that any new function
@@ -54,6 +56,7 @@ extern struct frame *errp, *Pushframe(), *Ipushf();
  *
  * as well.
  */
+
 
 #ifdef SPISFP
 #define Pushframe(a,b,c) Ipushf(a,b,c,&pb)
@@ -65,3 +68,9 @@ typedef struct pframe
         long regs[16];
         struct frame f;
 } pbuf;
+
+extern struct frame *errp;
+extern struct frame *Ipushf(int,lispval,lispval,struct pframe*);
+
+
+#endif

@@ -20,6 +20,8 @@ static char *rcsid =
 
 #include <stdlib.h>
 
+#include "stubs.h"
+
 #define b 0x40000000
 #define toint(p) ((int) (p))
 

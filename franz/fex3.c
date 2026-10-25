@@ -22,6 +22,8 @@ static char *rcsid = "$Header: fex3.c,v 1.15 85/03/13 17:18:29 sklower Exp $";
 #include <fcntl.h>
 #include <string.h>
 
+#include "stubs.h"
+
 extern char *gstab();
 static int pagsiz, pagrnd;
 
@@ -41,7 +43,8 @@ Ndumplisp (void)
         extern int reborn;
         struct exec work, old;
         extern int dmpmode,usehole;
-        extern char etext[], *curhbeg;
+        extern char         etext[];
+        extern char        *curhbeg;
         int descrip, des2, ax,mode;
         extern int holesize;
         char tbuf[BUFSIZ];

@@ -30,6 +30,8 @@ static char *rcsid =
 #include <string.h>
 #include <unistd.h>
 
+#include "stubs.h"
+
 
 /* fasl  -  fast loader                         j.k.foderaro
  * this loader is tuned for the lisp fast loading application
@@ -90,18 +92,51 @@ static char *rcsid =
 
 /* external functions called or referenced */
 
-extern lispval qcons(),qlinker(),qget();
-extern int     _qf0(), _qf1(), _qf2(), _qf3(), _qf4(), _qfuncl(), svkludg(),qnewint();
-extern int     qnewdoub(),qoneplus(),qoneminus(), wnaerr();
-extern lispval Lread(), Lcons(), Lminus(), Ladd1(), Lsub1(), Lplist(), Lputprop();
-extern lispval Lprint(), Lpatom(), Lconcat(), Lget(), Lmapc(), Lmapcan();
-extern lispval Llist(), Ladd(), Lgreaterp(), Lequal(), Ltimes(), Lsub(), Ipurcopy();
-extern lispval Lncons(), Ibindvars(), Iunbindvars(),error();
+extern lispval qcons();
+extern lispval qlinker();
+extern lispval qget();
+extern int     _qf0(); 
+extern int     _qf1(); 
+extern int     _qf2(); 
+extern int     _qf3(); 
+extern int     _qf4(); 
+extern int     _qfuncl();
+extern int     svkludg();
+extern int     qnewint();
+extern int     qnewdoub(); 
+extern int     qoneplus(); 
+extern int     qoneminus(); 
+extern int     wnaerr();
+extern lispval Lread(); 
+extern lispval Lcons(); 
+extern lispval Lminus(); 
+extern lispval Ladd1(); 
+extern lispval Lsub1(); 
+extern lispval Lplist(); 
+extern lispval Lputprop();
+extern lispval Lprint(); 
+extern lispval Lpatom(); 
+extern lispval Lconcat(); 
+extern lispval Lget(); 
+extern lispval Lmapc(); 
+extern lispval Lmapcan();
+extern lispval Llist(); 
+extern lispval Ladd(); 
+extern lispval Lgreaterp(); 
+extern lispval Lequal(); 
+extern lispval Ltimes(); 
+extern lispval Lsub(); 
+extern lispval Ipurcopy();
+extern lispval Lncons(); 
+extern lispval Ibindvars(); 
+extern lispval Iunbindvars(),error();
 extern int     Inonlocalgo();
 extern lispval Istsrch();
 extern int     mcount();
 extern int     qpushframe();
-extern int mcnts[],mcntp,doprof;
+extern int     mcnts[];
+extern int     mcntp;
+extern int     doprof;
 
 extern lispval *tynames[];
 extern struct frame *errp;

@@ -21,6 +21,8 @@ static char *rcsid =
 #include <signal.h>
 #include <sys/types.h>
 
+#include "stubs.h"
+
 #if (os_4_2 || os_4_3)
 #include <sys/time.h>
 #else
