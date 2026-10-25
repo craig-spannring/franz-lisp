@@ -1,5 +1,3 @@
-
-
 /*                                      -[Sun Jun 19 14:41:00 1983 by jkf]-
  *      data.c                          $Locker:  $
  * static storage declarations

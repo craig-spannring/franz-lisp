@@ -1,5 +1,3 @@
-
-
 /*                                      -[Mon Mar 21 19:37:21 1983 by jkf]-
  *      ffasl.c                         $Locker:  $
  * dynamically load C code

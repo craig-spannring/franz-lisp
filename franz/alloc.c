@@ -1,5 +1,3 @@
-
-
 /*
  *      alloc.c                         $Locker:  $
  * storage allocator and garbage collector

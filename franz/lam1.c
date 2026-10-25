@@ -1,5 +1,3 @@
-
-
 /*                                      -[Fri Feb 17 16:44:24 1984 by layer]-
  *      lam1.c                          $Locker:  $
  * lambda functions

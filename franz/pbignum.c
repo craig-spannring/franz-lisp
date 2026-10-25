@@ -1,5 +1,3 @@
-
-
 /*                                      -[Sat Jan 29 13:30:47 1983 by jkf]-
  *      pbignum.c                       $Locker:  $
  * print a bignum

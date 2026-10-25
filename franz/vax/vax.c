@@ -1,7 +1,3 @@
-
-
-#endif
-
 /*                                      -[Mon Mar 21 19:35:50 1983 by jkf]-
  *      vax.c                           $Locker:  $
  * vax specific functions

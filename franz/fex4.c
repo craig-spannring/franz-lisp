@@ -1,5 +1,3 @@
-
-
 /*                                      -[Sat Jan 29 12:40:56 1983 by jkf]-
  *      fex4.c                          $Locker:  $
  * nlambda functions

@@ -1,5 +1,3 @@
-
-
 /*                                      -[Sat Jan 29 13:09:59 1983 by jkf]-
  *      lamr.c                          $Locker:  $
  * lambda functions

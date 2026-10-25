@@ -1,5 +1,3 @@
-
-
 /*                                      -[Sat Jan 29 13:24:33 1983 by jkf]-
  *      lisp.c                          $Locker:  $
  * main program

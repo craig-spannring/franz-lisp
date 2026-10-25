@@ -1,5 +1,3 @@
-
-
 /*                                      -[Sat Jan 29 12:59:39 1983 by jkf]-
  *      inits.c                         $Locker:  $
  * initialization routines

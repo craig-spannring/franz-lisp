@@ -1,4 +1,3 @@
-
 /*
  *
  *      This program changes a unix textfile to a VMS text file.

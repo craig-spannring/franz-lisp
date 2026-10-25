@@ -1,5 +1,3 @@
-
-
 /*
  *      frame.c                         $Locker:  $
  * non local goto handlers

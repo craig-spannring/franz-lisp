@@ -1,5 +1,3 @@
-
-
 /*
  *      error.c                         $Locker:  $
  * error handler

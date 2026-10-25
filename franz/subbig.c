@@ -1,5 +1,3 @@
-
-
 /*                                      -[Sat Jan 29 13:36:05 1983 by jkf]-
  *      subbig.c                        $Locker:  $
  * bignum subtraction

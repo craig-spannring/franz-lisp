@@ -1,5 +1,3 @@
-
-
 /*                                      -[Thu Sep 29 14:05:32 1983 by jkf]-
  *      sysat.c                         $Locker:  $
  * startup data structure creation

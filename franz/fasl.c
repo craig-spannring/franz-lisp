@@ -1,5 +1,3 @@
-
-
 /*                                      -[Thu Jun  2 21:44:26 1983 by jkf]-
  *      fasl.c                          $Locker:  $
  * compiled lisp loader

@@ -1,5 +1,3 @@
-
-
 /*                                      -[Thu Aug 18 10:07:22 1983 by jkf]-
  *      eval.c                          $Locker:  $
  * evaluator

@@ -1,5 +1,3 @@
-
-
 /*                                      -[Sat Jan 29 13:07:37 1983 by jkf]-
  *      lamgc.c                         $Locker:  $
  * file used to meter gc, not always loaded

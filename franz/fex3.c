@@ -1,4 +1,3 @@
-
 /*                                      -[Sat Apr  9 17:03:02 1983 by layer]-
  *      fex3.c                          $Locker:  $
  * nlambda functions

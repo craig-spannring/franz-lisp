@@ -1,5 +1,3 @@
-
-
 /*                                      -[Tue Nov 22 10:01:14 1983 by jkf]-
  *      io.c                            $Locker:  $
  * input output functions

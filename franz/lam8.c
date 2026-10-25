@@ -1,5 +1,3 @@
-
-
 /*                                      -[Thu Sep 29 22:24:10 1983 by jkf]-
  *      lam8.c                          $Locker:  $
  * lambda functions

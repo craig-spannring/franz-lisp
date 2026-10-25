@@ -1,5 +1,3 @@
-
-
 /*                                      -[Sat Jan 29 13:32:26 1983 by jkf]-
  *      rlc.c                           $Locker:  $
  * relocator for data space

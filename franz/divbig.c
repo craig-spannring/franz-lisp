@@ -1,5 +1,3 @@
-
-
 /*                                      -[Sat Jan 29 12:22:36 1983 by jkf]-
  *      divbig.c                                $Locker:  $
  * bignum division

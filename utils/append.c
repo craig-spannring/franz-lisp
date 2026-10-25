@@ -1,4 +1,3 @@
-
 /*
  * append:  append a tail to a list of roots or prepend a head to a list
  *          of tails.

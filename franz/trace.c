@@ -1,5 +1,3 @@
-
-
 /*                                      -[Thu Aug 18 10:08:36 1983 by jkf]-
  *      trace.c                         $Locker:  $
  * evalhook evaluator

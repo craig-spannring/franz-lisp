@@ -1,5 +1,3 @@
-
-
 /*                                      -[Sat Jan 29 12:44:16 1983 by jkf]-
  *      fpipe.c                         $Locker:  $
  * pipe creation

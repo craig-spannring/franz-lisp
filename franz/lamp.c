@@ -1,5 +1,3 @@
-
-
 /*                                      -[Tue Mar 22 15:17:09 1983 by jkf]-
  *      lamp.c                          $Locker:  $
  * interface with unix profiling
