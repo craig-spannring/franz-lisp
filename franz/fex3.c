@@ -1,6 +1,4 @@
-#ifndef lint
-static char *rcsid = "$Header: fex3.c,v 1.15 85/03/13 17:18:29 sklower Exp $";
-#endif
+
 /*                                      -[Sat Apr  9 17:03:02 1983 by layer]-
  *      fex3.c                          $Locker:  $
  * nlambda functions

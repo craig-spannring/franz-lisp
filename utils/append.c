@@ -1,4 +1,3 @@
-static char *rcsid = "$Header: append.c,v 1.2 84/01/22 04:07:25 sklower Exp $";
 
 /*
  * append:  append a tail to a list of roots or prepend a head to a list

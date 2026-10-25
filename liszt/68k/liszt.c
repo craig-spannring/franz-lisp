@@ -1,6 +1,4 @@
-#ifndef lint
-static char *rcsid = "$Header: liszt.c 1.6 83/07/25 12:07:31 layer Exp $";
-#endif
+
 
 /*
 **                      -[Wed May  4 18:18:10 1983 by layer]-

@@ -137,6 +137,4 @@ long Fixzero[]
        1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 1020, 1021, 1022};
 long Lastfix[] = {1023};
 
-#ifndef lint
-static char *rcsid = "$Header: low.c,v 1.5 85/05/22 07:53:54 sklower Exp $";
-#endif
+

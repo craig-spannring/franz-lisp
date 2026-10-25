@@ -1,7 +1,3 @@
-#ifndef lint
-static char *rcsid =
-   "$Header: fixmask.c,v 1.2 83/04/10 21:34:40 sklower Exp $";
-#endif
 
 /*                                      -[Sat Jan 29 12:42:54 1983 by jkf]-
  *      fixmask.c                               $Locker:  $

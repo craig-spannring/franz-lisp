@@ -1,6 +1,4 @@
-#ifndef lint
-static char *rcsid = "$Header: fasl.c,v 1.11 87/12/14 16:49:06 sklower Exp $";
-#endif
+
 
 /*                                      -[Thu Jun  2 21:44:26 1983 by jkf]-
  *      fasl.c                          $Locker:  $

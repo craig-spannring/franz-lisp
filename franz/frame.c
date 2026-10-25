@@ -1,6 +1,4 @@
-#ifndef lint
-static char *rcsid = "$Header: frame.c,v 1.3 87/12/14 16:51:52 sklower Exp $";
-#endif
+
 
 /*
  *      frame.c                         $Locker:  $

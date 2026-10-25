@@ -1,6 +1,4 @@
-#ifndef lint
-static char *rcsid = "$Header: /na/franz/franz/RCS/fexr.c,v 1.1 83/01/29 12:48:43 jkf Exp $";
-#endif
+
 
 /*                                      -[Sat Jan 29 12:41:19 1983 by jkf]-
  *      fexr.c                          $Locker:  $

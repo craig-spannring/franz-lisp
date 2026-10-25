@@ -1,6 +1,4 @@
-#ifndef lint
-static char *rcsid = "$Header: subbig.c,v 1.2 83/09/12 14:17:31 sklower Exp $";
-#endif
+
 
 /*                                      -[Sat Jan 29 13:36:05 1983 by jkf]-
  *      subbig.c                        $Locker:  $

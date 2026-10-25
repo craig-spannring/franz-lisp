@@ -8,8 +8,6 @@
  */
 #include <stdio.h>
 
-static char *rcsid = "$Header: /na/franz/franz/vax/RCS/totxtfile.c,v 1.1 83/04/11 00:31:07 sklower Exp $";
-
 int 
 main (int argc, char *argv[])
 {

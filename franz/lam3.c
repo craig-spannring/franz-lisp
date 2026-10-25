@@ -1,6 +1,4 @@
-#ifndef lint
-static char *rcsid = "$Header: lam3.c,v 1.4 84/04/06 23:08:13 layer Exp $";
-#endif
+
 
 /*                                      -[Fri Aug  5 12:47:19 1983 by jkf]-
  *      lam3.c                          $Locker:  $

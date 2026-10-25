@@ -1,7 +1,5 @@
 
-#ifndef lint
-static char *rcsid =
-   "$Header: vax.c,v 1.6 84/02/29 16:45:23 sklower Exp $";
+
 #endif
 
 /*                                      -[Mon Mar 21 19:35:50 1983 by jkf]-

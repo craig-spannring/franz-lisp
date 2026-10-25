@@ -1,6 +1,4 @@
-#ifndef lint
-static char *rcsid = "$Header: eval2.c,v 1.8 85/03/24 11:03:02 sklower Exp $";
-#endif
+
 
 /*                                      -[Sat May  7 23:38:37 1983 by jkf]-
  *      eval2.c                         $Locker:  $

@@ -1,6 +1,4 @@
-#ifndef lint
-static char *rcsid = "$Header: fpipe.c,v 1.3 85/05/22 07:53:41 sklower Exp $";
-#endif
+
 
 /*                                      -[Sat Jan 29 12:44:16 1983 by jkf]-
  *      fpipe.c                         $Locker:  $

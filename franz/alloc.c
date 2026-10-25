@@ -1,6 +1,4 @@
-#ifndef lint
-static char *rcsid = "$Header: alloc.c,v 1.13 87/12/11 17:27:45 sklower Exp $";
-#endif
+
 
 /*
  *      alloc.c                         $Locker:  $
