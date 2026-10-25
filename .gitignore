@@ -27,6 +27,7 @@ ipch/
 *.vspx
 
 # Build artifacts
+franz/rawlisp
 build/
 xcbuild/
 compile_commands.json
