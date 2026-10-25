@@ -384,7 +384,7 @@ struct atom *newatom(int pure)
 char *newstr(int purep)
 {
   char                  *save;
-  int                    atmlen;
+  size_t                 atmlen;
   register struct str_x *p = str_current + purep;
 
   atmlen = strlen(strbuf) + 1;
@@ -402,7 +402,7 @@ char *newstr(int purep)
     p->space_left = LBPG;
   }
   strcpy((save = p->next_free), strbuf);
-  /*while(atmlen & 3) ++atmlen;   /*  even up length of string  */
+  // while(atmlen & 3) ++atmlen;   /*  even up length of string  */
   p->next_free += atmlen;
   p->space_left -= atmlen;
   return (save);
@@ -410,7 +410,7 @@ char *newstr(int purep)
 
 static char *Iinewstr(char *s, int purep)
 {
-  int len = strlen(s);
+  size_t len = strlen(s);
   while (len > (endstrb - strbuf - 1))
     atomtoolong(strbuf);
   strcpy(strbuf, s);
@@ -443,7 +443,6 @@ lispval newarray(void)
 lispval newfunct(void)
 {
   register lispval temp;
-  lispval          Badcall();
   temp = next_one(&funct_str);
 #if !IGNORE_STATIC_ASSERT
   _Static_assert(0, "figure out how we handle the weak typing");
@@ -641,7 +640,7 @@ lispval Ipurep(lispval element)
  *  dtprs.    The dtpr list is linked by car instead of cdr so when we
  *  put it in the free list, we have to change the links.
  */
-int pruneb(lispval bignum)
+void pruneb(lispval bignum)
 {
   register lispval temp = bignum;
 
@@ -662,7 +661,7 @@ int pruneb(lispval bignum)
     dtpr_str.next_free = (char *)temp;
   }
 }
-lispval Badcall(void)
+void Badcall(void)
 {
   error("BAD FUNCTION DESCRIPTOR USED IN CALL", FALSE);
 }
@@ -890,7 +889,8 @@ int gc1(void)
      */
     if ((type == DTPR) || (type == SDOT))
     {
-      int *head, *lim;
+      int *head;
+      int *lim;
       head = (int *)s->next_free; /* first value on free list*/
 
       for (i = 0; i < 4; i++) /* 4 bit map words per page  */

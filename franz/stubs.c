@@ -232,7 +232,7 @@ long adback(long *utop, long *ubot, long *vtop)
   return 0;
 }
 
-struct frame *Ipushf(int, lispval, lispval, struct pframe *)
+struct frame *Ipushf(int a, lispval b, lispval c, struct pframe *d)
 {
   assert(0);
   return 0;

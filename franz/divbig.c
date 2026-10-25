@@ -87,10 +87,8 @@ d1:
   dsmult(utop - 1, ubot, d);
   dsmult(ubot - 1, vbot, d);
 
-d2:
   for (j = 0, ujp = ubot; j <= m; j++, ujp++)
   {
-  d3:
     qhat = calqhat(ujp, vbot);
   d4:
     if ((borrow = mlsb(ujp + n, ujp, ubot, -qhat)) < 0)
