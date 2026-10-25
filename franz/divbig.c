@@ -1,6 +1,5 @@
 #ifndef lint
-static char *rcsid =
-   "$Header: divbig.c,v 1.4 83/11/26 12:10:16 sklower Exp $";
+static char *rcsid = "$Header: divbig.c,v 1.4 83/11/26 12:10:16 sklower Exp $";
 #endif
 
 /*                                      -[Sat Jan 29 12:22:36 1983 by jkf]-
@@ -23,96 +22,97 @@ static char *rcsid =
 #include "stubs.h"
 
 #define b 0x40000000
-#define toint(p) ((int) (p))
+#define toint(p) ((int)(p))
 
-void 
-divbig (lispval dividend, lispval divisor, lispval *quotient, lispval *remainder)
-{ 
-        long *ujp;
-        int d, negflag = 0, m, n, carry, rem, qhat, j;
-        int borrow, negrem = 0;
-        long *utop = sp(), *ubot, *vbot, *qbot;
-        register lispval work; lispval export();
-        Keepxs();
+void divbig(lispval dividend, lispval divisor, lispval *quotient, lispval *remainder)
+{
+  long            *ujp;
+  int              d, negflag     = 0, m, n, carry, rem, qhat, j;
+  int              borrow, negrem = 0;
+  long            *utop = sp(), *ubot, *vbot, *qbot;
+  register lispval work;
+  lispval          export();
+  Keepxs();
 
-        /* copy dividend */
-        for(work = dividend; work; work = work ->s.CDR)
-                stack(work->s.I);
-        ubot = sp();
-        if(*ubot < 0) {         /* knuth's division alg works only for pos
-                                        bignums                         */
-                negflag ^= 1;
-                negrem = 1;
-                dsmult(utop-1,ubot,-1);
-        }
-        stack(0);
-        ubot = sp();
+  /* copy dividend */
+  for (work = dividend; work; work = work->s.CDR)
+    stack(work->s.I);
+  ubot = sp();
+  if (*ubot < 0)
+  { /* knuth's division alg works only for pos
+            bignums                         */
+    negflag ^= 1;
+    negrem = 1;
+    dsmult(utop - 1, ubot, -1);
+  }
+  stack(0);
+  ubot = sp();
 
-        
-        /*copy divisor */
-        for(work = divisor; work; work = work->s.CDR)
-                stack(work->s.I);
+  /*copy divisor */
+  for (work = divisor; work; work = work->s.CDR)
+    stack(work->s.I);
 
-        vbot = sp();
-        stack(0);
-        if(*vbot < 0) {
-                negflag ^= 1;
-                dsmult(ubot-1,vbot,-1);
-        }
+  vbot = sp();
+  stack(0);
+  if (*vbot < 0)
+  {
+    negflag ^= 1;
+    dsmult(ubot - 1, vbot, -1);
+  }
 
-        /* check validity of data */
-        n = ubot - vbot;
-        m = utop - ubot - n - 1;
-        if (n == 1) {
-                /* do destructive division by  a single. */
-                rem = dsdiv(utop-1,ubot,*vbot);
-                if(negrem)
-                        rem = -rem;
-                if(negflag)
-                        dsmult(utop-1,ubot,-1);
-                if(remainder)
-                        *remainder = inewint(rem);
-                if(quotient)
-                        *quotient = export(utop,ubot);
-                Freexs();
-                return;
-        }
-        if (m < 0) {
-                if (remainder)
-                        *remainder = dividend;
-                if(quotient)
-                        *quotient = inewint(0);
-                Freexs();
-                return;
-        }
-        qbot = alloca(toint(utop) + toint(vbot) - 2 * toint(ubot));
+  /* check validity of data */
+  n = ubot - vbot;
+  m = utop - ubot - n - 1;
+  if (n == 1)
+  {
+    /* do destructive division by  a single. */
+    rem = dsdiv(utop - 1, ubot, *vbot);
+    if (negrem) rem = -rem;
+    if (negflag) dsmult(utop - 1, ubot, -1);
+    if (remainder) *remainder = inewint(rem);
+    if (quotient) *quotient = export(utop, ubot);
+    Freexs();
+    return;
+  }
+  if (m < 0)
+  {
+    if (remainder) *remainder = dividend;
+    if (quotient) *quotient = inewint(0);
+    Freexs();
+    return;
+  }
+  qbot = alloca(toint(utop) + toint(vbot) - 2 * toint(ubot));
 d1:
-        d = b /(*vbot +1);
-        dsmult(utop-1,ubot,d);
-        dsmult(ubot-1,vbot,d);
+  d = b / (*vbot + 1);
+  dsmult(utop - 1, ubot, d);
+  dsmult(ubot - 1, vbot, d);
 
-d2:     for(j=0,ujp=ubot; j <= m; j++,ujp++) {
-
-        d3:     
-                qhat = calqhat(ujp,vbot);
-        d4:
-                if((borrow = mlsb(ujp + n, ujp, ubot, -qhat)) < 0) {
-                        adback(ujp + n, ujp, ubot);
-                        qhat--;
-                }
-                qbot[j] = qhat;
-        }
-d8:     if(remainder) {
-                dsdiv(utop-1, utop - n, d);
-                if(negrem) dsmult(utop-1,utop-n,-1);
-                *remainder = export(utop,utop-n);
-        }
-        if(quotient) {
-                if(negflag)
-                        dsmult(qbot+m,qbot,-1);
-                *quotient = export(qbot + m + 1, qbot);
-        }
-        Freexs();
+d2:
+  for (j = 0, ujp = ubot; j <= m; j++, ujp++)
+  {
+  d3:
+    qhat = calqhat(ujp, vbot);
+  d4:
+    if ((borrow = mlsb(ujp + n, ujp, ubot, -qhat)) < 0)
+    {
+      adback(ujp + n, ujp, ubot);
+      qhat--;
+    }
+    qbot[j] = qhat;
+  }
+d8:
+  if (remainder)
+  {
+    dsdiv(utop - 1, utop - n, d);
+    if (negrem) dsmult(utop - 1, utop - n, -1);
+    *remainder = export(utop, utop - n);
+  }
+  if (quotient)
+  {
+    if (negflag) dsmult(qbot + m, qbot, -1);
+    *quotient = export(qbot + m + 1, qbot);
+  }
+  Freexs();
 }
 /*
  * asm code commented out due to optimizer bug
@@ -191,229 +191,217 @@ asm("   acbl    8(ap),$-4,r11,loop5");
 asm("   movl    r1,4(r11)");
 }
 */
-lispval 
-export (register long *top, register long *bot)
+lispval export(register long *top, register long *bot)
 {
-        register lispval p;
-        lispval result;
+  register lispval p;
+  lispval          result;
 
-        top--; /* screwey convention matches original
-                  vax assembler convenience */
-        while(bot < top)
-        {
-                if(*bot==0)
-                        bot++;
-                else if(*bot==-1)
-                        *++bot |= 0xc0000000;
-                else break;
-        }
-        if(bot==top) return(inewint(*bot));
-        result = p = newsdot();
-        protect(p);
-        p->s.I = *top--;
-        while(top >= bot) {
-                p = p->s.CDR = newdot();
-                p->s.I = *top--;
-        }
-        p->s.CDR = 0;
-        np--;
-        return(result);
+  top--; /* screwey convention matches original
+            vax assembler convenience */
+  while (bot < top)
+  {
+    if (*bot == 0) bot++;
+    else if (*bot == -1) *++bot |= 0xc0000000;
+    else break;
+  }
+  if (bot == top) return (inewint(*bot));
+  result = p = newsdot();
+  protect(p);
+  p->s.I = *top--;
+  while (top >= bot)
+  {
+    p = p->s.CDR = newdot();
+    p->s.I       = *top--;
+  }
+  p->s.CDR = 0;
+  np--;
+  return (result);
 }
 
 #define MAXINT 0x80000000L
 
-int 
-Ihau (int fix)
+int Ihau(int fix)
 {
-        int count;
-        if(fix==MAXINT)
-                return(32);
-        if(fix < 0)
-                fix = -fix;
-        for(count = 0; fix; count++)
-                fix /= 2;
-        return(count);
+  int count;
+  if (fix == MAXINT) return (32);
+  if (fix < 0) fix = -fix;
+  for (count = 0; fix; count++)
+    fix /= 2;
+  return (count);
 }
-lispval 
-Lhau (void)
+lispval Lhau(void)
 {
-        int    count;
-        register lispval handy;
-        lispval Labsval();
+  int              count;
+  register lispval handy;
+  lispval          Labsval();
 
-        handy = lbot->val;
+  handy = lbot->val;
 top:
-        switch(TYPE(handy)) {
-        case INT:
-                count = Ihau(handy->i);
-                break;
-        case SDOT:
-                handy = Labsval();
-                for(count = 0; handy->s.CDR!=((lispval) 0); handy = handy->s.CDR)
-                        count += 30;
-                count += Ihau(handy->s.I);
-                break;
-        default:
-                handy = errorh1(Vermisc,"Haulong: bad argument",nil,
-                               TRUE,997,handy);
-                goto top;
-        }
-        return(inewint(count));
+  switch (TYPE(handy))
+  {
+    case INT: count = Ihau(handy->i); break;
+    case SDOT:
+      handy = Labsval();
+      for (count = 0; handy->s.CDR != ((lispval)0); handy = handy->s.CDR)
+        count += 30;
+      count += Ihau(handy->s.I);
+      break;
+    default: handy = errorh1(Vermisc, "Haulong: bad argument", nil, TRUE, 997, handy); goto top;
+  }
+  return (inewint(count));
 }
-lispval 
-Lhaipar (void)
+lispval Lhaipar(void)
 {
-        lispval work;
-        int     n;
-        int    *top = sp() - 1;
-        int    *bot;
-        int     mylen;
+  lispval work;
+  int     n;
+  int    *top = sp() - 1;
+  int    *bot;
+  int     mylen;
 
-        /*chkarg(2);*/
-        work = lbot->val;
-                                        /* copy data onto stack */
+  /*chkarg(2);*/
+  work = lbot->val;
+  /* copy data onto stack */
 on1:
-        switch(TYPE(work)) {
-        case INT:
-                stack(work->i);
-                break;
-        case SDOT:
-                for(; work!=((lispval) 0); work = work->s.CDR)
-                        stack(work->s.I);
-                break;
-        default:
-                work = errorh1(Vermisc,"Haipart: bad first argument",nil,
-                                TRUE,996,work);
-                goto on1;
-        }
-        bot = sp();
-        if(*bot < 0) {
-                stack(0);
-                dsmult(top,bot,-1);
-                bot--;
-        }
-        for(; *bot==0 && bot < top; bot++);
-                                /* recalculate haulong internally */
-        mylen = (top - bot) * 30 + Ihau(*bot);
-                                /* get second argument            */
-        work = lbot[1].val;
-        while(TYPE(work)!=INT)
-                work = errorh1(Vermisc,"Haipart: 2nd arg not int",nil,
-                                TRUE,995,work);
-        n = work->i;
-        if(n >= mylen || -n >= mylen)
-                goto done;
-        if(n==0) return(inewint(0));
-        if(n > 0) {
-                                /* Here we want n most significant bits
-                                   so chop off mylen - n bits */
-                stack(0);
-                n = mylen - n;
-                for(n; n >= 30; n -= 30)
-                        top--;
-                if(top < bot)
-                        error("Internal error in haipart #1",FALSE);
-                dsdiv(top,bot,1<<n);
-
-        } else {
-                                /* here we want abs(n) low order bits */
-                stack(0);
-                bot = top + 1;
-                for(; n <= 0; n += 30)
-                        bot--;
-                n = 30 - n;
-                *bot &= ~ (-1<<n);
-        }
+  switch (TYPE(work))
+  {
+    case INT: stack(work->i); break;
+    case SDOT:
+      for (; work != ((lispval)0); work = work->s.CDR)
+        stack(work->s.I);
+      break;
+    default: work = errorh1(Vermisc, "Haipart: bad first argument", nil, TRUE, 996, work); goto on1;
+  }
+  bot = sp();
+  if (*bot < 0)
+  {
+    stack(0);
+    dsmult(top, bot, -1);
+    bot--;
+  }
+  for (; *bot == 0 && bot < top; bot++)
+    ;
+  /* recalculate haulong internally */
+  mylen = (top - bot) * 30 + Ihau(*bot);
+  /* get second argument            */
+  work = lbot[1].val;
+  while (TYPE(work) != INT)
+    work = errorh1(Vermisc, "Haipart: 2nd arg not int", nil, TRUE, 995, work);
+  n = work->i;
+  if (n >= mylen || -n >= mylen) goto done;
+  if (n == 0) return (inewint(0));
+  if (n > 0)
+  {
+    /* Here we want n most significant bits
+       so chop off mylen - n bits */
+    stack(0);
+    n = mylen - n;
+    for (n; n >= 30; n -= 30)
+      top--;
+    if (top < bot) error("Internal error in haipart #1", FALSE);
+    dsdiv(top, bot, 1 << n);
+  }
+  else
+  {
+    /* here we want abs(n) low order bits */
+    stack(0);
+    bot = top + 1;
+    for (; n <= 0; n += 30)
+      bot--;
+    n = 30 - n;
+    *bot &= ~(-1 << n);
+  }
 done:
-        return(export(top + 1,bot));
+  return (export(top + 1, bot));
 }
 #define STICKY 1
 #define TOEVEN 2
-lispval 
-Ibiglsh (lispval bignum, lispval count, int mode)
+lispval Ibiglsh(lispval bignum, lispval count, int mode)
 {
-        lispval work;
-        int     n;
-        int *top = sp() - 1;
-        int *bot;
-        int mylen, guard = 0, sticky = 0, round = 0;
-        lispval export();
+  lispval work;
+  int     n;
+  int    *top = sp() - 1;
+  int    *bot;
+  int     mylen, guard = 0, sticky = 0, round = 0;
+  lispval export();
 
-                                /* get second argument            */
-        work = count;
-        while(TYPE(work)!=INT)
-                work = errorh1(Vermisc,"Bignum-shift: 2nd arg not int",nil,
-                                TRUE,995,work);
-        n = work->i;
-        if(n==0) return(bignum);
-        for(; n >= 30; n -= 30) {/* Here we want to multiply by 2^n
-                                   so start by copying n/30 zeroes
-                                   onto stack */
-                stack(0);
-        }
+  /* get second argument            */
+  work = count;
+  while (TYPE(work) != INT)
+    work = errorh1(Vermisc, "Bignum-shift: 2nd arg not int", nil, TRUE, 995, work);
+  n = work->i;
+  if (n == 0) return (bignum);
+  for (; n >= 30; n -= 30)
+  { /* Here we want to multiply by 2^n
+      so start by copying n/30 zeroes
+      onto stack */
+    stack(0);
+  }
 
-        work = bignum;          /* copy data onto stack */
+  work = bignum; /* copy data onto stack */
 on1:
-        switch(TYPE(work)) {
-        case INT:
-                stack(work->i);
-                break;
-        case SDOT:
-                for(; work!=((lispval) 0); work = work->s.CDR)
-                        stack(work->s.I);
-                break;
-        default:
-                work = errorh1(Vermisc,"Bignum-shift: bad bignum argument",nil,
-                                TRUE,996,work);
-                goto on1;
-        }
-        bot = sp();
-        if(n >= 0) {
-                stack(0);
-                bot--;
-                dsmult(top,bot,1<<n);
-        } else {
-                        /* Trimming will only work without leading
-                           zeroes without my having to think
-                           a lot harder about it, if the inputs
-                           are canonical */
-                for(n = -n; n > 30; n -= 30) {
-                        if(guard) sticky |= 1;
-                        guard = round;
-                        if(top > bot) {
-                                round = *top;
-                                top --;
-                        } else  {
-                                round = *top;
-                                *top >>= 30;
-                        }
-                }
-                if(n > 0) {
-                        if(guard) sticky |= 1;
-                        guard = round;
-                        round = dsrsh(top,bot,-n,-1<<n);
-                }
-                stack(0); /*so that dsadd1 will work;*/
-                if (mode==STICKY) {
-                        if(((*top&1)==0) && (round | guard | sticky))
-                                dsadd1(top,bot);
-                } else if (mode==TOEVEN) {
-                        int mask;
+  switch (TYPE(work))
+  {
+    case INT: stack(work->i); break;
+    case SDOT:
+      for (; work != ((lispval)0); work = work->s.CDR)
+        stack(work->s.I);
+      break;
+    default: work = errorh1(Vermisc, "Bignum-shift: bad bignum argument", nil, TRUE, 996, work); goto on1;
+  }
+  bot = sp();
+  if (n >= 0)
+  {
+    stack(0);
+    bot--;
+    dsmult(top, bot, 1 << n);
+  }
+  else
+  {
+    /* Trimming will only work without leading
+       zeroes without my having to think
+       a lot harder about it, if the inputs
+       are canonical */
+    for (n = -n; n > 30; n -= 30)
+    {
+      if (guard) sticky |= 1;
+      guard = round;
+      if (top > bot)
+      {
+        round = *top;
+        top--;
+      }
+      else
+      {
+        round = *top;
+        *top >>= 30;
+      }
+    }
+    if (n > 0)
+    {
+      if (guard) sticky |= 1;
+      guard = round;
+      round = dsrsh(top, bot, -n, -1 << n);
+    }
+    stack(0); /*so that dsadd1 will work;*/
+    if (mode == STICKY)
+    {
+      if (((*top & 1) == 0) && (round | guard | sticky)) dsadd1(top, bot);
+    }
+    else if (mode == TOEVEN)
+    {
+      int mask;
 
-                        if(n==0) n = 30;
-                        mask = (1<<(n-1));
-                        if(! (round & mask) ) goto chop;
-                        mask -= 1;
-                        if(  ((round&mask)==0)
-                          && guard==0
-                          && sticky==0
-                          && (*top&1)==0 ) goto chop;
-                        dsadd1(top,bot);
-                }
-                chop:;
-        }
-        work = export(top + 1,bot);
-        return(work);
+      if (n == 0) n = 30;
+      mask = (1 << (n - 1));
+      if (!(round & mask)) goto chop;
+      mask -= 1;
+      if (((round & mask) == 0) && guard == 0 && sticky == 0 && (*top & 1) == 0) goto chop;
+      dsadd1(top, bot);
+    }
+  chop:;
+  }
+  work = export(top + 1, bot);
+  return (work);
 }
 
 /*From drb  Mon Jul 27 01:25:56 1981
@@ -431,26 +419,23 @@ To try again, more succintly:  the answer is correct to within 1, and
 the 1's bit of the answer will be 0 only if the answer is exactly
 correct. */
 
-lispval 
-Lsbiglsh (void)
+lispval Lsbiglsh(void)
 {
-        register struct argent *mylbot = lbot;
-        chkarg(2,"sticky-bignum-leftshift");
-        return(Ibiglsh(lbot->val,lbot[1].val,STICKY));
+  register struct argent *mylbot = lbot;
+  chkarg(2, "sticky-bignum-leftshift");
+  return (Ibiglsh(lbot->val, lbot[1].val, STICKY));
 }
-lispval 
-Lbiglsh (void)
+lispval Lbiglsh(void)
 {
-        register struct argent *mylbot = lbot;
-        chkarg(2,"bignum-leftshift");
-        return(Ibiglsh(lbot->val,lbot[1].val,TOEVEN));
+  register struct argent *mylbot = lbot;
+  chkarg(2, "bignum-leftshift");
+  return (Ibiglsh(lbot->val, lbot[1].val, TOEVEN));
 }
-lispval 
-HackHex (void) /* this is a one minute function so drb and kls can debug biglsh */
+lispval HackHex(void) /* this is a one minute function so drb and kls can debug biglsh */
 /* (HackHex i) returns a string which is the result of printing i in hex */
 {
-        register struct argent *mylbot = lbot;
-        char buf[32];
-        sprintf(buf,"%lx",lbot->val->i);
-        return((lispval)inewstr(buf));
+  register struct argent *mylbot = lbot;
+  char                    buf[32];
+  sprintf(buf, "%lx", lbot->val->i);
+  return ((lispval)inewstr(buf));
 }

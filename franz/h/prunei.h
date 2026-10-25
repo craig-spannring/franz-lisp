@@ -4,9 +4,7 @@
 
 #include "structs.h"
 
-
 /* prunei.c */
 extern int prunei(register lispval what);
-
 
 #endif

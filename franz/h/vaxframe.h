@@ -7,12 +7,13 @@
  * (c) copyright 1982, Regents of the University of California
  */
 
-struct machframe {
-        lispval (*handler)();
-        long    mask;
-        lispval *ap;
-struct  machframe       *fp;
-        lispval (*pc)();
-        lispval *r6;
-        lispval *r7;
+struct machframe
+{
+  lispval (*handler)();
+  long              mask;
+  lispval          *ap;
+  struct machframe *fp;
+  lispval (*pc)();
+  lispval *r6;
+  lispval *r7;
 };

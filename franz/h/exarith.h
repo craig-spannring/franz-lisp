@@ -5,5 +5,4 @@
 /* exarith.c */
 extern long exarith(int mul1, int mul2, long add, long *hi, long *lo);
 
-
 #endif

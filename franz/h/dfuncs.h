@@ -17,15 +17,13 @@ extern long dsneg(long *top, long *bottom);
 extern int mmuladd(long a, long b, long c, long m);
 extern int gstart();
 typedef lispval (*callg_fx)(int, ...);
-extern int callg_(lispval (*funct)(int, ...),
-                  int *arglist);
-
+extern int callg_(lispval (*funct)(int, ...), int *arglist);
 
 /* mlsb.c */
 extern long mlsb(long *utop, long *ubot, long *vtop, int nqhat);
 extern long adback(long *utop, long *ubot, long *vtop);
 extern long dsdiv(long *top, long *bot, long div);
-extern int dsadd1(long *top, long *bot);
+extern int  dsadd1(long *top, long *bot);
 extern long dsrsh(long *top, long *bot, long ncnt, long mask1);
 
 /* dsmult.c */
@@ -33,7 +31,6 @@ extern int dsmult(long *top, long *bot, long mul);
 
 /* calqhat.c */
 extern int calqhat(register long *uj, register long *v1);
-
 
 // char *getsp();
 // char *pinewstr();

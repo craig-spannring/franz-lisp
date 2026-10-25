@@ -1,6 +1,5 @@
 #ifndef lint
-static char *rcsid =
-   "$Header: eval2.c,v 1.8 85/03/24 11:03:02 sklower Exp $";
+static char *rcsid = "$Header: eval2.c,v 1.8 85/03/24 11:03:02 sklower Exp $";
 #endif
 
 /*                                      -[Sat May  7 23:38:37 1983 by jkf]-
@@ -9,7 +8,6 @@ static char *rcsid =
  *
  * (c) copyright 1982, Regents of the University of California
  */
-
 
 #include "prototypes/eval2.h"
 
@@ -30,246 +28,231 @@ static char *rcsid =
  *  evalp - flag, if TRUE then the arguments should be evaluated when they
  *      are stacked.
  */
-lispval 
-Iarray (register lispval fun, register lispval args, int evalp)
+lispval Iarray(register lispval fun, register lispval args, int evalp)
 {
-        Savestack(2);
-        
-        lbot = np;
-        protect(fun->ar.accfun);
-        for ( ; args != nil ; args = args->d.cdr)  /* stack subscripts */
-          if(evalp) protect(eval(args->d.car));
-          else protect(args->d.car);
-        protect(fun);
-        vtemp = Lfuncal();
-        Restorestack();
-        return(vtemp);
+  Savestack(2);
+
+  lbot = np;
+  protect(fun->ar.accfun);
+  for (; args != nil; args = args->d.cdr) /* stack subscripts */
+    if (evalp) protect(eval(args->d.car));
+    else protect(args->d.car);
+  protect(fun);
+  vtemp = Lfuncal();
+  Restorestack();
+  return (vtemp);
 }
 
-    
-int 
-dumpmydata (int thing)
+int dumpmydata(int thing)
 {
-        register int *ip = &thing;
-        register int *lim = ip + nargs();
+  register int *ip  = &thing;
+  register int *lim = ip + nargs();
 
-        printf("Dumpdata got %d args:\n",nargs());
-        while(ip < lim) printf("%x\n",*ip++);
-        return(0);
+  printf("Dumpdata got %d args:\n", nargs());
+  while (ip < lim)
+    printf("%x\n", *ip++);
+  return (0);
 }
 /* Ifcall :: call foreign function/subroutine
  *   Ifcall is handed a binary object which is the function to call.
  * This function has already been determined to be a foreign function
- * by noticing that its discipline field is a string.  
+ * by noticing that its discipline field is a string.
  * The arguments to pass have already been evaluated and stacked.  We
- * create on the stack a 'callg' type argument list to give to the 
+ * create on the stack a 'callg' type argument list to give to the
  * function.  What is passed to the foreign function depends on the
  * type of argument.  Certain args are passes directly, others must be
  * copied since the foreign function my want to change them.
  * When the foreign function returns, we may have to box the result,
  * depending on the type of foreign function.
  */
-lispval 
-Ifcall (lispval a)
+lispval Ifcall(lispval a)
 {
-        register int *arglist;
-        register int index;
-        register struct argent *mynp;
-        register lispval ltemp;
-        pbuf pb;
-        int nargs = np - lbot, kind, mysize, *ap;
-        Keepxs();
+  register int           *arglist;
+  register int            index;
+  register struct argent *mynp;
+  register lispval        ltemp;
+  pbuf                    pb;
+  int                     nargs = np - lbot, kind, mysize, *ap;
+  Keepxs();
 
-        /* put a frame on the stack which will save np and lbot in a
-           easy to find place in a standard way */
-        errp = Pushframe(F_TO_FORT,nil,nil);
-        mynp = lbot;
-        kind = (((char *)a->bcd.discipline)[0]);
+  /* put a frame on the stack which will save np and lbot in a
+     easy to find place in a standard way */
+  errp = Pushframe(F_TO_FORT, nil, nil);
+  mynp = lbot;
+  kind = (((char *)a->bcd.discipline)[0]);
 
-        /* dispatch according to whether call by reference or value semantics */
-        switch(kind) {
-        case 'f': case 'i': case 's': case 'r':
-                arglist = (int *) alloca((nargs + 1) * sizeof(int));
-                *arglist = nargs;
-                for(index = 1; index <=  nargs; index++) {
-                        switch(TYPE(ltemp=mynp->val)) {
-                                /* fixnums and flonums must be reboxed */
-                        case INT:
-                                stack(0);
-                                arglist[index] = (int) sp();
-                                *(int *) arglist[index] = ltemp->i;
-                                break;
-                        case DOUB:
-                                stack(0);
-                                stack(0);
-                                arglist[index] = (int) sp();
-                                *(double *) arglist[index] = ltemp->r;
-                                break;
-
-                                /* these cause only part of the structure to be sent */
-
-                        case ARRAY:
-                                arglist[index] = (int) ltemp->ar.data;
-                                break;
-
-
-                        case BCD:
-                                arglist[index] = (int) ltemp->bcd.start;
-                                break;
-
-                                /* anything else should be sent directly */
-
-                        default:
-                                arglist[index] = (int) ltemp;
-                                break;
-                        }
-                        mynp++;
-                }
-                break;
-        case 'v':
-                while(TYPE(mynp->val)!=VECTORI)
-                        mynp->val = error(
-"First arg to c-function-returning-vector must be of type vector-immediate",
-                                          TRUE);
-                nargs--;
-                mynp++;
-                lbot++;
-        case 'c': case 'd':
-                /* make one pass over args 
-                calculating size of arglist */
-                while(mynp < np) switch(TYPE(ltemp=mynp++->val)) {
-                case DOUB:
-                        nargs += ((sizeof(double)/sizeof(int))-1);
-                        break;
-                case VECTORI:
-                        if(ltemp->v.vector[-1]==Vpbv) {
-                            nargs += -1+VecTotSize(ltemp->vl.vectorl[-2]);
-                        }
-                }
-                arglist = (int *) alloca((nargs+1)*sizeof(int));
-                *arglist = nargs;
-                ap = arglist + 1;
-                /* make another pass over the args
-                   actually copying the arguments */
-                for(mynp = lbot; mynp < np; mynp++)
-                        switch(TYPE(ltemp=mynp->val)) {
-                case INT:
-                        *ap++ = ltemp->i;
-                        break;
-                case DOUB:
-                        *(double *)ap = ltemp->r;
-                        ap += (sizeof (double)) / (sizeof (long));
-                        break;
-                case VECTORI:
-                        if(ltemp->v.vector[-1]==Vpbv) {
-                                mysize = ltemp->vl.vectorl[-2];
-                                mysize = sizeof(long) * VecTotSize(mysize);
-                                xbcopy(ap,ltemp,mysize);
-                                ap = (long *) (mysize + (int) ap);
-                                break;
-                        }
-                default:
-                        *ap++ = (long) ltemp;
-                }
-        }
-        switch(kind) {
-                case 'i': /* integer-function */
-                case 'c': /* C-function */
-                  ltemp = inewint(callg_((callg_fx)a->bcd.start,arglist));
-                        break;
-
-                case 'r': /* real-function*/
-                case 'd': /* C function declared returning double */
-                        {
-                        double result =
-                           (* ((double (*)()) callg_))(a->bcd.start,arglist);
-                        ltemp = newdoub();
-                        ltemp->r = result; 
-                        }
-                        break;
-
-                case 'f':  /* function */
-                       ltemp = (lispval) callg_((callg_fx)a->bcd.start,arglist);
-                        break;
-
-                case 'v': /* C function returning a structure */
-                        ap = (long *) callg_((callg_fx)a->bcd.start,arglist);
-                        ltemp = (--lbot)->val;
-                        mysize = ltemp->vl.vectorl[-2];
-                        mysize = sizeof(long) * VecTotSize(mysize);
-                        xbcopy(ltemp,ap,mysize);
-                        break;
-
-                default:
-                case 's': /* subroutine */
-                        callg_((callg_fx)a->bcd.start,arglist);
-                        ltemp = tatom;
-        }
-        errp = Popframe();
-        Freexs();
-        return(ltemp);
-}
-
-void
-xbcopy (register char *to, register char *from, size_t size)
-{
-        while(--size >= 0) *to++ = *from++;
-}
-
-lispval 
-ftolsp_ (lispval arg1)
-{
-        int count; 
-        register lispval *ap = &arg1;
-        lispval save;
-        pbuf pb;
-        Savestack(1);
-
-        if ((count = nargs()) == 0)
+  /* dispatch according to whether call by reference or value semantics */
+  switch (kind)
+  {
+    case 'f':
+    case 'i':
+    case 's':
+    case 'r':
+      arglist  = (int *)alloca((nargs + 1) * sizeof(int));
+      *arglist = nargs;
+      for (index = 1; index <= nargs; index++)
+      {
+        switch (TYPE(ltemp = mynp->val))
         {
-#if !IGNORE_STATIC_ASSERT
-          _Static_assert(0, "figure out what to return here.");
-#endif          
-          // original was jsut return;
-          return NULL; 
-        }          
+            /* fixnums and flonums must be reboxed */
+          case INT:
+            stack(0);
+            arglist[index]         = (int)sp();
+            *(int *)arglist[index] = ltemp->i;
+            break;
+          case DOUB:
+            stack(0);
+            stack(0);
+            arglist[index]            = (int)sp();
+            *(double *)arglist[index] = ltemp->r;
+            break;
 
-        if(errp->class==F_TO_FORT)
-                np = errp->svnp;
-        errp = Pushframe(F_TO_LISP,nil,nil);
-        lbot = np;
-        for(; count > 0; count--)
-                np++->val = *ap++;
-        save = Lfuncal();
-        errp = Popframe();
-        Restorestack();
-        return(save);
+            /* these cause only part of the structure to be sent */
+
+          case ARRAY: arglist[index] = (int)ltemp->ar.data; break;
+
+          case BCD:
+            arglist[index] = (int)ltemp->bcd.start;
+            break;
+
+            /* anything else should be sent directly */
+
+          default: arglist[index] = (int)ltemp; break;
+        }
+        mynp++;
+      }
+      break;
+    case 'v':
+      while (TYPE(mynp->val) != VECTORI)
+        mynp->val = error("First arg to c-function-returning-vector must be of type vector-immediate", TRUE);
+      nargs--;
+      mynp++;
+      lbot++;
+    case 'c':
+    case 'd':
+      /* make one pass over args
+      calculating size of arglist */
+      while (mynp < np)
+        switch (TYPE(ltemp = mynp++->val))
+        {
+          case DOUB: nargs += ((sizeof(double) / sizeof(int)) - 1); break;
+          case VECTORI:
+            if (ltemp->v.vector[-1] == Vpbv)
+            {
+              nargs += -1 + VecTotSize(ltemp->vl.vectorl[-2]);
+            }
+        }
+      arglist  = (int *)alloca((nargs + 1) * sizeof(int));
+      *arglist = nargs;
+      ap       = arglist + 1;
+      /* make another pass over the args
+         actually copying the arguments */
+      for (mynp = lbot; mynp < np; mynp++)
+        switch (TYPE(ltemp = mynp->val))
+        {
+          case INT: *ap++ = ltemp->i; break;
+          case DOUB:
+            *(double *)ap = ltemp->r;
+            ap += (sizeof(double)) / (sizeof(long));
+            break;
+          case VECTORI:
+            if (ltemp->v.vector[-1] == Vpbv)
+            {
+              mysize = ltemp->vl.vectorl[-2];
+              mysize = sizeof(long) * VecTotSize(mysize);
+              xbcopy(ap, ltemp, mysize);
+              ap = (long *)(mysize + (int)ap);
+              break;
+            }
+          default: *ap++ = (long)ltemp;
+        }
+  }
+  switch (kind)
+  {
+    case 'i': /* integer-function */
+    case 'c': /* C-function */ ltemp = inewint(callg_((callg_fx)a->bcd.start, arglist)); break;
+
+    case 'r': /* real-function*/
+    case 'd': /* C function declared returning double */
+    {
+      double result = (*((double (*)())callg_))(a->bcd.start, arglist);
+      ltemp         = newdoub();
+      ltemp->r      = result;
+    }
+    break;
+
+    case 'f': /* function */ ltemp = (lispval)callg_((callg_fx)a->bcd.start, arglist); break;
+
+    case 'v': /* C function returning a structure */
+      ap     = (long *)callg_((callg_fx)a->bcd.start, arglist);
+      ltemp  = (--lbot)->val;
+      mysize = ltemp->vl.vectorl[-2];
+      mysize = sizeof(long) * VecTotSize(mysize);
+      xbcopy(ltemp, ap, mysize);
+      break;
+
+    default:
+    case 's': /* subroutine */ callg_((callg_fx)a->bcd.start, arglist); ltemp = tatom;
+  }
+  errp = Popframe();
+  Freexs();
+  return (ltemp);
 }
 
-lispval 
-ftlspn_ (lispval func, register long *arglist)
+void xbcopy(register char *to, register char *from, size_t size)
 {
-        int count; 
-        lispval save;
-        pbuf pb;
-        Savestack(1);
-
-        if(errp->class==F_TO_FORT)
-                np = errp->svnp;
-        errp = Pushframe(F_TO_LISP,nil,nil);
-        lbot = np;
-        np++->val = func;
-        count = *arglist++;
-        for(; count > 0; count--)
-                np++->val = (lispval) (*arglist++);
-        save = Lfuncal();
-        errp = Popframe();
-        Restorestack();
-        return(save);
+  while (--size >= 0)
+    *to++ = *from++;
 }
 
+lispval ftolsp_(lispval arg1)
+{
+  int               count;
+  register lispval *ap = &arg1;
+  lispval           save;
+  pbuf              pb;
+  Savestack(1);
 
-    
+  if ((count = nargs()) == 0)
+  {
+#if !IGNORE_STATIC_ASSERT
+    _Static_assert(0, "figure out what to return here.");
+#endif
+    // original was jsut return;
+    return NULL;
+  }
+
+  if (errp->class == F_TO_FORT) np = errp->svnp;
+  errp = Pushframe(F_TO_LISP, nil, nil);
+  lbot = np;
+  for (; count > 0; count--)
+    np++->val = *ap++;
+  save = Lfuncal();
+  errp = Popframe();
+  Restorestack();
+  return (save);
+}
+
+lispval ftlspn_(lispval func, register long *arglist)
+{
+  int     count;
+  lispval save;
+  pbuf    pb;
+  Savestack(1);
+
+  if (errp->class == F_TO_FORT) np = errp->svnp;
+  errp      = Pushframe(F_TO_LISP, nil, nil);
+  lbot      = np;
+  np++->val = func;
+  count     = *arglist++;
+  for (; count > 0; count--)
+    np++->val = (lispval)(*arglist++);
+  save = Lfuncal();
+  errp = Popframe();
+  Restorestack();
+  return (save);
+}
+
 /* Ifclosure :: evaluate a fclosure  (new version)
  * the argument clos is a vector whose property is the atom fclosure
  * the form of the vector is
@@ -336,77 +319,77 @@ ftlspn_ (lispval func, register long *arglist)
 #define Case_B 1
 #define Case_C 2
 
-lispval 
-Ifclosure (register lispval clos, int funcallp)
+lispval Ifclosure(register lispval clos, int funcallp)
 {
-    struct nament *oldbnp = bnp, *lbnp, *locatevar();
-    register int i;
-    register lispval vect;
-    int numvars, vlength, tcase, foundc;
-    lispval handy, atm_dtpr, value_dtpr, Ifuncal(), Lapply();
-    Savestack(3);
+  struct nament   *oldbnp = bnp, *lbnp, *locatevar();
+  register int     i;
+  register lispval vect;
+  int              numvars, vlength, tcase, foundc;
+  lispval          handy, atm_dtpr, value_dtpr, Ifuncal(), Lapply();
+  Savestack(3);
 
-    /* bind variables to their values given in the fclosure */
-    vlength = VecTotSize(clos->vl.vectorl[VSizeOff]);
-    /* vector length must be positive (it has to have a function at least) */
-    if (vlength < 1)
-        errorh1(Vermisc,"funcall: fclosure has wrong size ",nil,FALSE,0, clos);
+  /* bind variables to their values given in the fclosure */
+  vlength = VecTotSize(clos->vl.vectorl[VSizeOff]);
+  /* vector length must be positive (it has to have a function at least) */
+  if (vlength < 1) errorh1(Vermisc, "funcall: fclosure has wrong size ", nil, FALSE, 0, clos);
 
-    numvars = (vlength - 1);    /* number of varibles */
-    
-    for (i = 1 ; i < vlength ; i += 1)
+  numvars = (vlength - 1); /* number of varibles */
+
+  for (i = 1; i < vlength; i += 1)
+  {
+    atm_dtpr   = clos->v.vector[i]; /* car is symbol name */
+    value_dtpr = atm_dtpr->d.cdr;   /* car: value, cdr:  fixnum count */
+
+    if (value_dtpr->d.cdr->i == 0) tcase = Case_A; /* first call */
+    else
     {
-        atm_dtpr = clos->v.vector[i];   /* car is symbol name */
-        value_dtpr = atm_dtpr->d.cdr;   /* car: value, cdr:  fixnum count */
-
-        if(value_dtpr->d.cdr->i == 0)
-                tcase = Case_A;         /* first call */
-        else {
-            lbnp = locatevar(atm_dtpr,&foundc,bnp-1);
-            if (!foundc)
-            {
-                /* didn't find the expected closure, count must be
-                   wrong, correct it and assume case (a)
-                 */
-                tcase = Case_A;
-                value_dtpr->d.cdr->i = 0;
-            }
-            else if(lbnp) tcase = Case_C ; /* found intermediate lambda bnd*/
-            else tcase = Case_B;           /* no intermediate lambda bind */
-        }
-
-        /* now bind the value if necessary */
-        switch(tcase) {
-            case Case_A: PUSHDOWN(atm_dtpr->d.car,value_dtpr->d.car);
-                         PUSHVAL(clos_marker,atm_dtpr);
-                         value_dtpr->d.cdr->i += 1;
-                         break;
-                         
-            case Case_B: break;         /* nothing to do */
-
-            case Case_C: /* push first bound value after last close */
-                         PUSHDOWN(atm_dtpr->d.car,lbnp->val);
-                         PUSHVAL(clos_marker,atm_dtpr);
-                         value_dtpr->d.cdr->i += 1;
-                         break;
-        }
+      lbnp = locatevar(atm_dtpr, &foundc, bnp - 1);
+      if (!foundc)
+      {
+        /* didn't find the expected closure, count must be
+           wrong, correct it and assume case (a)
+         */
+        tcase                = Case_A;
+        value_dtpr->d.cdr->i = 0;
+      }
+      else if (lbnp) tcase = Case_C; /* found intermediate lambda bnd*/
+      else tcase = Case_B;           /* no intermediate lambda bind */
     }
 
-    if(funcallp)
-       handy = Ifuncal(clos->v.vector[0]);
-    else {
-       handy = lbot[-2].val;    /* get args to apply.  This is hacky and may
-                                   fail if apply is changed */
-       lbot = np;
-       protect(clos->v.vector[0]);
-       protect(handy);
-       handy = Lapply();
-    }
+    /* now bind the value if necessary */
+    switch (tcase)
+    {
+      case Case_A:
+        PUSHDOWN(atm_dtpr->d.car, value_dtpr->d.car);
+        PUSHVAL(clos_marker, atm_dtpr);
+        value_dtpr->d.cdr->i += 1;
+        break;
 
-    xpopnames(oldbnp);  /* pop names with consideration for closure markers */
-    
-    if(!funcallp) Restorestack();
-    return(handy);
+      case Case_B: break; /* nothing to do */
+
+      case Case_C: /* push first bound value after last close */
+        PUSHDOWN(atm_dtpr->d.car, lbnp->val);
+        PUSHVAL(clos_marker, atm_dtpr);
+        value_dtpr->d.cdr->i += 1;
+        break;
+    }
+  }
+
+  if (funcallp) handy = Ifuncal(clos->v.vector[0]);
+  else
+  {
+    handy = lbot[-2].val; /* get args to apply.  This is hacky and may
+                             fail if apply is changed */
+    lbot = np;
+    protect(clos->v.vector[0]);
+    protect(handy);
+    handy = Lapply();
+  }
+
+  xpopnames(oldbnp); /* pop names with consideration for closure markers */
+
+  if (!funcallp) Restorestack();
+  return (handy);
 }
 
 /* xpopnames :: pop values from bindstack, but look out for
@@ -414,132 +397,130 @@ Ifclosure (register lispval clos, int funcallp)
  * when we know there will be closure markers or when we can't
  * be sure that there won't be closure markers (eg. in non-local go's)
  */
-int 
-xpopnames (register struct nament *llimit)
+int xpopnames(register struct nament *llimit)
 {
-    register struct nament *rnp, *lbnp;
-    lispval atm_dtpr, value_dtpr;
-    int foundc;
+  register struct nament *rnp, *lbnp;
+  lispval                 atm_dtpr, value_dtpr;
+  int                     foundc;
 
-    for(rnp = bnp; --rnp >= llimit;)
+  for (rnp = bnp; --rnp >= llimit;)
+  {
+    if (rnp->atm == clos_marker)
     {
-        if(rnp->atm == clos_marker)
+      atm_dtpr   = rnp->val;
+      value_dtpr = atm_dtpr->d.cdr;
+      if (value_dtpr->d.cdr->i <= 1)
+      {
+        /* this is the only occurance of this closure variable
+         * just restore current value to this closure.
+         */
+        value_dtpr->d.car = atm_dtpr->d.car->a.clb;
+      }
+      else
+      {
+        /* locate the last lambda before the next occurance of
+         * this closure and store the current symbol's value
+         * there
+         */
+        lbnp = locatevar(atm_dtpr, &foundc, rnp - 2);
+        if (!foundc)
         {
-            atm_dtpr = rnp->val;
-            value_dtpr = atm_dtpr->d.cdr;
-            if(value_dtpr->d.cdr->i <= 1)
-            {
-                /* this is the only occurance of this closure variable
-                 * just restore current value to this closure.
-                 */
-                value_dtpr->d.car = atm_dtpr->d.car->a.clb;
-            }
-            else {
-                /* locate the last lambda before the next occurance of
-                 * this closure and store the current symbol's value
-                 * there
-                 */
-                lbnp = locatevar(atm_dtpr,&foundc,rnp-2);
-                if(!foundc)
-                {
-                    /* strange, there wasn't a closure to be found.
-                     * well, we will fix things up so the count is
-                     * right.
-                     */
-                    value_dtpr->d.car = atm_dtpr->d.car->a.clb;
-                    value_dtpr->d.cdr->i = 1;
-                }
-                else if (lbnp) {
-                    /* note how the closures value isn't necessarily
-                     * stored in the closure, it may be stored on
-                     * the bindstack
-                     */
-                    lbnp->val = atm_dtpr->d.car->a.clb;
-                }
-                /* the case where lbnp is 0 should never happen, but
-                   if it does, we can just do nothing safely
-                 */
-            }
-            value_dtpr->d.cdr->i -= 1;
-        } else rnp->atm->a.clb = rnp->val;  /* the normal case */
+          /* strange, there wasn't a closure to be found.
+           * well, we will fix things up so the count is
+           * right.
+           */
+          value_dtpr->d.car    = atm_dtpr->d.car->a.clb;
+          value_dtpr->d.cdr->i = 1;
+        }
+        else if (lbnp)
+        {
+          /* note how the closures value isn't necessarily
+           * stored in the closure, it may be stored on
+           * the bindstack
+           */
+          lbnp->val = atm_dtpr->d.car->a.clb;
+        }
+        /* the case where lbnp is 0 should never happen, but
+           if it does, we can just do nothing safely
+         */
+      }
+      value_dtpr->d.cdr->i -= 1;
     }
-    bnp = llimit;
+    else rnp->atm->a.clb = rnp->val; /* the normal case */
+  }
+  bnp = llimit;
 }
 
-
-struct nament *
-locatevar (lispval clos, int *foundc, struct nament *rnp)
+struct nament *locatevar(lispval clos, int *foundc, struct nament *rnp)
 {
-    register struct nament  *retbnp;
-    lispval symb;
+  register struct nament *retbnp;
+  lispval                 symb;
 
-    retbnp = (struct nament *) 0;
-    *foundc = 0;
-    
-    symb = clos->d.car;
-    
-    for(  ; rnp >= orgbnp ; rnp--)
+  retbnp  = (struct nament *)0;
+  *foundc = 0;
+
+  symb = clos->d.car;
+
+  for (; rnp >= orgbnp; rnp--)
+  {
+    if ((rnp->atm == clos_marker) && (rnp->val == clos))
     {
-        if((rnp->atm == clos_marker) && (rnp->val == clos))
-        {
-            *foundc = 1;        /* found the closure */
-            return(retbnp);
-        }
-        if(rnp->atm == symb) retbnp = rnp;
+      *foundc = 1; /* found the closure */
+      return (retbnp);
     }
-    return(retbnp);     
+    if (rnp->atm == symb) retbnp = rnp;
+  }
+  return (retbnp);
 }
 
-lispval 
-LIfss (void)
+lispval LIfss(void)
 {
-        register lispval atm_dtpr, value_dtpr;
-        struct nament *oldbnp = bnp, *lbnp;
-        int tcase, foundc = 0;
-        lispval newval;
-        int argc = 1;
-        Savestack(2);
+  register lispval atm_dtpr, value_dtpr;
+  struct nament   *oldbnp = bnp, *lbnp;
+  int              tcase, foundc = 0;
+  lispval          newval;
+  int              argc = 1;
+  Savestack(2);
 
-        switch(np-lbot) {
-        case 2:
-                newval = np[-1].val;
-                argc++;
-        case 1:
-                atm_dtpr = lbot->val;
-                value_dtpr = atm_dtpr->d.cdr;
-                break;
-        default:
-                argerr("int:fclosure-symbol-stuff");
-        }
-        /* this code is copied from Ifclosure */
+  switch (np - lbot)
+  {
+    case 2: newval = np[-1].val; argc++;
+    case 1:
+      atm_dtpr   = lbot->val;
+      value_dtpr = atm_dtpr->d.cdr;
+      break;
+    default: argerr("int:fclosure-symbol-stuff");
+  }
+  /* this code is copied from Ifclosure */
 
-        if(value_dtpr->d.cdr->i==0)
-                tcase = Case_A; /* closure is not active */
-        else {
-                lbnp = locatevar(atm_dtpr,&foundc,bnp-1);
-                if (!foundc)
-                {
-                        /* didn't find closure, count must be wrong,
-                           correct it and assume case (a).*/
-                        tcase = Case_A;
-                        value_dtpr->d.cdr->i = 0;
-                }
-                else if(lbnp) tcase = Case_C; /* found intermediate lambda*/
-                else tcase = Case_B;
-        }
+  if (value_dtpr->d.cdr->i == 0) tcase = Case_A; /* closure is not active */
+  else
+  {
+    lbnp = locatevar(atm_dtpr, &foundc, bnp - 1);
+    if (!foundc)
+    {
+      /* didn't find closure, count must be wrong,
+         correct it and assume case (a).*/
+      tcase                = Case_A;
+      value_dtpr->d.cdr->i = 0;
+    }
+    else if (lbnp) tcase = Case_C; /* found intermediate lambda*/
+    else tcase = Case_B;
+  }
 
-        switch(tcase) {
-        case Case_B:
-                if(argc==2) return(atm_dtpr->d.car->a.clb = newval);
-                return(atm_dtpr->d.car->a.clb);
+  switch (tcase)
+  {
+    case Case_B:
+      if (argc == 2) return (atm_dtpr->d.car->a.clb = newval);
+      return (atm_dtpr->d.car->a.clb);
 
-        case Case_A:
-                if(argc==2) return(value_dtpr->d.car = newval);
-                return(value_dtpr->d.car);
+    case Case_A:
+      if (argc == 2) return (value_dtpr->d.car = newval);
+      return (value_dtpr->d.car);
 
-        case Case_C:
-                if(argc==2) return(lbnp->val = newval);
-                return(lbnp->val);
-        }
-        /*NOTREACHED*/
+    case Case_C:
+      if (argc == 2) return (lbnp->val = newval);
+      return (lbnp->val);
+  }
+  /*NOTREACHED*/
 }

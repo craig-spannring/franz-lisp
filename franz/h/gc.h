@@ -6,10 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
- 
-struct gchead
-        {  int version; /* version number of this dump file */
-           int lowdata; /* low address of sharable lisp data */
-           int dummy,dummy2,dummy3;     /* to be used later     */
-        };
 
+struct gchead
+{
+  int version;               /* version number of this dump file */
+  int lowdata;               /* low address of sharable lisp data */
+  int dummy, dummy2, dummy3; /* to be used later     */
+};

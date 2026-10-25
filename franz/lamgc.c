@@ -1,6 +1,5 @@
 #ifndef lint
-static char *rcsid =
-   "$Header: lamgc.c,v 1.5 84/03/31 22:34:28 layer Exp $";
+static char *rcsid = "$Header: lamgc.c,v 1.5 84/03/31 22:34:28 layer Exp $";
 #endif
 
 /*                                      -[Sat Jan 29 13:07:37 1983 by jkf]-
@@ -20,8 +19,8 @@ static char *rcsid =
 #include <sys/vtimes.h>
 #endif
 
-/* 
-  this file  is temporary and will contain routines to meter 
+/*
+  this file  is temporary and will contain routines to meter
   the garbage collector
  */
 
@@ -29,14 +28,15 @@ static char *rcsid =
    if this causes variables to be undefined,then it should be removed
 */
 
-extern int *beginsweep,gensymcounter;
+extern int *beginsweep;
+extern int  gensymcounter;
+
 int gcstat;
 int mrkdpcnt;
 int gccount;
 int conssame;
 int consdiff;
 int consnil;
-
 
 /*
  *      gcstat  - initiate and record gc statistics
@@ -46,75 +46,71 @@ int consnil;
  *      (gcstat 1) -- finish off gc statistics file by writing typetable
  *                    and closing file.
  */
-lispval 
-Lgcstat (void)
+lispval Lgcstat(void)
 {
-        register lispval handy;
-        int nbytes;
-        struct gchead hhh;
+  register lispval handy;
+  int              nbytes;
+  struct gchead    hhh;
 
-        chkarg(1,"gcstat");
+  chkarg(1, "gcstat");
 
-        if(TYPE(handy=lbot->val) != INT)
-        {       error("gcstat: non integer arg ",FALSE);
-        }
+  if (TYPE(handy = lbot->val) != INT)
+  {
+    error("gcstat: non integer arg ", FALSE);
+  }
 
-        switch(handy->i)
-        {
-            case 0:  if((gcstat = creat("gc.out",0644)) < 0)
-                       error("cant open gc.out",FALSE);
-                     hhh.version = 5;
-                     hhh.lowdata = (int)beginsweep;
-                     printf("writing %d bytes \n",sizeof(hhh));
-                     write(gcstat,(char *)&hhh,sizeof(hhh));
-                     gccount = 0;
-                     return(tatom);
+  switch (handy->i)
+  {
+    case 0:
+      if ((gcstat = creat("gc.out", 0644)) < 0) error("cant open gc.out", FALSE);
+      hhh.version = 5;
+      hhh.lowdata = (int)beginsweep;
+      printf("writing %d bytes \n", sizeof(hhh));
+      write(gcstat, (char *)&hhh, sizeof(hhh));
+      gccount = 0;
+      return (tatom);
 
-            case 1:
-                     /* first write out the type table */ 
-                     nbytes = 0;
-                     /* 0 means type table follows */
-                     printf("gc's %d, writing %d bytes \n",gccount,
-                                  sizeof(nbytes));
-                     write(gcstat,(char *)&nbytes,sizeof(nbytes));
-                     write(gcstat,(char *)&typetable[ATOX(beginsweep)+1],
-                                nbytes = ((int)datalim - (int)beginsweep)>>9);
-                     printf("writing %d bytes \n",nbytes+sizeof(nbytes));
-                     write(gcstat,(char *)&nbytes,sizeof(nbytes));
-                     close(gcstat);
-                     gcstat = 0;
-                     return(inewint(nbytes));
-            default:
-                     error("Bad value to gcstat ",TRUE);
-        }
-        /* NOTREACHED */
+    case 1:
+      /* first write out the type table */
+      nbytes = 0;
+      /* 0 means type table follows */
+      printf("gc's %d, writing %d bytes \n", gccount, sizeof(nbytes));
+      write(gcstat, (char *)&nbytes, sizeof(nbytes));
+      write(gcstat, (char *)&typetable[ATOX(beginsweep) + 1], nbytes = ((int)datalim - (int)beginsweep) >> 9);
+      printf("writing %d bytes \n", nbytes + sizeof(nbytes));
+      write(gcstat, (char *)&nbytes, sizeof(nbytes));
+      close(gcstat);
+      gcstat = 0;
+      return (inewint(nbytes));
+    default: error("Bad value to gcstat ", TRUE);
+  }
+  /* NOTREACHED */
 }
-extern int bitmapi[];           /* a bit of a lie it is really a double array*/
-char *bitmapc = (char *)bitmapi;
-/* called in the garbage collector after the bit maps have been made 
+extern int bitmapi[]; /* a bit of a lie it is really a double array*/
+char      *bitmapc = (char *)bitmapi;
+/* called in the garbage collector after the bit maps have been made
    only if gcstat is non zero */
-int 
-gcdump (void)
+int gcdump(void)
 {
-#if !IGNORE_STATIC_ASSERT  
-        extern struct vtimes premark,presweep,alldone;
-        int                  nbytes, recsize;
-        _Static_assert(0, "figure out how we're going to print all of these.");
-        
-        /* 16 bytes/page in the bitmap */
-        nbytes = (((int) datalim - (int) beginsweep) >> 9) * 16;
-        recsize = nbytes + 6*sizeof(int) + 3*sizeof(struct vtimes);
-        write(gcstat,(char *)&recsize,sizeof(recsize)); /* whole record size */
-        write(gcstat,(char *)&premark,sizeof(premark));
-        write(gcstat,(char *)&presweep,sizeof(presweep));
-        write(gcstat,(char *)&alldone,sizeof(alldone));
-        write(gcstat,(char *)&gensymcounter,sizeof(int));
-        write(gcstat,(char *)&conssame,sizeof(int));
-        write(gcstat,(char *)&consdiff,sizeof(int));
-        write(gcstat,(char *)&consnil,sizeof(int));
-        write(gcstat,(char *)&mrkdpcnt,sizeof(int));
-        write(gcstat,(char *)&nbytes,sizeof(nbytes));   /* bit table size */
-        write(gcstat,(char *)&bitmapc[ATOX(beginsweep) * 16],nbytes);
-        printf("gc: %d, written %d bytes\n",++gccount,nbytes);
+#if !IGNORE_STATIC_ASSERT
+  extern struct vtimes premark, presweep, alldone;
+  int                  nbytes, recsize;
+  _Static_assert(0, "figure out how we're going to print all of these.");
+
+  /* 16 bytes/page in the bitmap */
+  nbytes  = (((int)datalim - (int)beginsweep) >> 9) * 16;
+  recsize = nbytes + 6 * sizeof(int) + 3 * sizeof(struct vtimes);
+  write(gcstat, (char *)&recsize, sizeof(recsize)); /* whole record size */
+  write(gcstat, (char *)&premark, sizeof(premark));
+  write(gcstat, (char *)&presweep, sizeof(presweep));
+  write(gcstat, (char *)&alldone, sizeof(alldone));
+  write(gcstat, (char *)&gensymcounter, sizeof(int));
+  write(gcstat, (char *)&conssame, sizeof(int));
+  write(gcstat, (char *)&consdiff, sizeof(int));
+  write(gcstat, (char *)&consnil, sizeof(int));
+  write(gcstat, (char *)&mrkdpcnt, sizeof(int));
+  write(gcstat, (char *)&nbytes, sizeof(nbytes)); /* bit table size */
+  write(gcstat, (char *)&bitmapc[ATOX(beginsweep) * 16], nbytes);
+  printf("gc: %d, written %d bytes\n", ++gccount, nbytes);
 #endif
 }

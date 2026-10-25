@@ -1,6 +1,6 @@
 /*                                      -[Sat May  7 20:46:54 1983 by jkf]-
  *      sigtab.h                        $Locker:  $
- * table of lispvals needed by C 
+ * table of lispvals needed by C
  *
  * $Header: sigtab.h 1.4 83/06/09 01:15:47 sklower Exp $
  *
@@ -60,14 +60,14 @@ extern lispval lispsys[SIGNIF];
 #define plimit (lispsys[44])
 #define array_items (lispsys[45])
 #define array_pages (lispsys[46])
-#define array_name  (lispsys[47])
+#define array_name (lispsys[47])
 #define sdot_items (lispsys[48])
 #define sdot_pages (lispsys[49])
 #define sdot_name (lispsys[50])
 #define val_items (lispsys[51])
 #define val_pages (lispsys[52])
-#define val_name  (lispsys[53])
-#define splice  (lispsys[54])
+#define val_name (lispsys[53])
+#define splice (lispsys[54])
 #define rdrsdot (lispsys[55])
 #define funct_items (lispsys[56])
 #define funct_pages (lispsys[57])
@@ -121,15 +121,15 @@ extern lispval lispsys[SIGNIF];
 #define evalhatom (lispsys[107])
 #define funhatom (lispsys[108])
 #define Vptport (lispsys[109])
-#define Vcntlw  (lispsys[110])
+#define Vcntlw (lispsys[110])
 #define Verrset (lispsys[111])
 #define Verundef (lispsys[112])
 #define Vsubrou (lispsys[113])
 #define Vprinlevel (lispsys[114])
 #define Vprinlength (lispsys[115])
 #define Vfloatformat (lispsys[116])
-#define Vldprt  (lispsys[117])
-#define Verdepth  (lispsys[118])
+#define Vldprt (lispsys[117])
+#define Verdepth (lispsys[118])
 #define mrtabspace (lispsys[119])
 #define pnameprot (lispsys[120])
 #define other_name (lispsys[121])
@@ -153,7 +153,7 @@ extern lispval lispsys[SIGNIF];
 
 /* various status switches */
 
-extern lispval stattab[16] ;
+extern lispval stattab[16];
 #define Schainp (stattab[0])
 #define Sautor (stattab[1])
 #define Strans (stattab[2])
