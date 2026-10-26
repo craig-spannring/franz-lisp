@@ -54,7 +54,7 @@ lispval Lshostk(void)
   return 0;
 }
 
-lispval adbig(lispval, lispval)
+lispval adbig(lispval a, lispval b)
 {
   assert(0);
   return 0;

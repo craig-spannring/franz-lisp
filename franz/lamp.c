@@ -57,6 +57,7 @@ int  doprof   = FALSE;
 lispval Lmonitor(void)
 {
   error("Profiling not enabled", FALSE);
+  return nil; 
 }
 
 #endif

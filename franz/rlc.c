@@ -18,10 +18,9 @@ extern char *curhbeg;
 
 void rlc(void)
 {
-  char *cp, *dp;
-
 #if !IGNORE_STATIC_ASSERT
   _Static_assert(0, "need to implement this in modern C");
+  char *cp, *dp;
 
   brk(end);
   dp = holend;

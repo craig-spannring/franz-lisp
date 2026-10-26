@@ -18,8 +18,6 @@ struct atom nilatom = {nil, nil, nil, (struct atom *)CNIL, nilpname};
 extern char eofpname[];
 struct atom eofatom = {nil, nil, nil, (struct atom *)CNIL, eofpname};
 
-static char padding[LBPG - sizeof nilatom - sizeof eofatom] = {0};
-
 #if !RTPORTS
 FILE *xports[128] = {_iob + 0,  _iob + 1,  _iob + 2,  _iob + 3,  _iob + 4,  _iob + 5,  _iob + 6,  _iob + 7,  _iob + 8,  _iob + 9,
                      _iob + 10, _iob + 11, _iob + 12, _iob + 13, _iob + 14, _iob + 15, _iob + 16, _iob + 17, _iob + 18, _iob + 19};

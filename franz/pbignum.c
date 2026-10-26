@@ -23,12 +23,12 @@ void pbignum(lispval current, FILE *useport)
   do
   {
     stack(current->s.I);
-  } while (current = current->s.CDR);
+  } while ((current = current->s.CDR));
 
   bot = sp();
   if (top == bot)
   {
-    fprintf(useport, "%d", *bot);
+    fprintf(useport, "%ld", *bot);
     Freexs();
     return;
   }

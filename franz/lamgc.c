@@ -108,5 +108,7 @@ int gcdump(void)
   write(gcstat, (char *)&nbytes, sizeof(nbytes)); /* bit table size */
   write(gcstat, (char *)&bitmapc[ATOX(beginsweep) * 16], nbytes);
   printf("gc: %d, written %d bytes\n", ++gccount, nbytes);
+#else
+  return 0;
 #endif
 }
