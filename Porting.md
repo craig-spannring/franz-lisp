@@ -24,7 +24,7 @@ We will change to a cmake based build system.
 
 ## AI Perspective ##
 
-### lisplib ### 
+### lisplib ###
 The parts of lisplib/ most obviously still tied to the original
 Berkeley Unix toolchain are: 
 
@@ -226,6 +226,42 @@ If you want, I can go one level deeper and sketch:
 - a compatibility layer for POSIX vs Win32
 - or a migration plan for replacing the old native backend with LLVM.
 
+
+### Memory Map ###
+
+For the VAX/BSD 4.3 build, the memory model is a flat, page-based Lisp
+heap starting at address 0, not a segmented layout. 
+
+The key points from the VAX configuration are:
+
+- `OFFSET` is set to 0 for VAX Unix builds, and `NILIS0` is
+  enabled. That means the Lisp heap begins at zero in user space. 
+- `CNIL` is defined as `OFFSET - 4`, so the `nil` sentinel sits just
+  below the heap base. In other words, the heap is addressed as a
+  contiguous region starting immediately at the base of the data
+  segment. 
+- Lisp objects are page-addressed: each object page is 512 bytes, and
+  the address-to-page conversion is 
+  effectively `(address - OFFSET) >> 9`.
+- The runtime keeps a type table named `typetable` with one entry per
+  page, so each 512-byte page knows what kind of Lisp object it
+  contains. The default heap size is `TTSIZE = 6120` pages, which is
+  roughly 3.1 MB of Lisp heap. 
+- The heap itself is stored in `purepage[TTSIZE]`, with `datalim`
+  marking the next free allocation point. 
+
+So the practical memory map is:
+
+- low addresses: runtime / C / stack / text
+- base of Lisp heap: address 0
+- Lisp object area: contiguous pages, 512 bytes each, type-tagged by `typetable`
+- higher addresses: the growing Lisp heap up to the limit implied by `TTSIZE`
+- `nil` sentinel: immediately below the heap base (`OFFSET - 4`)
+
+There is also a second build variant in the tree that inserts a 2 MB
+“hole” between text and data (`-H 2097152`), but that is not the
+normal VAX/BSD 4.3 `rawlisp` layout; the standard build is the no-hole
+contiguous version.
 
 
 ## A More Human Oriented Perspective ##
