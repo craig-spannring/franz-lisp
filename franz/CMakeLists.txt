@@ -109,7 +109,15 @@ target_sources(rawlisp PRIVATE
 
   stubs.c
 )
-target_compile_definitions(rawlisp PUBLIC IGNORE_STATIC_ASSERT=1)
+set(STILL_PORTING true)
+if(STILL_PORTING)
+  target_compile_definitions(rawlisp PUBLIC STILL_PORTING=1)
+  target_compile_definitions(rawlisp PUBLIC FINISHED_PORTING=0)
+else()
+  target_compile_definitions(rawlisp PUBLIC STILL_PORTING=0)
+  target_compile_definitions(rawlisp PUBLIC FINISHED_PORTING=1)
+endif()
+
 target_include_directories(rawlisp PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/./h
   ${CMAKE_CURRENT_BINARY_DIR}
