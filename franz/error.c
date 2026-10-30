@@ -60,13 +60,13 @@ static lispval Ierrorh(lispval type, char *message, lispval valret, int contuab,
   lispval               *work  = IEargs;
   int                    limit = IElimit;
   int                    pass, curdepth;
-  lispval                Lread(), calhan();
+//  lispval                Lread(), calhan();
   lispval                contatm;
   lispval                handy2;
   extern struct frame   *errp;
   pbuf                   pb;
   Savestack(2);
-
+  
   contatm = (contuab == TRUE ? tatom : nil);
 
   /* if there is a catch every error handler */

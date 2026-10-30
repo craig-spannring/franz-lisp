@@ -12,6 +12,7 @@
 
 #include "prototypes/error.h"
 #include "prototypes/io.h"
+#include "structs.h"
 
 /*
  *
@@ -268,7 +269,8 @@ lispval Lmfunction(void)
   register lispval handy;
   chkarg(2, "mfunction");
   handy                 = (newfunct());                 /*  get a new function cell  */
-  handy->bcd.start      = (lispval (*)())((lbot)->val); /* insert entry point */
+//  handy->bcd.start      = (lispval (*)())((lbot)->val); /* insert entry point */
+  handy->bcd.start      = (lbot)->val; /* insert entry point */
   handy->bcd.discipline = ((lbot + 1)->val);            /*  insert discipline  */
   return (handy);
 }

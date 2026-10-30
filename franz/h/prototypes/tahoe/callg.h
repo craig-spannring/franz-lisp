@@ -3,7 +3,8 @@
 #define INC_callg_c6a69330e7aa111525967287030ae668_h
 
 /* callg.c */
-extern int callg_(register int (*funct)(void), register int *arglist);
+extern int callg_(int (*funct)(void),     int *arglist);
+extern int callg_(lispval (*funct)(void), int *arglist);
 
 
 #endif

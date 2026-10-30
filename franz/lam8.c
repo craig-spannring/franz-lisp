@@ -21,6 +21,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <assert.h>
+
 
 #include "stubs.h"
 
@@ -638,11 +640,14 @@ lispval Lsprintf(void)
         default: error("sprintf: Bad data type to sprintf", FALSE);
       }
     }
-#if !IGNORE_STATIC_ASSERT
-    _Static_assert(0, "this code is messed up");
 
+#if STILL_PORTING
+    assert(0);
+#else     
+    VERIFY_NOT_PORTING("this code is messed up and must be rewritten");
     sprintf(sbuf);
-#endif
+#endif    
+
     for (j = 0; j < np - lbot; j++)
       unstack();
   }
@@ -797,7 +802,6 @@ lispval Lcharindex(void)
   return (inewint(str2 - string + 1));
 }
 
-lispval Ipurcopy();
 
 lispval Lpurcopy(void)
 {
@@ -911,14 +915,9 @@ lispval Ipurcopy(lispval handy)
  */
 lispval Lpurep(void)
 {
-  lispval Ipurep();
-
   chkarg(1, "purep");
   return (Ipurep(lbot->val));
 }
-
-/* vector functions */
-lispval newvec(), nveci(), Inewvector();
 
 /* vector creation and initialization functions */
 lispval Lnvec(void)

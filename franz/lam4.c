@@ -10,6 +10,7 @@
 #include "prototypes/error.h"
 #include "prototypes/frame.h"
 #include "prototypes/divbig.h"
+#include "prototypes/lam5.h"
 
 #include "global.h"
 #include "prunei.h"
@@ -21,7 +22,6 @@
 #include "stubs.h"
 
 // lispval adbig(),subbig(),mulbig();
-double  Ifloat();
 lispval Ladd(void)
 {
   register lispval        work;

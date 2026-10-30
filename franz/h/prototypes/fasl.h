@@ -5,13 +5,13 @@
 #include "structs.h"
 
 /* fasl.c */
-extern lispval Lfasl(void);
-extern int compar(int *arg1, int *arg2);
-extern struct trent *gettran(int size);
-extern int clrtt(int flag);
-extern lispval chktt(void);
-extern int add_offset(register int *addr, int relocoffset);
-extern int add_offset(register int *addr, int relocoffset);
+extern lispval       Lfasl(void);
+extern int           compar(int *arg1, int *arg2);
+extern struct trent *gettran(int size); /* function to allocate entries */
+extern void          clrtt(int flag);
+extern lispval       chktt(void);
+extern int           add_offset(register int *addr, int relocoffset);
+extern int           add_offset(register int *addr, int relocoffset);
 
 
 #endif

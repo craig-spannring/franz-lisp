@@ -22,9 +22,18 @@
 
 #define AD 0
 
-#if !IGNORE_STATIC_ASSERT
-_Static_assert(0, "need to figure out how to code this");
+#if STILL_PORTING
+#define VERIFY_NOT_PORTING(s)   static_assert(0);
+#define VERIFY_STILL_PORTING(s) static_assert(1);
+#else                                          
+#define VERIFY_NOT_PORTING(s)   static_assert(1);
+#define VERIFY_STILL_PORTING(s) static_assert(0);
 #endif
+
+
+
+
+
 #define peekc(p) (0)
 // #define peekc(p)        (p->_cnt>0? *(p)->_ptr&0377:_filbuf(p)==-1?-1:((p)->_cnt++,*--(p)->_ptr&0377))
 
@@ -177,7 +186,7 @@ extern FILE *xports[]; /* page of file *'s for lisp    */
 #define P(p) ((lispval)(xports + ((p) - _iob)))
 #define PN(p) ((int)((p) - _iob))
 #else
-extern lispval P();
+extern lispval P(FILE*);
 extern FILE  **xports;
 #define PN(p) (((FILE **)P(p)) - xports)
 #endif

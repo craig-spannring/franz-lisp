@@ -13,6 +13,8 @@
 #include "prototypes/ffasl.h"
 #include "prototypes/lisp.h"
 #include "prototypes/eval.h"
+#include "prototypes/fpipe.h"
+#include "prototypes/io.h"
 
 #include "global.h"
 #include <signal.h>
@@ -155,7 +157,7 @@ lispval Lprocess(void)
   int     writep, readp;
   int     itemp;
   void (*handler)(int);
-  FILE *bufs[2], *obufs[2], *fpipe();
+  FILE *bufs[2], *obufs[2];
   Savestack(0);
 
   writep = readp = FALSE;
@@ -441,7 +443,6 @@ lispval Iimplode(int unintern)
   register lispval handy, work;
   register char   *cp = strbuf;
   extern int       atmlen; /* used by newatom and getatom */
-  extern char     *atomtoolong();
 
   chkarg(1, "implode");
   for (handy = lbot->val; handy != nil; handy = handy->d.cdr)

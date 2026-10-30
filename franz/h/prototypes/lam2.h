@@ -4,10 +4,11 @@
 
 #include "structs.h"
 
-
 /* lam2.c */
-extern lispval Lflatsi(void);
-extern void    Iflatsi(register lispval current);
+#if 1
+#include "lfuncs.h"
+#else 
+extern void    Iflatsi(lispval current);
 extern lispval Lread(void);
 extern lispval Lratom(void);
 extern lispval Lreadc(void);
@@ -31,6 +32,6 @@ extern lispval Lmapc(void);
 extern lispval Lmap(void);
 extern lispval Lmapcan(void);
 extern lispval Lmapcon(void);
-
+#endif
 
 #endif

@@ -10,6 +10,9 @@
 #include "prototypes/eval.h"
 #include "prototypes/sysat.h"
 #include "prototypes/frame.h"
+#include "prototypes/fex4.h"
+#include "lfuncs.h"
+
 
 #include "global.h"
 #include "frame.h"
@@ -18,6 +21,8 @@
 #include <stdlib.h>
 
 #include "stubs.h"
+
+
 
 /* main *****************************************************************/
 /* Execution of the lisp system begins here.  This is the top level     */
@@ -74,7 +79,7 @@ int main(int argc, char **argv, char **arge)
 
 lispval Ntpl(void)
 {
-  lispval Lread(), Istsrch();
+  lispval Lread();
 
   if (virgin == 0)
   {

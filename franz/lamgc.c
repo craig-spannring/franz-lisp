@@ -88,7 +88,11 @@ char      *bitmapc = (char *)bitmapi;
    only if gcstat is non zero */
 int gcdump(void)
 {
-#if !IGNORE_STATIC_ASSERT
+#if STILL_PORTING
+  VERIFY_STILL_PORTING("need to replace this")  
+  return 0;
+#else
+  VERIFY_NOT_PORTING("need to replace this")  
   extern struct vtimes premark, presweep, alldone;
   int                  nbytes, recsize;
   _Static_assert(0, "figure out how we're going to print all of these.");
@@ -108,7 +112,5 @@ int gcdump(void)
   write(gcstat, (char *)&nbytes, sizeof(nbytes)); /* bit table size */
   write(gcstat, (char *)&bitmapc[ATOX(beginsweep) * 16], nbytes);
   printf("gc: %d, written %d bytes\n", ++gccount, nbytes);
-#else
-  return 0;
 #endif
 }

@@ -15,7 +15,6 @@ lispval Levalf(void)
 {
   register struct frame *myfp;
   register lispval       handy, result;
-  struct frame          *searchforpdl();
   int                    evaltype;
   Savestack(3);
 

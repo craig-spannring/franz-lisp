@@ -11,6 +11,7 @@
 #include "prototypes/error.h"
 #include "prototypes/inits.h"
 #include "prototypes/ffasl.h"
+#include "prototypes/fpipe.h"
 
 #include "global.h"
 #include "chkrtab.h"
@@ -21,6 +22,7 @@
 #include <sys/types.h>
 #include <sys/times.h>
 #include <stdlib.h>
+#include <string.h>
 #include <signal.h>
 
 lispval Lreadli(void)
@@ -28,8 +30,6 @@ lispval Lreadli(void)
   register lispval work, handy;
   register FILE   *p;
   register char   *string;
-  FILE            *fstopen();
-  lispval          Lread();
   int              count;
   pbuf             pb;
   Savestack(4);
@@ -97,7 +97,6 @@ lispval Lreadli(void)
 
 lispval Lgetenv(void)
 {
-  char *getenv(), *strcpy();
   char *res;
   chkarg(1, "getenv");
 
@@ -266,7 +265,6 @@ lispval Lptime(void)
 
 lispval Lerr(void)
 {
-  lispval errorh();
   lispval valret = nil;
   char   *mesg;
 

@@ -4,9 +4,13 @@
 
 #include "structs.h"
 
+#include <stdio.h> 
+
 
 /* fpipe.c */
 extern lispval Nioreset(void);
+FILE *fstopen(char *base, int count, char *flag);
+FILE *fpipe(FILE *info[2]);
 
 
 #endif

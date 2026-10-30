@@ -7,6 +7,7 @@
 
 #include "prototypes/subbig.h"
 #include "prototypes/error.h"
+#include "prototypes/lam4.h"
 
 #include "global.h"
 
@@ -22,7 +23,6 @@
 lispval subbig(lispval pos, lispval neg)
 {
   register lispval work;
-  lispval          adbig();
   register long   *mysp   = sp() - 2;
   register long   *ersatz = mysp;
   Keepxs();

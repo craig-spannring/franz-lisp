@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
+#include <assert.h>
 
 #define round(x, s) ((((x) - 1) & ~((s) - 1)) + (s))
 
@@ -24,7 +25,6 @@ char       *stabf = 0, *Ilibdir();
 extern int  fvirgin;
 static int  seed = 0;
 static char myname[100];
-lispval     verify();
 
 /* dispget - get discipline of function
  * this is used to handle the tricky defaulting of the discipline
@@ -61,7 +61,6 @@ lispval Lcfasl(void)
   register lispval        work;
   register int            fildes, totsize;
   int                     readsize;
-  lispval                 csegment();
   char                   *currend, *tfile, cbuf[6000], *mytemp(), *gstab();
   char                    ostabf[128];
   struct exec             header;
@@ -227,7 +226,6 @@ lispval Lcfasl(void)
 char *gstab(void)
 {
   register char *cp, *cp2;
-  char          *getenv();
   struct stat    stbuf;
   extern char  **Xargv;
 
@@ -568,8 +566,11 @@ lispval Lrmadd(void)
 #if !(os_unix_ts | os_unisoft)
           if (strcmp((char *)mlbot->val, strtbl + q->n_un.n_strx - 4) != 0) continue;
 #else
-#if !IGNORE_STATIC_ASSERT
-          _Static_assert(0, "figure out portable way");
+#if STILL_PORTING
+            VERIFY_STILL_PORTING("figure out portable way");
+            assert(0);             
+#else
+          VERIFY_NOT_PORTING("figure out portable way");
           if (strncmp((char *)mlbot->val, q->n_name, 8) != 0)
 #endif
             continue;

@@ -9,20 +9,18 @@
 #include "prototypes/alloc.h"
 #include "prototypes/error.h"
 #include "prototypes/sysat.h"
+#include "prototypes/fasl.h"
 
 #include "global.h"
 #include "lfuncs.h"
 #include "chkrtab.h"
+#include "stubs.h"
+
 #include <signal.h>
 #include <sys/types.h>
 
-#include "stubs.h"
-
-#if (os_4_2 || os_4_3)
-#include <sys/time.h>
-#else
 #include <time.h>
-#endif
+
 
 /* this is now a lambda function instead of a nlambda.
    the only reason that it wasn't a lambda to begin with is that
@@ -152,12 +150,10 @@ lispval Nstatus(void)
   int                   indx, ctim;
   int                   typ;
   char                 *cp;
-  char                 *ctime();
-  struct tm            *lctime, *localtime();
+  struct tm            *lctime;
   extern unsigned char *ctable;
   extern int            dmpmode;
   extern lispval        chktt();
-  lispval               Istsrch();
   Savestack(3);
 
   if (lbot->val == nil) return (nil);
@@ -255,7 +251,6 @@ lispval Nstatus(void)
 lispval Nsstatus(void)
 {
   register lispval handy;
-  lispval          Isstatus();
 
   handy = lbot->val;
 
@@ -269,9 +264,7 @@ lispval Nsstatus(void)
 lispval Isstatus(lispval curnam, lispval curval)
 {
   register lispval curitm, head;
-  lispval          Istsrch(), Iaddstat();
   void (*badmr)(int);
-  int        clrtt();
   extern int uctolc, dmpmode, bcdtrsw, gcstrings;
 
   curitm = Istsrch(curnam);

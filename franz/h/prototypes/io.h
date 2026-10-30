@@ -11,14 +11,14 @@ extern int plength;       /* maximum number of list elements printed  */
 
 /* io.c */
 extern lispval  readr(FILE *useport);
-extern lispval  readrx(register int code);
+extern lispval  readrx(int code);
 extern void     macrox(void);
-extern void     imacrox(register lispval current, int inlist);
+extern void     imacrox(lispval current, int inlist);
 extern int      Iratom(void);
-extern lispval  getnum(register char *name);
-extern lispval  dopow(register char *part2, int base);
-extern lispval  calcnum(char *strbuf, register char *name, int base);
-extern lispval  finatom(register char *name);
+extern lispval  getnum(char *name);
+extern lispval  dopow(char *part2, int base);
+extern lispval  calcnum(char *strbuf, char *name, int base);
+extern lispval  finatom(char *name);
 extern char    *atomtoolong(char *copyto);
 extern void     lfltpr(char *buf, double val);
 extern void     dmpport(FILE *useport);

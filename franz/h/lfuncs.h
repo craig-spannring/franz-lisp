@@ -7,6 +7,8 @@
  * (c) copyright 1982, Regents of the University of California
  */
 
+
+
 /* these functions never return values.  The declarations
    are merely to shut lint up. */
 extern lispval Lcont(void);
@@ -19,9 +21,13 @@ extern lispval Ntpl(void);
 
 /* Begin functions which return values */
 
+extern lispval Iputprop(register lispval atm, register lispval prop, register lispval ind);
+extern lispval Igetplist(register lispval pptr, register lispval ind);
+
 extern lispval Lstacktrace(void);
 extern lispval Lunstacktrace(void);
 
+extern lispval Iget(lispval atm, lispval ind);
 extern lispval Lalfalp(void);
 extern lispval Lfseek(void);
 extern lispval LDivide(void);
@@ -104,6 +110,7 @@ extern lispval Lfm(void);
 extern lispval Lfp(void);
 extern lispval Lfd(void);
 extern lispval Lft(void);
+extern void    Iflatsi(lispval current);
 extern lispval Lflatsi(void);
 extern lispval Lfltodb(void);
 extern lispval Lflessp(void);

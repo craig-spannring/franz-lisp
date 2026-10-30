@@ -13,6 +13,7 @@
 #include "prototypes/sysat.h"
 #include "prototypes/alloc.h"
 #include "prototypes/io.h"
+#include "prototypes/fpipe.h"
 
 #include "global.h"
 #include <sys/types.h>
@@ -24,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <assert.h>
 
 #include "stubs.h"
 
@@ -83,53 +85,61 @@
  *
  */
 
-/* external functions called or referenced */
+#include "prototypes/fasl.h"
 
-extern lispval qcons();
-extern lispval qlinker();
-extern lispval qget();
-extern int     _qf0();
-extern int     _qf1();
-extern int     _qf2();
-extern int     _qf3();
-extern int     _qf4();
-extern int     _qfuncl();
-extern int     svkludg();
-extern int     qnewint();
-extern int     qnewdoub();
-extern int     qoneplus();
-extern int     qoneminus();
-extern int     wnaerr();
-extern lispval Lread();
-extern lispval Lcons();
-extern lispval Lminus();
-extern lispval Ladd1();
-extern lispval Lsub1();
-extern lispval Lplist();
-extern lispval Lputprop();
-extern lispval Lprint();
-extern lispval Lpatom();
-extern lispval Lconcat();
-extern lispval Lget();
-extern lispval Lmapc();
-extern lispval Lmapcan();
-extern lispval Llist();
-extern lispval Ladd();
-extern lispval Lgreaterp();
-extern lispval Lequal();
-extern lispval Ltimes();
-extern lispval Lsub();
-extern lispval Ipurcopy();
-extern lispval Lncons();
-extern lispval Ibindvars();
-extern lispval Iunbindvars(), error();
-extern int     Inonlocalgo();
-extern lispval Istsrch();
-extern int     mcount();
-extern int     qpushframe();
-extern int     mcnts[];
-extern int     mcntp;
-extern int     doprof;
+#include "prototypes/lam2.h"
+#include "prototypes/lam7.h"
+#include "prototypes/lam8.h"
+#include "prototypes/lamp.h"
+#include "prototypes/fex4.h"
+
+
+/* external functions called or referenced */
+// extern lispval qcons();
+// extern lispval qlinker();
+// extern lispval qget();
+// extern int     _qf0();
+// extern int     _qf1();
+// extern int     _qf2();
+// extern int     _qf3();
+// extern int     _qf4();
+// extern int     _qfuncl();
+// extern int     svkludg();
+// extern int     qnewint();
+// extern int     qnewdoub();
+// extern int     qoneplus();
+// extern int     qoneminus();
+// extern int     wnaerr();
+// extern lispval Lread();
+// extern lispval Lcons();
+// extern lispval Lminus();
+// extern lispval Ladd1();
+// extern lispval Lsub1();
+// extern lispval Lplist();
+// extern lispval Lputprop();
+// extern lispval Lprint();
+// extern lispval Lpatom();
+// extern lispval Lconcat();
+// extern lispval Lget();
+// extern lispval Lmapc();
+// extern lispval Lmapcan();
+// extern lispval Llist();
+// extern lispval Ladd();
+// extern lispval Lgreaterp();
+// extern lispval Lequal();
+// extern lispval Ltimes();
+// extern lispval Lsub();
+// extern lispval Ipurcopy();
+// extern lispval Lncons();
+// extern lispval Ibindvars();
+// extern lispval Iunbindvars(), error();
+// extern int     Inonlocalgo();
+// extern lispval Istsrch();
+// extern int     mcount();
+// extern int     qpushframe();
+// extern int     mcnts[];
+// extern int     mcntp;
+// extern int     doprof;
 
 extern lispval      *tynames[];
 extern struct frame *errp;
@@ -148,21 +158,21 @@ struct ssym
   void *floc; /* address of symbol */
   int   ord;  /* ordinal number within cur sym tab */
 
-} Symbtb[] = {"trantb",       0,           -1, /* must be first */
-              "linker",       0,           -1, /* must be second */
-              "mcount",       mcount,      -1, "mcnts",      mcnts,     -1, "_wnaerr",      wnaerr,      -1,
-              "_qnewint",     qnewint,     -1, "_qnewdoub",  qnewdoub,  -1, "_qcons",       qcons,       -1,
-              "_qoneplus",    qoneplus,    -1, "_qoneminus", qoneminus, -1, "_typetable",   typetable,   -1,
-              "_tynames",     tynames,     -1, "_qget",      qget,      -1, "_errp",        &errp,       -1,
-              "_Inonlocalgo", Inonlocalgo, -1, "__erthrow",  _erthrow,  -1, "_error",       error,       -1,
-              "_qpushframe",  qpushframe,  -1, "_retval",    &retval,   -1, "_lispretval",  &lispretval, -1,
+} Symbtb[] = {{"trantb",       0,           -1}, /* must be first */
+              {"linker",       0,           -1}, /* must be second */
+              {"mcount",       mcount,      -1}, {"mcnts",      mcnts,     -1}, {"_wnaerr",      wnaerr,      -1},
+              {"_qnewint",     qnewint,     -1}, {"_qnewdoub",  qnewdoub,  -1}, {"_qcons",       qcons,       -1},
+              {"_qoneplus",    qoneplus,    -1}, {"_qoneminus", qoneminus, -1}, {"_typetable",   typetable,   -1},
+              {"_tynames",     tynames,     -1}, {"_qget",      qget,      -1}, {"_errp",        &errp,       -1},
+              {"_Inonlocalgo", Inonlocalgo, -1}, {"__erthrow",  _erthrow,  -1}, {"_error",       error,       -1},
+              {"_qpushframe",  qpushframe,  -1}, {"_retval",    &retval,   -1}, {"_lispretval",  &lispretval, -1},
 #ifndef NPINREG
-              "_np",          &np,         -1, "_lbot",      &lbot,     -1,
-#endif
-#if !NILIS0
-              "_nilatom",     &nilatom,    -1,
-#endif
-              "_bnp",         &bnp,        -1, "_Ibindvars", Ibindvars, -1, "_Iunbindvars", Iunbindvars, -1};
+              {"_np",          &np,         -1}, {"_lbot",      &lbot,     -1},
+#endif                                           
+#if !NILIS0                                      
+              {"_nilatom",     &nilatom,    -1}, 
+#endif                                           
+              {"_bnp",         &bnp,        -1}, {"_Ibindvars", Ibindvars, -1}, {"_Iunbindvars", Iunbindvars, -1}};
 
 #define SYMMAX ((sizeof Symbtb) / (sizeof(struct ssym)))
 
@@ -194,7 +204,6 @@ extern struct trtab *trhead; /* head of list of transfer tables          */
 extern struct trent *trcur;  /* next entry to allocate                   */
 extern int           trleft; /* # of entries left in this transfer table */
 
-struct trent *gettran(); /* function to allocate entries */
 
 /* maximum number of functions */
 #define MAXFNS 2000
@@ -206,7 +215,7 @@ lispval Lfasl(void)
   extern char           *curhbeg;
   struct argent         *svnp;
   struct exec            exblk;                      /* stores a.out header */
-  FILE                  *filp, *p, *map, *fstopen(); /* file pointer */
+  FILE                  *filp, *p, *map;             /* file pointer */
   int                    domap, note_redef;
   lispval                handy, debugmode;
   struct relocation_info reloc;
@@ -234,7 +243,7 @@ lispval Lfasl(void)
       *binder_core_org,  /* beginning of binder table   */
       *string_core_org;
 
-  int              /*string_file_org,  /* location of string table in file */
+  int              /*string_file_org,*/  /* location of string table in file */
       string_size, /* number of chars in string table */
       segsiz;      /* size of permanent incore segment */
 
@@ -461,7 +470,8 @@ lispval Lfasl(void)
           if (debug) printf("Relocating %d (ord %d) at %x\n", j, Symbtb[j].ord, reloc.r_address);
           if (Symbtb[j].floc == (int)mcnts)
           {
-            add_offset((int *)(code_core_org + reloc.r_address), mcntp - offset(reloc));
+            add_offset((int *)(code_core_org + reloc.r_address),
+                       (int)(mcntp - offset(reloc)));
             if (doprof)
             {
               if (mcntp == (int)&mcnts[NMCOUNT - 2]) printf("Ran out of counters; increas NMCOUNT in fasl.c\n");
@@ -489,8 +499,10 @@ lispval Lfasl(void)
 
   p = fstopen((char *)literal_core_org, lit_end - lit_org, "r");
 
-#if !IGNORE_STATIC_ASSERT
-  _Static_assert(0, "make this portable");
+#if STILL_PORTING
+  VERIFY_STILL_PORTING("need to figure out how to write this portably.")  
+#else
+  VERIFY_NOT_PORTING("") 
   if (debug) printf("lit_org %d, charstrt  %d\n", lit_org, p->_base);
   /* the first forms we wish to read are those literals in the
    * literal table, that is those forms referenced by an offset
@@ -543,7 +555,12 @@ lispval Lfasl(void)
     uctolc = ouctolc;
     getc(p);
     tranloc->name = handy;
-    tranloc->fcn  = qlinker; /* initially go to qlinker */
+#if STILL_PORTING
+    assert(0);
+#else
+    VERIFY_NOT_PORTING("");     
+    tranloc->fcn = qlinker; /* initially go to qlinker */
+#endif     
     tranloc++;
   }
 
@@ -675,7 +692,7 @@ struct trent *gettran(int size)
  * 2) as many transfer tables are set up to point to bcd functions
  *    as possible
  */
-int clrtt(int flag)
+void clrtt(int flag)
 {
   /*  flag = 0 :: set to qlinker
    *  flag = 1 :: set to function bcd binding if possible
@@ -688,8 +705,20 @@ int clrtt(int flag)
   {
     for (tement = &temptt->trentrs[0]; tement->fcn != 0; tement++)
     {
-      if (flag == 0 || TYPE(fnb = tement->name->a.fnbnd) != BCD || TYPE(fnb->bcd.discipline) == STRNG) tement->fcn = qlinker;
-      else tement->fcn = fnb->bcd.start;
+      if (flag == 0 || TYPE(fnb = tement->name->a.fnbnd) != BCD || TYPE(fnb->bcd.discipline) == STRNG)
+      {
+#if STILL_PORTING
+        VERIFY_STILL_PORTING("");
+        assert(0);
+#else                              
+        VERIFY_NOT_PORTING(("need to figure out how to handle the loose typing.");
+        tement->fcn = qlinker;
+#endif
+      }
+      else
+      {
+        tement->fcn = fnb->bcd.start;
+      }        
     }
   }
 }

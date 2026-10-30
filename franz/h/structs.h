@@ -63,11 +63,12 @@ struct array
 
 struct bfun
 {
-  lispval (*start)(lispval, int *); /*  entry point to routine  */
-  lispval discipline,               /*  argument-passing discipline  */
-      language,                     /*  language coded in   */
-      params,                       /*  parameter list if relevant  */
-      loctab;                       /*  local table  */
+//  lispval (*start)(lispval, int *); /*  entry point to routine  */
+  lispval (*start)(void); /*  entry point to routine  */  
+  lispval discipline;               /*  argument-passing discipline  */
+  lispval language;                     /*  language coded in   */
+  lispval params;                       /*  parameter list if relevant  */
+  lispval loctab;                       /*  local table  */
 };
 typedef lispval (*bfun_start_fx)(lispval, int *); // bfun_start_fx;
 
@@ -120,8 +121,9 @@ union lispobj
 
 struct trent
 {
-  lispval (*fcn)(lispval, int *); /* function to call                     */
-  lispval name;                   /* symbol which is the function to call */
+  //  lispval (*fcn)(lispval, int *); /* function to call                     */
+  lispval (*fcn)(void);               /* function to call                     */  
+  lispval name;                       /* symbol which is the function to call */
 };
 
 struct trtab

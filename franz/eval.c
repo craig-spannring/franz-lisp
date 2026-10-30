@@ -14,12 +14,14 @@
 #include "prototypes/inits.h"
 #include "prototypes/alloc.h"
 #include "prototypes/io.h"
+#include "prototypes/eval2.h"
 
 #include "global.h"
 #include "frame.h"
 
 #include <signal.h>
-
+#include <assert.h>
+    
 #include "stubs.h"
 
     /*
@@ -38,7 +40,6 @@
   struct nament          *oldbnp     = bnp;
   int                     dopopframe = FALSE;
   int                     type, shortcircuit = TRUE;
-  lispval                 Ifcall(), Iarray();
   Savestack(4);
 
   /*debugging
@@ -352,7 +353,7 @@ lispval Lapply(void)
 {
   register lispval a;
   register lispval handy;
-  lispval          vtemp, Ifclosure();
+  lispval          vtemp;
   struct nament   *oldbnp  = bnp;
   struct argent   *oldlbot = lbot; /* Bottom of my frame! */
   struct argent   *oldnp   = np;   /* First free on stack */
@@ -507,7 +508,6 @@ lispval Ifuncal(lispval fcn)
   register lispval handy;
   struct nament   *oldbnp = bnp; /* MUST be first local for evalframe */
   lispval          fcncalled;
-  lispval          Ifcall(), Llist(), Iarray(), Ifclosure();
   lispval          vtemp;
   int              typ, dopopframe = FALSE, extrapush;
   extern lispval   end[];
@@ -744,8 +744,7 @@ lispval Llexfun(void)
 /* protect
  * pushes the first argument onto namestack, thereby protecting from gc
  */
-lispval protect(a)
-lispval a;
+lispval protect(lispval a)
 {
   (np++)->val = a;
   if (np >= nplim) namerr();
@@ -781,10 +780,12 @@ lispval Undeff(lispval atmn)
 /* VARARGS1 */
 int bindfix(lispval firstarg, lispval x, lispval y)
 {
-#if !IGNORE_STATIC_ASSERT
-  _Static_assert(0, "need to figure out how to implement bindfix in portable C.\n"
-                    "It is called as if it has varargs.");
-#endif
+#if STILL_PORTING
+  assert(0);
+  VERIFY_STILL_PORTING("need to figure out how to implement bindfix in portable C.\n"                       
+                       "It is called as if it has varargs.");
+#else
+  VERIFY_NOT_PORTING(""); 
   register lispval       *argp  = &firstarg;
   register struct nament *mybnp = bnp;
   while (*argp != nil)
@@ -794,4 +795,5 @@ int bindfix(lispval firstarg, lispval x, lispval y)
     mybnp->atm->a.clb = *argp++;
     bnp               = mybnp++;
   }
+#endif
 }

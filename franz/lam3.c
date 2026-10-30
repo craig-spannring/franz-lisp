@@ -250,7 +250,6 @@ lispval Lsub1(void)
 lispval Lminus(void)
 {
   register lispval arg1, handy;
-  lispval          subbig();
 
   chkarg(1, "minus");
   arg1  = lbot->val;
@@ -372,11 +371,12 @@ lispval Lsetsyn(void)
 {
   register lispval        s, c;
   register struct argent *mynp;
-#if !IGNORE_STATIC_ASSERT
-  _Static_assert(0, "index is used as a pointer, an integer, or a char.  "
-                    "Figure out how to handle it.")
+#if STILL_PORTING
+  VERIFY_STILL_PORTING("index is used as a pointer, an integer, or a char.  "
+                       "Figure out how to handle it.");
 #endif
-      int               index;
+  
+  int                  index;
   lispval               x /*  ,debugmode  */;
   extern unsigned char *ctable;
   extern lispval        Istsrch();

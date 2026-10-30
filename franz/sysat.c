@@ -52,7 +52,8 @@ extern int  ttsize;     /* need to know how much of pagetable to set to other */
 struct ftab
 {
   char *string;
-  lispval (*start)(); // bfun_start_fx  start;
+         lispval (*start)(void); // bfun_start_fx  start;
+//    lispval (*start)(lispval, int *);
   lispval *discip;
 };
 
@@ -509,7 +510,7 @@ lispval mfun(char *string, lispval (*start)(void), lispval discip)
   lispval v;
   v                          = inewatom(string);
   v->a.fnbnd                 = newfunct();
-  v->a.fnbnd->bcd.start      = (bfun_start_fx)start;
+  v->a.fnbnd->bcd.start      = start;
   v->a.fnbnd->bcd.discipline = discip;
   return (v);
 }
@@ -527,7 +528,11 @@ lispval mftab(register struct ftab *table)
 }
 
 static struct ftab cfuns[] = {
-    {"car",                      Lcar,        &(lambda)},
+    {
+      "car",
+      Lcar,
+      &(lambda)
+    },
     {"cdr",                      Lcdr,        &(lambda)},
     {"eval",                     Leval1,      &(lambda)},
     {"asin",                     Lasin,       &(lambda)},

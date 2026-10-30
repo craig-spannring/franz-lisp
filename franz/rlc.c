@@ -18,7 +18,10 @@ extern char *curhbeg;
 
 void rlc(void)
 {
-#if !IGNORE_STATIC_ASSERT
+#if STILL_PORTING  
+  VERIFY_STILL_PORTING("need to implement this in modern C");
+#else
+  VERIFY_NOT_PORTING("need to implement this in modern C");
   _Static_assert(0, "need to implement this in modern C");
   char *cp, *dp;
 

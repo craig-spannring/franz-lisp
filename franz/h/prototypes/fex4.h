@@ -4,7 +4,6 @@
 
 #include "structs.h"
 
-
 /* fex4.c */
 extern lispval Lsyscall(void);
 extern lispval Nevwhen(void);
@@ -13,6 +12,5 @@ extern lispval Nsstatus(void);
 extern lispval Isstatus(lispval curnam, lispval curval);
 extern lispval Istsrch(lispval nam);
 extern lispval Iaddstat(lispval name, int readcode, int setcode, lispval valu);
-
 
 #endif

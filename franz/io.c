@@ -14,6 +14,8 @@
 #include "prototypes/eval.h"
 #include "prototypes/io.h"
 #include "prototypes/sysat.h"
+#include "prototypes/alloc.h"
+#include "prototypes/fex4.h"
 
 #include "structs.h"
 #include "global.h"
@@ -21,6 +23,7 @@
 #include "bigmath.h"
 #include "pbignum.h"
 #include "chars.h"
+#include "lfuncs.h"
 
 #include <ctype.h>
 #include <stdbool.h>
@@ -72,10 +75,7 @@ struct readtable
 extern unsigned char *ctable;
 lispval               atomval; /* external varaible containing atom returned
                                   from internal atom reading routine */
-lispval        readrx();
-lispval        readr();
 lispval        readry();
-char          *atomtoolong();
 int            keywait;
 int            plevel  = -1; /* contains maximum list recursion count        */
 int            plength = -1; /* maximum number of list elements printed  */
@@ -114,7 +114,6 @@ lispval readrx(int code)
   register lispval       *current;
   register struct argent *result;
   int                     inlbkt = FALSE;
-  lispval                 errorh();
   Savestack(4); /* ???not necessary because np explicitly restored if
     changed */
 
@@ -287,7 +286,7 @@ void imacrox(lispval current, int inlist)
   }
   else handy = current;
 
-  lbot = np;
+  lbot = np;  
   protect(Iget(atomval, lastrtab));
   protect(handy);
   atomval = Lfuncal();
@@ -326,7 +325,6 @@ int Iratom(void)
 {
   register FILE *useport = rdrport;
   register char  c, marker, *name;
-  extern lispval finatom(), calcnum(), getnum();
   int            code, cc;
   int            strflag = FALSE;
 
@@ -455,7 +453,6 @@ lispval getnum(char *name)
   int              sawdigit = 0, saweof = 0, cc;
   char            *exploc = (char *)0;
   double           realno;
-  extern lispval   finatom(), calcnum(), newdoub(), dopow();
 
   if (mantisfl)
   {
@@ -683,9 +680,9 @@ lispval finatom(register char *name)
 char *atomtoolong(char *copyto)
 {
   int            size;
-  register char *oldp = strbuf;
-  register char *newp;
-  lispval        nveci();
+  char          *oldp = strbuf;
+  char          *newp;
+
   /*
    * the string buffer contains an string which is too long
    * so we get a bigger buffer.
@@ -716,7 +713,6 @@ void printr(lispval a, FILE *useport)
   char   *chstr;
   int     curplength = plength;
   int     quot;
-  lispval Istsrch();
   lispval debugmode;
 
 val_loop:

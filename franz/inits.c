@@ -6,26 +6,30 @@
  */
 
 #include "prototypes/inits.h"
-#include "global.h"
-#include "frame.h"
-
 #include "prototypes/fasl.h"
 #include "prototypes/sysat.h"
 #include "prototypes/inits.h"
 #include "prototypes/fpipe.h"
 #include "prototypes/alloc.h"
 #include "prototypes/error.h"
+#include "prototypes/fex4.h"
+#include "prototypes/eval2.h"
+
+#include "global.h"
+#include "frame.h"
 
 #include <signal.h>
 
 #include "stubs.h"
+
+extern lispval matom(char *string);
 
 /* initial
  * initializes the parts of the system that cannot be automatically
  * accomplished in the declarations.
  */
 
-int          reborn = 0; /*  flag to tell whether we are in fast-load version  */
+int          reborn = 0; ///< flag to tell whether we are in fast-load version  
 extern char *stabf;
 extern int   fvirgin;
 extern int   keywait;
@@ -35,9 +39,6 @@ static void re_enable(int signo, void (*handler)(int));
 
 void initial(void)
 {
-  lispval Isstatus();
-  lispval Istsrch();
-
   extern int hashtop;
 
   /* clear any memory of pending SIGINT's */
@@ -73,6 +74,7 @@ void initial(void)
     /* set up SIGBUS and SIGSEGV from current value
        of status flag dumpcore
     */
+
     Isstatus(matom("dumpcore"), (Istsrch(matom("dumpcore")))->d.cdr->d.cdr->d.cdr);
 
     makenv();

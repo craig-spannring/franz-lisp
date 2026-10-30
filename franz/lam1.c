@@ -74,7 +74,6 @@ lispval cxxr(register int as, register int ds)
 {
   register lispval temp, temp2;
   int              i, typ;
-  lispval          errorh();
 
   chkarg(1, "c{ad}+r");
   temp = lbot->val;
@@ -437,7 +436,8 @@ lispval Lnwritn(void)
     handy = lbot->val;
   }
 
-#if !IGNORE_STATIC_ASSERT
+#if FINISHED_PORTING
+  VERIFY_NOT_PORTING("need to replace with something portable.");
   _Static_assert(0, "need to replace with something portable.");
   port  = okport(handy, okport(Vpoport->a.clb, stdout));
   value = port->_ptr - port->_base;
@@ -458,7 +458,7 @@ lispval Ldrain(void)
     chkarg(1, "nwritn");
     handy = lbot->val;
   }
-#if !IGNORE_STATIC_ASSERT
+#if FINISHED_PORTING
   _Static_assert(0, "need to replace with something portable.");
 
   port = okport(handy, okport(Vpoport->a.clb, stdout));
@@ -971,9 +971,7 @@ loop:
   return (strlen(handy));
 }
 #undef okport
-FILE   *okport(arg, proper)
-lispval arg;
-FILE   *proper;
+FILE *okport(lispval arg, FILE *proper)
 {
   if (TYPE(arg) != PORT) return (proper);
   else return (arg->p);

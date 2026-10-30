@@ -168,8 +168,7 @@ lispval LIfranzcall(void)
        * or nil if doesn't exist.
        */
       {
-        struct passwd *pw, *getpwnam();
-        lispval        newvec(), inewint();
+        struct passwd *pw;
         struct argent *oldnp;
 
         pw = getpwnam(verify(lbot[1].val, "int:franz-call: invalid name"));

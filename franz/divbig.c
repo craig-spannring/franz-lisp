@@ -27,7 +27,6 @@ void divbig(lispval dividend, lispval divisor, lispval *quotient, lispval *remai
   int              borrow, negrem = 0;
   long            *utop = sp(), *ubot, *vbot, *qbot;
   register lispval work;
-  lispval          export();
   Keepxs();
 
   /* copy dividend */
@@ -316,7 +315,6 @@ lispval Ibiglsh(lispval bignum, lispval count, int mode)
   int    *top = sp() - 1;
   int    *bot;
   int     mylen, guard = 0, sticky = 0, round = 0;
-  lispval export();
 
   /* get second argument            */
   work = count;

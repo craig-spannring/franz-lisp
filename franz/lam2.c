@@ -6,6 +6,7 @@
  */
 
 #include "prototypes/lam2.h"
+
 #include "prototypes/lam1.h"
 #include "prototypes/io.h"
 #include "prototypes/frame.h"
@@ -20,6 +21,7 @@
 #include "chars.h"
 #include "chkrtab.h"
 #include "pbignum.h"
+#include "lfuncs.h"
 
 #include <string.h>
 #include <signal.h>
@@ -59,7 +61,7 @@ lispval Lflatsi(void)
 /*
  * Iflatsi does the real work of the calculation for flatc
  */
-void Iflatsi(register lispval current)
+void Iflatsi(lispval current)
 {
   if (flen > fmax) return;
   switch (TYPE(current))
@@ -93,6 +95,8 @@ void Iflatsi(register lispval current)
     }
   }
 }
+
+extern lispval r(int op);
 
 #define EADC -1
 #define EAD -2
@@ -262,7 +266,6 @@ lispval Iconcat(int unintern)
   register char          *cp = strbuf;
   register lispval        cur;
   int                     n;
-  char                   *atomtoolong();
   lispval                 Lhau();
 
   *cp = NULL_CHAR;
@@ -305,8 +308,10 @@ lispval Iconcat(int unintern)
 
       case SDOT:
       {
-#if !IGNORE_STATIC_ASSERT
-        _Static_assert(0, "need to figure out howto replace this with something portable");
+#if STILL_PORTING
+        VERIFY_STILL_PORTING("need to figure out howto replace this with something portable");
+#else         
+        VERIFY_NOT_PORTING("need to figure out howto replace this with something portable");
         struct _iobuf    _myiob;
         register lispval handy = cur;
 
@@ -347,7 +352,6 @@ lispval Luconcat(void)
 
 lispval Lputprop(void)
 {
-  lispval Iputprop();
   chkarg(3, "putprop");
   return (Iputprop(lbot->val, lbot[1].val, lbot[2].val));
 }
@@ -362,7 +366,6 @@ lispval Iputprop(register lispval atm, register lispval prop, register lispval i
   register lispval pptr;
   lispval         *tack; /* place to begin property list */
   lispval          pptr2;
-  lispval          errorh();
   Savestack(4);
 
 top:
@@ -421,7 +424,6 @@ lispval Lget(void)
 {
   register lispval ind, atm;
   register lispval dum1;
-  lispval          Igetplist();
 
   chkarg(2, "get");
   ind = lbot[1].val;
@@ -466,8 +468,6 @@ top:
 
 lispval Iget(register lispval atm, register lispval ind)
 {
-  lispval Igetplist();
-
   if (atm == nil) atm = nilplist;
   else atm = atm->a.plist;
   return (Igetplist(atm, ind));
@@ -479,7 +479,7 @@ lispval Iget(register lispval atm, register lispval ind)
  * ind is the indicator
  */
 
-lispval Igetplist(register lispval pptr, register lispval ind)
+lispval Igetplist(lispval pptr, lispval ind)
 {
   while (pptr != nil)
   {
@@ -614,7 +614,7 @@ lispval Lmapcx(int maptyp /* 0= mapc   , 1= map  */
 
   int            count;
   struct argent *first;
-  lispval        lists[25], errorh();
+  lispval        lists[25];
   Savestack(4);
 
   namptr = lbot + 1;
@@ -675,14 +675,10 @@ lispval Lmap(void)
 
 lispval Lmapcan(void)
 {
-  lispval Lmapcrx();
-
   return (Lmapcrx(0, 1));
 }
 
 lispval Lmapcon(void)
 {
-  lispval Lmapcrx();
-
   return (Lmapcrx(1, 1));
 }

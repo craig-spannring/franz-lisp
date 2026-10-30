@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
+#include <math.h>
 
 #include "stubs.h"
 
@@ -138,7 +139,7 @@ lispval Lexpldx(int kind, int slashify /* kind = 0 => explode to characters
       break;
     case SDOT:
     {
-#if !IGNORE_STATIC_ASSERT
+#if FINISHED_PORTING
       _Static_assert(0, "need to figure out portable way to do this");
       struct _iobuf _strbuf;
       int           count;
@@ -380,8 +381,7 @@ to calculate fact of > 2^30 We will be here till doomsday!.",
  */
 lispval Lfix(void)
 {
-  register lispval handy;
-  double           floor();
+  lispval handy;
 
   chkarg(1, "fix");
   handy = lbot->val;
@@ -413,7 +413,8 @@ lispval Lfrexp(void)
   Savestack(2);
   chkarg(1, "frexp");
 
-#if !IGNORE_STATIC_ASSERT
+#if FINISHED_PORTING
+  VERIFY_NOT_PORTING("Need to figure out portable way to do this");
   _Static_assert(0, "need to figure out portable way to do this");
   myfrexp(lbot->val->r, &exp, &hi, &lo);
 #endif

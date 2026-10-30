@@ -11,6 +11,7 @@
 #include "prototypes/error.h"
 #include "prototypes/eval.h"
 #include "prototypes/eval2.h"
+#include "prototypes/frame.h"
 
 #include "global.h"
 #include "frame.h"
@@ -68,7 +69,7 @@
 
 int Inonlocalgo(int class, lispval arg1, lispval arg2)
 {
-  struct frame *uwpframe, *Inlthrow();
+  struct frame *uwpframe;
   lispval       handy;
 
   /*

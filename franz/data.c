@@ -210,13 +210,14 @@ struct types
                 &val_items,     &val_pages,     &val_name,
                 (struct heads *) CNIL, (char *)CNIL
         },
-funct_str =
+        /// @todo describe if needed.
+        funct_str =
         {
                 (char *) CNIL,  0,      BCDSPP,         BCD,    2,
                 &funct_items,   &funct_pages,   &funct_name,
                 (struct heads *) CNIL, (char *)CNIL
         },
-vect_str =
+        vect_str =
         {
                 
                 (char *) CNIL,  0,      VECTORSPP,      VECTOR, 1,

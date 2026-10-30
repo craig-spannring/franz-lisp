@@ -11,8 +11,12 @@
 #include "prototypes/eval.h"
 #include "prototypes/error.h"
 #include "prototypes/alloc.h"
+#include "dfuncs.h"
+#include "stubs.h"
+
 #include "global.h"
 #include "frame.h"
+#include "dfuncs.h"
 
 #include <stdlib.h>
 
@@ -171,9 +175,15 @@ lispval Ifcall(lispval a)
     case 'r': /* real-function*/
     case 'd': /* C function declared returning double */
     {
+      VERIFY_STILL_PORTING("")
+#if STILL_PORTING
+      VERIFY_STILL_PORTING("")
+#else       
+      VERIFY_NOT_PORTING("")
       double result = (*((double (*)())callg_))(a->bcd.start, arglist);
       ltemp         = newdoub();
       ltemp->r      = result;
+#endif      
     }
     break;
 
@@ -211,9 +221,7 @@ lispval ftolsp_(lispval arg1)
 
   if ((count = nargs()) == 0)
   {
-#if !IGNORE_STATIC_ASSERT
-    _Static_assert(0, "figure out what to return here.");
-#endif
+    VERIFY_STILL_PORTING("figure out what to return here.");
     // original was jsut return;
     return NULL;
   }
@@ -317,11 +325,11 @@ lispval ftlspn_(lispval func, register long *arglist)
 
 lispval Ifclosure(register lispval clos, int funcallp)
 {
-  struct nament   *oldbnp = bnp, *lbnp, *locatevar();
+  struct nament   *oldbnp = bnp, *lbnp;
   register int     i;
   register lispval vect;
   int              numvars, vlength, tcase, foundc;
-  lispval          handy, atm_dtpr, value_dtpr, Ifuncal(), Lapply();
+  lispval          handy, atm_dtpr, value_dtpr;
   Savestack(3);
 
   /* bind variables to their values given in the fclosure */

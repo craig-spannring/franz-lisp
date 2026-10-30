@@ -10,11 +10,13 @@
 #include "prototypes/error.h"
 
 #include "global.h"
+#include "ltypes.h"
+
 #include <signal.h>
 #include <stdlib.h>
+#include <assert.h>
 
-FILE *fpipe(info)
-FILE *info[2];
+FILE *fpipe(FILE *info[2])
 {
   register FILE *p;
   int            fd[2];
@@ -42,8 +44,9 @@ FILE *info[2];
 
 lispval Nioreset(void)
 {
-#if !IGNORE_STATIC_ASSERT
-  _Static_assert(0, "need a portable way of doing this")
+#if STILL_PORTING
+  VERIFY_STILL_PORTING("need a portable way of doing this")
+#else
 #if !RTPORTS
       register FILE *p;
 
@@ -57,14 +60,14 @@ lispval Nioreset(void)
   _fwalk(NiorUtil);
 #endif RTPORTS
 #endif
+  
   return (nil);
 }
 
 #if RTPORTS
 FILE FILEdummy;
 
-static lispval NiorUtil(p)
-FILE          *p;
+static lispval NiorUtil(FILE *p)
 {
   lispval handy;
   if (p == stdin || p == stdout || p == stderr) return (0);
@@ -79,8 +82,7 @@ FILE          *p;
 FILE **xports;
 
 #define LOTS (LBPG / (sizeof(FILE *)))
-lispval P(p)
-FILE   *p;
+lispval P(FILE   *p)
 {
   register FILE **q;
   extern int      fakettsize;
@@ -115,26 +117,33 @@ FILE *fstopen(char *base, int count, char *flag)
 // char *flag;
 {
   FILE *p = fdopen(0, flag);
-#if !IGNORE_STATIC_ASSERT
-  _Static_assert(0, "need to write this in a portable manner");
 
+#if STILL_PORTING
+  VERIFY_STILL_PORTING("need to write this in a portable manner");
+  assert(0);
+#else   
+  VERIFY_NOT_PORTING("need to write this in a portable manner");
   p->_flag |= _IOSTRG;
   p->_cnt = count;
   p->_ptr = p->_base = base;
   p->_file           = -1;
 #endif
+  
   return (p);
 }
 
-#if !IGNORE_STATIC_ASSERT
-_Static_assert(0, "think through the memory layouts and allocations");
-
+#if STILL_PORTING
+// char *alloca(register int howmuch)
+// {
+//   VERIFY_STILL_PORTING("think through the memory layouts and allocations");
+//   assert(0);
+// }  
+#else 
 #ifdef SPISFP
 char *alloca(register int howmuch)
 {
-#if !IGNORE_STATIC_ASSERT
-  _Static_assert(0, "We should be able to use the standard library here.");
-#endif
+  VERIFY_NOT_PORTING("need to figure out how we allocate memory.");
+
   howmuch += 3;
   howmuch >>= 2;
   xsp -= howmuch;
@@ -147,3 +156,4 @@ char *alloca(register int howmuch)
 }
 #endif
 #endif
+

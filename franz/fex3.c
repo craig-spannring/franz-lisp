@@ -488,9 +488,11 @@ int pagenorm(void) {}
 
 lispval Lgetaddress(void)
 {
-#if IGNORE_STATIC_ASSERT
+#if STILL_PORTING
+  VERIFY_STILL_PORTING(""); 
   return nil;
 #else
+  VERIFY_NOT_PORTING(""); 
   _Static_assert(0, "need to figure out how to rewrite this without stack tricks");
   register struct argent *mlbot = lbot;
   register lispval        work;

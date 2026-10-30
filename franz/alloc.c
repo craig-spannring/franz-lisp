@@ -440,9 +440,11 @@ lispval newfunct(void)
 {
   register lispval temp;
   temp = next_one(&funct_str);
-#if !IGNORE_STATIC_ASSERT
-  _Static_assert(0, "figure out how we handle the weak typing");
+#if FINISHED_PORTING
+  VERIFY_NOT_PORTING("figure out how we handle the weak typing");
   temp->bcd.start = Badcall;
+#else
+  VERIFY_STILL_PORTING("");
 #endif
   temp->bcd.discipline = nil;
   return (temp);
@@ -496,7 +498,6 @@ lispval inewval(lispval arg)
  *  N consecutive bytes
  *
  */
-lispval getvec();
 
 lispval newvec(int size)
 {

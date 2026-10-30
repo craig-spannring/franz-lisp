@@ -60,7 +60,6 @@ extern lispval copval(lispval option, lispval value);
 // lispval getatom(int);
 // lispval inewval();
 // lispval linterp();
-// lispval matom();
 // lispval mfun();
 // lispval mstr();
 // lispval newarray();
