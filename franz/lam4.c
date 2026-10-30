@@ -24,8 +24,8 @@
 // lispval adbig(),subbig(),mulbig();
 lispval Ladd(void)
 {
-  register lispval        work;
-  register struct argent *result, *mynp, *oldnp;
+  lispval        work;
+  struct argent *result, *mynp, *oldnp;
   long                    restype, prunep, hi, lo = 0;
   struct sdot             dummybig;
   double                  flacc;
@@ -168,8 +168,8 @@ lispval Ladd(void)
 
 lispval Lsub(void)
 {
-  register lispval        work;
-  register struct argent *result, *mynp, *oldnp;
+  lispval        work;
+  struct argent *result, *mynp, *oldnp;
   long                    prunep, restype, hi, lo = 0;
   struct sdot             dummybig;
   double                  flacc;
@@ -377,8 +377,8 @@ out:
 
 lispval Ltimes(void)
 {
-  register lispval        work;
-  register struct argent *result, *mynp, *oldnp;
+  lispval        work;
+  struct argent *result, *mynp, *oldnp;
   long                    restype, prunep, hi, lo = 1;
   struct sdot             dummybig;
   double                  flacc;
@@ -498,8 +498,8 @@ lispval Ltimes(void)
 
 lispval Lquo(void)
 {
-  register lispval        work;
-  register struct argent *result, *mynp, *oldnp;
+  lispval        work;
+  struct argent *result, *mynp, *oldnp;
   int                     restype;
   lispval                 quotient;
   double                  flacc;
@@ -656,7 +656,7 @@ out:
 lispval Lfp(void)
 {
   int                     temp = 0;
-  register struct argent *argp;
+  struct argent *argp;
 
   for (argp = lbot; argp < np; argp++)
     if (TYPE(argp->val) != INT) errorh1(Vermisc, "+: non fixnum argument ", nil, FALSE, 0, argp->val);
@@ -682,7 +682,7 @@ lispval Lfm(void)
 lispval Lft(void)
 {
   int                     temp = 1;
-  register struct argent *argp;
+  struct argent *argp;
 
   for (argp = lbot; argp < np; argp++)
     if (TYPE(argp->val) != INT) errorh1(Vermisc, "*: non fixnum argument ", nil, FALSE, 0, argp->val);
@@ -712,7 +712,7 @@ lispval Lflessp(void)
 lispval Lfd(void)
 {
   int                     temp = 0;
-  register struct argent *argp;
+  struct argent *argp;
 
   if (lbot == np) return (inewint(1));
   if (TYPE(lbot->val) != INT) errorh1(Vermisc, "/: non fixnum argument ", nil, FALSE, 0, lbot->val);
@@ -738,9 +738,9 @@ lispval Lfadd1(void)
  */
 lispval Lfexpt(void)
 {
-  register int base;
-  register int exp;
-  register int res;
+  int base;
+  int exp;
+  int res;
 
   chkarg(2, "^");
   if ((TYPE(lbot[0].val) != INT) || (TYPE(lbot[1].val) != INT))
@@ -827,7 +827,7 @@ lispval Ldbtofl(void)
 
 lispval Lfltodb(void)
 {
-  register lispval handy;
+  lispval handy;
   chkarg(1, "float-to-double");
 
   if (TYPE(lbot->val) != INT) errorh1(Vermisc, "float-to-double: non fixnum argument ", nil, FALSE, 0, lbot->val);

@@ -37,7 +37,7 @@ lispval Lfork(void)
 
 lispval Lwait(void)
 {
-  register lispval ret, temp;
+  lispval ret, temp;
   int              status = -1, pid;
   Savestack(2);
 
@@ -55,7 +55,7 @@ lispval Lwait(void)
 
 lispval Lpipe(void)
 {
-  register lispval ret, temp;
+  lispval ret, temp;
   int              pipes[2];
   Savestack(2);
 
@@ -75,7 +75,7 @@ lispval Lpipe(void)
 
 lispval Lfdopen(void)
 {
-  register lispval fd, type;
+  lispval fd, type;
   FILE            *ptr;
 
   chkarg(2, "fdopen");
@@ -296,8 +296,8 @@ extern struct types atom_str;
 
 lispval Lremprop(void)
 {
-  register struct argent *argp;
-  register lispval        pptr, ind, opptr;
+  struct argent *argp;
+  lispval        pptr, ind, opptr;
   lispval                 atm;
   int                     disemp = FALSE;
 
@@ -366,7 +366,7 @@ lispval Lsymbolp(void)
 
 lispval Lrematom(void)
 {
-  register lispval temp;
+  lispval temp;
 
   chkarg(1, "rematom");
   temp = lbot->val;
@@ -387,7 +387,7 @@ lispval Lrematom(void)
 lispval Lprname(void)
 {
   lispval               a, ret;
-  register lispval      work, prev;
+  lispval      work, prev;
   char                 *front, *temp;
   int                   clean;
   char                  ctemp[100];
@@ -432,7 +432,7 @@ lispval Lprname(void)
 
 lispval Lexit(void)
 {
-  register lispval handy;
+  lispval handy;
   if (np - lbot == 0) franzexit(0);
   handy = lbot->val;
   if (TYPE(handy) == INT) franzexit((int)handy->i);
@@ -440,8 +440,8 @@ lispval Lexit(void)
 }
 lispval Iimplode(int unintern)
 {
-  register lispval handy, work;
-  register char   *cp = strbuf;
+  lispval handy, work;
+  char   *cp = strbuf;
   extern int       atmlen; /* used by newatom and getatom */
 
   chkarg(1, "implode");
@@ -476,8 +476,8 @@ lispval Limplode(void)
 
 lispval Lntern(void)
 {
-  register int     hash;
-  register lispval handy, atpr;
+  int     hash;
+  lispval handy, atpr;
 
   chkarg(1, "intern");
   if (TYPE(handy = lbot->val) != ATOM) errorh1(Vermisc, "non atom to intern ", nil, FALSE, 0, handy);
@@ -507,7 +507,7 @@ lispval Lntern(void)
  ***/
 lispval Ibindvars(void)
 {
-  register lispval vars, vals, handy;
+  lispval vars, vals, handy;
   struct nament   *oldbnp = bnp;
 
   chkarg(2, "int:bindvars");

@@ -185,7 +185,7 @@ restart:
 }
 
 #ifndef tahoe
-int Iretfromfr(register struct frame *fram)
+int Iretfromfr(struct frame *fram)
 {
   xpopnames(fram->svbnp);
   qretfromfr(); /* modified in sed script to point to real function */

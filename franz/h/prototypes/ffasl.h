@@ -11,7 +11,7 @@ extern lispval Lcfasl(void);
 extern char *gstab(void);
 extern char *mytemp(void);
 extern int ungstab(void);
-extern lispval verify(register lispval in, char *error);
+extern lispval verify(lispval in, char *error);
 extern lispval Lrmadd(void);
 extern char *Ilibdir(void);
 

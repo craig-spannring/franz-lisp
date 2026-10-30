@@ -86,7 +86,7 @@ lispval Ltci(void)
 /*                                                                      */
 lispval Ltcx(void)
 {
-  register struct argent *mylbot = lbot;
+  struct argent *mylbot = lbot;
   int                     line, column;
 
   switch (np - lbot)
@@ -156,7 +156,7 @@ static int show(char *option, int *line, int *colum)
 
 lispval LIfranzcall(void)
 {
-  register lispval handy;
+  lispval handy;
 
   if ((np - lbot) <= 0) argerr("int:franz-call");
 

@@ -29,9 +29,9 @@
 */
 lispval Lsyscall(void)
 {
-  register lispval        temp;
-  register struct argent *aptr;
-  register int            acount = 1;
+  lispval        temp;
+  struct argent *aptr;
+  int            acount = 1;
   int                     args[50];
   Savestack(3);
 
@@ -78,8 +78,8 @@ lispval Lsyscall(void)
 
 lispval Nevwhen(void)
 {
-  register lispval handy;
-  register lispval handy2;
+  lispval handy;
+  lispval handy2;
   Savestack(2);
 
   for (handy = (lbot->val)->d.car; handy != nil; handy = handy->d.cdr)
@@ -146,7 +146,7 @@ lispval Nevwhen(void)
 
 lispval Nstatus(void)
 {
-  register lispval      handy, curitm, valarg;
+  lispval      handy, curitm, valarg;
   int                   indx, ctim;
   int                   typ;
   char                 *cp;
@@ -250,7 +250,7 @@ lispval Nstatus(void)
 }
 lispval Nsstatus(void)
 {
-  register lispval handy;
+  lispval handy;
 
   handy = lbot->val;
 
@@ -263,7 +263,7 @@ lispval Nsstatus(void)
 /* Isstatus - internal routine to do a set status.      */
 lispval Isstatus(lispval curnam, lispval curval)
 {
-  register lispval curitm, head;
+  lispval curitm, head;
   void (*badmr)(int);
   extern int uctolc, dmpmode, bcdtrsw, gcstrings;
 
@@ -362,7 +362,7 @@ setit: /* store value in status list */
 
 lispval Istsrch(lispval nam)
 {
-  register lispval handy;
+  lispval handy;
 
   for (handy = stlist; handy != nil; handy = handy->d.cdr)
     if (handy->d.car->d.car == nam) return (handy->d.car);
@@ -375,7 +375,7 @@ lispval Istsrch(lispval nam)
 
 lispval Iaddstat(lispval name, int readcode, int setcode, lispval valu)
 {
-  register lispval handy, handy2;
+  lispval handy, handy2;
   Savestack(2);
 
   protect(handy = newdot()); /* build status list here */

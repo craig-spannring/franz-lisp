@@ -3,7 +3,7 @@
 #define INC_calqhat_7883d1dd187e0b8c8bc1579501e1b904_h
 
 /* calqhat.c */
-extern int calqhat(register long *uj, register long *v1);
+extern int calqhat(long *uj, long *v1);
 
 
 #endif

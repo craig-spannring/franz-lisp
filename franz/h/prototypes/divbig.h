@@ -6,8 +6,8 @@
 
 /* divbig.c */
 extern void    divbig(lispval dividend, lispval divisor, lispval *quotient, lispval *remainder);
-extern lispval export(register long *top, register long *bot);
-extern int     Ihau(register int fix);
+extern lispval export(long *top, long *bot);
+extern int     Ihau(int fix);
 extern lispval Lhau(void);
 extern lispval Lhaipar(void);
 extern lispval Ibiglsh(lispval bignum, lispval count, int mode);

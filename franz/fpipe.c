@@ -18,7 +18,7 @@
 
 FILE *fpipe(FILE *info[2])
 {
-  register FILE *p;
+  FILE *p;
   int            fd[2];
 
   if (0 > pipe(fd)) return ((FILE *)-1);
@@ -48,7 +48,7 @@ lispval Nioreset(void)
   VERIFY_STILL_PORTING("need a portable way of doing this")
 #else
 #if !RTPORTS
-      register FILE *p;
+      FILE *p;
 
   for (p = &_iob[3]; p < _iob + _NFILE; p++)
   {
@@ -84,7 +84,7 @@ FILE **xports;
 #define LOTS (LBPG / (sizeof(FILE *)))
 lispval P(FILE   *p)
 {
-  register FILE **q;
+  FILE **q;
   extern int      fakettsize;
 
   if (xports == ((FILE **)0))
@@ -133,14 +133,14 @@ FILE *fstopen(char *base, int count, char *flag)
 }
 
 #if STILL_PORTING
-// char *alloca(register int howmuch)
+// char *alloca(int howmuch)
 // {
 //   VERIFY_STILL_PORTING("think through the memory layouts and allocations");
 //   assert(0);
 // }  
 #else 
 #ifdef SPISFP
-char *alloca(register int howmuch)
+char *alloca(int howmuch)
 {
   VERIFY_NOT_PORTING("need to figure out how we allocate memory.");
 

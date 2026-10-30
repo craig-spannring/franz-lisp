@@ -36,7 +36,7 @@ static int fmax; /*used for maximum for quick reference */
 
 lispval Lflatsi(void)
 {
-  register lispval current;
+  lispval current;
   Savestack(1); /* fixup entry mask */
 
   fmax = 0x7fffffff; /* biggest integer by default */
@@ -122,7 +122,7 @@ extern unsigned char *ctable;
 lispval r(int op)
 {
   unsigned char    c;
-  register lispval result;
+  lispval result;
   int              cc;
   int              orlevel;
   extern int       rlevel;
@@ -200,9 +200,9 @@ lispval r(int op)
 /* openable, for instance).                                              */
 lispval Lload(void)
 {
-  register FILE   *port;
-  register char   *p, *ttemp;
-  register lispval vtemp;
+  FILE   *port;
+  char   *p, *ttemp;
+  lispval vtemp;
   struct nament   *oldbnp = bnp;
   int              orlevel, typ;
   char             longname[100];
@@ -262,9 +262,9 @@ lispval Lload(void)
 - *********************************************************/
 lispval Iconcat(int unintern)
 {
-  register struct argent *temnp;
-  register char          *cp = strbuf;
-  register lispval        cur;
+  struct argent *temnp;
+  char          *cp = strbuf;
+  lispval        cur;
   int                     n;
   lispval                 Lhau();
 
@@ -313,7 +313,7 @@ lispval Iconcat(int unintern)
 #else         
         VERIFY_NOT_PORTING("need to figure out howto replace this with something portable");
         struct _iobuf    _myiob;
-        register lispval handy = cur;
+        lispval handy = cur;
 
         for (n = 12; handy->s.CDR != (lispval)0; handy = handy->s.CDR)
           n += 12;
@@ -361,9 +361,9 @@ lispval Lputprop(void)
  *  note: prop and ind are lisp values but are not protected (by this
  * function) from gc.  The caller should protect them!!
  */
-lispval Iputprop(register lispval atm, register lispval prop, register lispval ind)
+lispval Iputprop(lispval atm, lispval prop, lispval ind)
 {
-  register lispval pptr;
+  lispval pptr;
   lispval         *tack; /* place to begin property list */
   lispval          pptr2;
   Savestack(4);
@@ -422,8 +422,8 @@ top:
  */
 lispval Lget(void)
 {
-  register lispval ind, atm;
-  register lispval dum1;
+  lispval ind, atm;
+  lispval dum1;
 
   chkarg(2, "get");
   ind = lbot[1].val;
@@ -466,7 +466,7 @@ top:
  * Iget - the first arg must be a symbol.
  */
 
-lispval Iget(register lispval atm, register lispval ind)
+lispval Iget(lispval atm, lispval ind)
 {
   if (atm == nil) atm = nilplist;
   else atm = atm->a.plist;
@@ -490,7 +490,7 @@ lispval Igetplist(lispval pptr, lispval ind)
 }
 lispval Lgetd(void)
 {
-  register lispval typ;
+  lispval typ;
 
   chkarg(1, "getd");
   typ = lbot->val;
@@ -499,7 +499,7 @@ lispval Lgetd(void)
 }
 lispval Lputd(void)
 {
-  register lispval atom, list;
+  lispval atom, list;
 
   chkarg(2, "putd");
   list = lbot[1].val;
@@ -609,8 +609,8 @@ lispval Lmapcx(int maptyp /* 0= mapc   , 1= map  */
 {
   struct argent   *namptr;
   int              index;
-  register lispval temp;
-  register lispval result;
+  lispval temp;
+  lispval result;
 
   int            count;
   struct argent *first;

@@ -92,7 +92,7 @@ static char baddot2[] = "Bad reader construction: (<something> . <something> not
 /* argument.  Handles superbrackets, reader macros.                     */
 lispval readr(FILE *useport)
 {
-  register lispval handy = Vreadtable->a.clb;
+  lispval handy = Vreadtable->a.clb;
 
   chkrtab(handy);
   rbktf   = FALSE;
@@ -110,9 +110,9 @@ lispval readr(FILE *useport)
 /* pair, and quoted atom detection                                      */
 lispval readrx(int code)
 {
-  register lispval        work;
-  register lispval       *current;
-  register struct argent *result;
+  lispval        work;
+  lispval       *current;
+  struct argent *result;
   int                     inlbkt = FALSE;
   Savestack(4); /* ???not necessary because np explicitly restored if
     changed */
@@ -271,7 +271,7 @@ void macrox(void)
 void imacrox(lispval current, int inlist)
 {
   FILE            *svport;
-  register lispval work;
+  lispval work;
   lispval          Lapply(), handy;
 
   Savestack(2);
@@ -323,8 +323,8 @@ lispval ratomr(FILE *useport)
 #define next() (((cc = getc(useport)) != EOF) ? (stats = ctable[c = cc & 0177]) : ((c = 0), (saweof = 1), (stats = SEPMASK)))
 int Iratom(void)
 {
-  register FILE *useport = rdrport;
-  register char  c, marker, *name;
+  FILE *useport = rdrport;
+  char  c, marker, *name;
   int            code, cc;
   int            strflag = FALSE;
 
@@ -447,8 +447,8 @@ again:
 lispval getnum(char *name)
 {
   unsigned char    c;
-  register lispval result;
-  register FILE   *useport = rdrport;
+  lispval result;
+  FILE   *useport = rdrport;
   unsigned char    stats;
   int              sawdigit = 0, saweof = 0, cc;
   char            *exploc = (char *)0;
@@ -584,11 +584,11 @@ verylast:
   return (result);
 }
 
-lispval dopow(register char *part2, int base)
+lispval dopow(char *part2, int base)
 {
-  register char *name    = part2;
-  register FILE *useport = rdrport;
-  register int   power;
+  char *name    = part2;
+  FILE *useport = rdrport;
+  int   power;
   lispval        work;
   unsigned char  stats, c;
   int            cc, saweof = 0;
@@ -624,10 +624,10 @@ lispval dopow(register char *part2, int base)
   return (work);
 }
 
-lispval calcnum(char *strbuf, register char *name, int base)
+lispval calcnum(char *strbuf, char *name, int base)
 {
-  register char   *p;
-  register lispval result, temp;
+  char   *p;
+  lispval result, temp;
   int              negflag = 0;
 
   result = temp = newsdot(); /* initialize sdot cell */
@@ -654,9 +654,9 @@ lispval calcnum(char *strbuf, register char *name, int base)
   np--;
   return (result);
 }
-lispval finatom(register char *name)
+lispval finatom(char *name)
 {
-  register FILE *useport = rdrport;
+  FILE *useport = rdrport;
   unsigned char  c, stats;
   int            cc, saweof = 0;
 
@@ -921,7 +921,7 @@ val_loop:
       }
       else
       {
-        register char *cp    = front;
+        char *cp    = front;
         int            handy = ctable[*cp & 0177];
 
         if (synclass(handy) == CNUM) putc(Xesc, useport);
@@ -953,7 +953,7 @@ val_loop:
  */
 static bool vectorpr(lispval vec, FILE *port)
 {
-  register lispval handy;
+  lispval handy;
   int              svplevel  = plevel; /* save these global values */
   int              svplength = plength;
   Savestack(2);

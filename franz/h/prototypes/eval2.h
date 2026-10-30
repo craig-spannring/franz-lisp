@@ -10,11 +10,11 @@
 extern lispval Iarray(lispval fun, lispval args, int evalp);
 extern int dumpmydata(int thing);
 extern lispval Ifcall(lispval a);
-extern void xbcopy(register char *to, register char *from, size_t size);
+extern void xbcopy(char *to, char *from, size_t size);
 extern lispval ftolsp_(lispval arg1);
-extern lispval ftlspn_(lispval func, register long *arglist);
-extern lispval Ifclosure(register lispval clos, int funcallp);
-extern int xpopnames(register struct nament *llimit);
+extern lispval ftlspn_(lispval func, long *arglist);
+extern lispval Ifclosure(lispval clos, int funcallp);
+extern int xpopnames(struct nament *llimit);
 extern struct nament *locatevar(lispval clos, int *foundc, struct nament *rnp);
 extern lispval LIfss(void);
 

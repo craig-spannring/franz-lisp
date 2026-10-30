@@ -55,8 +55,8 @@ lispval error(char *mesg, int contvl)
  */
 static lispval Ierrorh(lispval type, char *message, lispval valret, int contuab, int uniqid)
 {
-  register struct frame *curp, *uwpframe = (struct frame *)0;
-  register lispval       handy;
+  struct frame *curp, *uwpframe = (struct frame *)0;
+  lispval       handy;
   lispval               *work  = IEargs;
   int                    limit = IElimit;
   int                    pass, curdepth;
@@ -303,9 +303,9 @@ lispval errorh2( // type,message,valret,contuab,uniqid,arg1,arg2)
 }
 
 lispval
-calhan(int limit, register lispval *work, lispval type, int uniqid, lispval contuab, register char *message, lispval handler)
+calhan(int limit, lispval *work, lispval type, int uniqid, lispval contuab, char *message, lispval handler)
 {
-  register lispval handy;
+  lispval handy;
   Savestack(4);
   lbot = np;
   protect(handler);          /* funcall the handler */

@@ -57,7 +57,7 @@ struct ftab
   lispval *discip;
 };
 
-extern lispval mftab(register struct ftab *table);
+extern lispval mftab(struct ftab *table);
 
 /* extern lispval Iaddstat(); */
 /* extern lispval Isstatus(); */
@@ -515,7 +515,7 @@ lispval mfun(char *string, lispval (*start)(void), lispval discip)
   return (v);
 }
 
-lispval mftab(register struct ftab *table)
+lispval mftab(struct ftab *table)
 {
   lispval v;
   for (; table->string; table++)

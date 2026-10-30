@@ -14,8 +14,8 @@
 #include "global.h"
 lispval Leval1(void)
 {
-  register struct nament *bindptr;
-  register lispval        handy;
+  struct nament *bindptr;
+  lispval        handy;
   if (np - lbot == 2)
   { /*if two arguments to eval */
     if (TYPE((lbot + 1)->val) != INT) error("Eval: 2nd arg not legal alist pointer", FALSE);
@@ -41,8 +41,8 @@ lispval Leval1(void)
 
 lispval Levalhook(void)
 {
-  register lispval handy;
-  register lispval funhval = CNIL;
+  lispval handy;
+  lispval funhval = CNIL;
 
   switch (np - lbot)
   {
@@ -81,8 +81,8 @@ lispval Levalhook(void)
 
 lispval Lfunhook(void)
 {
-  register lispval handy;
-  register lispval evalhval = CNIL;
+  lispval handy;
+  lispval evalhval = CNIL;
   Savestack(2);
 
   switch (np - lbot)

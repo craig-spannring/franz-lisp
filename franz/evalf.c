@@ -13,8 +13,8 @@ static char *sccsid = "%W% %G%";
 
 lispval Levalf(void)
 {
-  register struct frame *myfp;
-  register lispval       handy, result;
+  struct frame *myfp;
+  lispval       handy, result;
   int                    evaltype;
   Savestack(3);
 
@@ -132,9 +132,9 @@ struct frame *searchforpdl(struct frame *myfp)
  * vfypdlp :: verify pdl pointer as existing,  do not return unless
  * it is valid
  */
-void vfypdlp(register struct frame *curfp)
+void vfypdlp(struct frame *curfp)
 {
-  register struct frame *myfp;
+  struct frame *myfp;
 
   for (myfp = errp; myfp != (struct frame *)0; myfp = myfp->olderrp)
     if (myfp == curfp) return;

@@ -31,9 +31,9 @@ static int   pagsiz, pagrnd;
 
 lispval Ndumplisp(void)
 {
-  register struct exec *workp;
-  register lispval      argptr, temp;
-  register char        *fname;
+  struct exec *workp;
+  lispval      argptr, temp;
+  char        *fname;
   extern int            reborn;
   struct exec           work, old;
   extern int            dmpmode, usehole;
@@ -158,11 +158,11 @@ lispval Ndumplisp(void)
 
 lispval Ndumplisp(void)
 {
-  register struct exec *workp;
-  register lispval      argptr, temp;
+  struct exec *workp;
+  lispval      argptr, temp;
   char                 *fname;
-  register ISD         *Isd;
-  register int          i;
+  ISD         *Isd;
+  int          i;
   extern lispval        reborn;
   struct exec           work, old;
   extern etext;
@@ -494,9 +494,9 @@ lispval Lgetaddress(void)
 #else
   VERIFY_NOT_PORTING(""); 
   _Static_assert(0, "need to figure out how to rewrite this without stack tricks");
-  register struct argent *mlbot = lbot;
-  register lispval        work;
-  register int            numberofargs, i;
+  struct argent *mlbot = lbot;
+  lispval        work;
+  int            numberofargs, i;
   char                    ostabf[128];
   struct nlist            NTABLE[100];
   lispval                 dispget();

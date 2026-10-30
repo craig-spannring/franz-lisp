@@ -5,6 +5,6 @@
 #include "structs.h"
 
 /* prunei.c */
-extern int prunei(register lispval what);
+extern int prunei(lispval what);
 
 #endif

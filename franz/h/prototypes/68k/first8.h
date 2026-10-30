@@ -4,7 +4,7 @@
 
 /* first8.c */
 extern int init(void);
-extern int doit(int act, register unsigned char *list);
+extern int doit(int act, unsigned char *list);
 extern int main(void);
 
 

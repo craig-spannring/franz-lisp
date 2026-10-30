@@ -21,8 +21,8 @@ extern lispval Ntpl(void);
 
 /* Begin functions which return values */
 
-extern lispval Iputprop(register lispval atm, register lispval prop, register lispval ind);
-extern lispval Igetplist(register lispval pptr, register lispval ind);
+extern lispval Iputprop(lispval atm, lispval prop, lispval ind);
+extern lispval Igetplist(lispval pptr, lispval ind);
 
 extern lispval Lstacktrace(void);
 extern lispval Lunstacktrace(void);

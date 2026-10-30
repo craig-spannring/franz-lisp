@@ -3,7 +3,7 @@
 #define INC_fixbits_8cf2b27d377e216c5dfc1268885b8f57_h
 
 /* fixbits.c */
-extern int fixbits(register char *from, register char *to);
+extern int fixbits(char *from, char *to);
 
 
 #endif

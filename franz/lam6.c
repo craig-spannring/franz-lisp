@@ -27,9 +27,9 @@
 
 lispval Lreadli(void)
 {
-  register lispval work, handy;
-  register FILE   *p;
-  register char   *string;
+  lispval work, handy;
+  FILE   *p;
+  char   *string;
   int              count;
   pbuf             pb;
   Savestack(4);
@@ -110,7 +110,7 @@ lispval Lgetenv(void)
 
 lispval Lboundp(void)
 {
-  register lispval result, handy;
+  lispval result, handy;
 
   chkarg(1, "boundp");
 
@@ -122,7 +122,7 @@ lispval Lboundp(void)
 
 lispval Lplist(void)
 {
-  register lispval atm;
+  lispval atm;
   /* get property list of an atom or disembodied property list */
 
   chkarg(1, "plist");
@@ -139,7 +139,7 @@ lispval Lplist(void)
 
 lispval Lsetpli(void)
 { /* set the property list of the given atom to the given list */
-  register lispval atm, vall;
+  lispval atm, vall;
 
   chkarg(2, "setplist");
   atm = lbot->val;
@@ -153,7 +153,7 @@ lispval Lsetpli(void)
 
 lispval Lsignal(void)
 {
-  register lispval handy, old, routine;
+  lispval handy, old, routine;
   int              i;
   // int sginth();
 
@@ -187,7 +187,7 @@ lispval Lsignal(void)
 
 lispval Lassq(void)
 {
-  register lispval work, handy;
+  lispval work, handy;
 
   chkarg(2, "assq");
 
@@ -206,7 +206,7 @@ lispval Lkilcopy(void)
 
 lispval Larg(void)
 {
-  register lispval handy;
+  lispval handy;
   int              offset;
   long             count;
 
@@ -238,7 +238,7 @@ lispval Lptime(void)
   extern int       gctime;
   int              lgctime = gctime;
   struct tms       current;
-  register lispval result, handy;
+  lispval result, handy;
   Savestack(2);
 
   times(&current);
@@ -284,8 +284,8 @@ lispval Lerr(void)
  */
 lispval Ltyi(void)
 {
-  register FILE   *port;
-  register lispval handy;
+  FILE   *port;
+  lispval handy;
   lispval          eofval;
   int              val; /* really char but getc returns int on eof */
   int              eofvalgiven;
@@ -345,8 +345,8 @@ lispval Luntyi(void)
 
 lispval Ltyipeek(void)
 {
-  register FILE   *port;
-  register lispval handy;
+  FILE   *port;
+  lispval handy;
   int              val;
 
   switch (np - lbot)
@@ -369,8 +369,8 @@ lispval Ltyipeek(void)
 
 lispval Ltyo(void)
 {
-  register FILE   *port;
-  register lispval handy, where;
+  FILE   *port;
+  lispval handy, where;
   char             val;
 
   switch (np - lbot)
@@ -397,7 +397,7 @@ lispval Imkrtab(int current)
   {
     unsigned char ctable[132];
   } initread;
-  register lispval handy;
+  lispval handy;
   extern lispval   lastrtab;
 
   static int   cycle = 0;
@@ -468,7 +468,7 @@ lispval Lmakertbl(void)
 
 lispval Lcpy1(void)
 {
-  register lispval handy = lbot->val, result = handy;
+  lispval handy = lbot->val, result = handy;
 
 top:
   switch (TYPE(handy))
@@ -487,8 +487,8 @@ top:
  */
 lispval Lcopyint(void)
 {
-  register lispval handy = lbot->val;
-  register lispval ret;
+  lispval handy = lbot->val;
+  lispval ret;
 
   while (TYPE(handy) != INT)
   {

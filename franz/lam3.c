@@ -24,7 +24,7 @@
 
 lispval Lalfalp(void)
 {
-  register char *first, *second;
+  char *first, *second;
 
   chkarg(2, "alphalessp");
   first  = (char *)verify(lbot->val, "alphalessp: non symbol or string arg");
@@ -35,7 +35,7 @@ lispval Lalfalp(void)
 
 lispval Lncons(void)
 {
-  register lispval handy;
+  lispval handy;
 
   chkarg(1, "ncons");
   handy        = newdot();
@@ -45,7 +45,7 @@ lispval Lncons(void)
 }
 lispval Lzerop(void)
 {
-  register lispval handy;
+  lispval handy;
 
   chkarg(1, "zerop");
   handy = lbot->val;
@@ -58,7 +58,7 @@ lispval Lzerop(void)
 }
 lispval Lonep(void)
 {
-  register lispval handy;
+  lispval handy;
   lispval          Ladd();
 
   handy = lbot->val;
@@ -77,9 +77,9 @@ lispval Lonep(void)
 
 lispval cmpx(int lssp)
 {
-  register struct argent *argp;
-  register struct argent *outarg;
-  register struct argent *onp = np;
+  struct argent *argp;
+  struct argent *outarg;
+  struct argent *onp = np;
   Savestack(3);
 
   argp   = lbot + 1;
@@ -104,7 +104,7 @@ lispval cmpx(int lssp)
 
 lispval Lgreaterp(void)
 {
-  register int typ;
+  int typ;
   /* do the easy cases first */
   if (np - lbot == 2)
   {
@@ -125,7 +125,7 @@ lispval Lgreaterp(void)
 
 lispval Llessp(void)
 {
-  register int typ;
+  int typ;
   /* do the easy cases first */
   if (np - lbot == 2)
   {
@@ -163,7 +163,7 @@ lispval Ldiff(void)
 
 lispval Lmod(void)
 {
-  register lispval arg1, arg2;
+  lispval arg1, arg2;
   lispval          handy;
   struct sdot      fake1, fake2;
   fake2.CDR = 0;
@@ -206,7 +206,7 @@ lispval Lmod(void)
 }
 lispval Ladd1(void)
 {
-  register lispval handy;
+  lispval handy;
   lispval          Ladd();
   Savestack(1); /* fixup entry mask */
   chkarg(1, "add1");
@@ -228,7 +228,7 @@ lispval Ladd1(void)
 
 lispval Lsub1(void)
 {
-  register lispval handy;
+  lispval handy;
   lispval          Ladd();
   Savestack(1); /* fixup entry mask */
   chkarg(1, "sub1");
@@ -249,7 +249,7 @@ lispval Lsub1(void)
 
 lispval Lminus(void)
 {
-  register lispval arg1, handy;
+  lispval arg1, handy;
 
   chkarg(1, "minus");
   arg1  = lbot->val;
@@ -278,7 +278,7 @@ lispval Lminus(void)
 
 lispval Lnegp(void)
 {
-  register lispval handy = np[-1].val, work;
+  lispval handy = np[-1].val, work;
   bool             flag  = false;
 
 loop:
@@ -305,7 +305,7 @@ loop:
 
 lispval Labsval(void)
 {
-  register lispval arg1;
+  lispval arg1;
 
   chkarg(1, "absval");
   arg1 = lbot->val;
@@ -369,8 +369,8 @@ lispval Loblist(void)
 
 lispval Lsetsyn(void)
 {
-  register lispval        s, c;
-  register struct argent *mynp;
+  lispval        s, c;
+  struct argent *mynp;
 #if STILL_PORTING
   VERIFY_STILL_PORTING("index is used as a pointer, an integer, or a char.  "
                        "Figure out how to handle it.");
@@ -477,7 +477,7 @@ lispval Lsetsyn(void)
  */
 int rpltab(int cclass, unsigned char *addr)
 {
-  register int          i;
+  int          i;
   extern unsigned char *ctable;
   for (i = 0; i <= 127 && synclass(ctable[i]) != cclass; i++)
     ;
@@ -493,7 +493,7 @@ int rpltab(int cclass, unsigned char *addr)
  */
 lispval Lgetsyntax(void)
 {
-  register char *name;
+  char *name;
   int            number, typ;
   lispval        handy;
 
@@ -536,7 +536,7 @@ lispval Lgetsyntax(void)
 
 lispval Lzapline(void)
 {
-  register FILE *port;
+  FILE *port;
   extern FILE   *rdrport;
 
   port = rdrport;

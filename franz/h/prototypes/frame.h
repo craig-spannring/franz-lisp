@@ -10,7 +10,7 @@
 /* frame.c */
 extern int Inonlocalgo(int class, lispval arg1, lispval arg2);
 extern struct frame *Inlthrow(int class, lispval arg1, lispval arg2);
-extern int Iretfromfr(register struct frame *fram);
+extern int Iretfromfr(struct frame *fram);
 extern int matchtags(lispval tag1, lispval tag2);
 extern lispval Lframedump(void);
 

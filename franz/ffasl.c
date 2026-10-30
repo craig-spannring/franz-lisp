@@ -57,9 +57,9 @@ lispval dispget(lispval given, char *messg, lispval defult)
 
 lispval Lcfasl(void)
 {
-  register struct argent *mlbot = lbot;
-  register lispval        work;
-  register int            fildes, totsize;
+  struct argent *mlbot = lbot;
+  lispval        work;
+  int            fildes, totsize;
   int                     readsize;
   char                   *currend, *tfile, cbuf[6000], *mytemp(), *gstab();
   char                    ostabf[128];
@@ -225,7 +225,7 @@ lispval Lcfasl(void)
 #define oktox(n) (0 == stat(n, &stbuf) && (stbuf.st_mode & S_IFMT) == S_IFREG && 0 == access(n, M))
 char *gstab(void)
 {
-  register char *cp, *cp2;
+  char *cp, *cp2;
   struct stat    stbuf;
   extern char  **Xargv;
 
@@ -317,7 +317,7 @@ int ungstab(void)
     fvirgin = 1;
   }
 }
-lispval verify(register lispval in, char *error)
+lispval verify(lispval in, char *error)
 {
   for (EVER)
   {
@@ -372,9 +372,9 @@ void copyblock(FILE *f1, FILE *f2, long size)
 
 lispval Lrmadd(void)
 {
-  register struct argent *mlbot = lbot;
-  register struct nlist  *q;
-  register int            i;
+  struct argent *mlbot = lbot;
+  struct nlist  *q;
+  int            i;
   int                     numberofargs, strsize;
   char                   *gstab();
   char                    ostabf[128];
@@ -600,7 +600,7 @@ alldone:
 }
 char *Ilibdir(void)
 {
-  register lispval handy;
+  lispval handy;
 tryagain:
   handy = Vlibdir->a.clb;
   switch (TYPE(handy))

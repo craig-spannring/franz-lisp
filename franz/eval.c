@@ -33,10 +33,10 @@
     lispval eval(lispval actarg)
 {
 #define argptr handy
-  register lispval        a = actarg;
-  register lispval        handy;
-  register struct nament *namptr;
-  register struct argent *workp;
+  lispval        a = actarg;
+  lispval        handy;
+  struct nament *namptr;
+  struct argent *workp;
   struct nament          *oldbnp     = bnp;
   int                     dopopframe = FALSE;
   int                     type, shortcircuit = TRUE;
@@ -320,9 +320,9 @@
  * knows about the special cases.  bnp is returned pointing to the
  * same place as the argument passed.
  */
-lispval popnames(register struct nament *llimit)
+lispval popnames(struct nament *llimit)
 {
-  register struct nament *rnp;
+  struct nament *rnp;
 
   for (rnp = bnp; --rnp >= llimit;)
     rnp->atm->a.clb = rnp->val;
@@ -351,8 +351,8 @@ int dumpnamestack(void)
 
 lispval Lapply(void)
 {
-  register lispval a;
-  register lispval handy;
+  lispval a;
+  lispval handy;
   lispval          vtemp;
   struct nament   *oldbnp  = bnp;
   struct argent   *oldlbot = lbot; /* Bottom of my frame! */
@@ -478,7 +478,7 @@ lispval Lapply(void)
  */
 void rebind(lispval argptr, struct argent *workp)
 {
-  register struct nament *namptr = bnp;
+  struct nament *namptr = bnp;
 
   for (; argptr != (lispval)nil; workp++, argptr = argptr->d.cdr) /* rebind formal names (shallow) */
   {
@@ -504,8 +504,8 @@ void rebind(lispval argptr, struct argent *workp)
  */
 lispval Ifuncal(lispval fcn)
 {
-  register lispval a;
-  register lispval handy;
+  lispval a;
+  lispval handy;
   struct nament   *oldbnp = bnp; /* MUST be first local for evalframe */
   lispval          fcncalled;
   lispval          vtemp;
@@ -716,7 +716,7 @@ int fchack(void) {}
  */
 lispval Llexfun(void)
 {
-  register lispval handy;
+  lispval handy;
 
   switch (np - lbot)
   {
@@ -786,8 +786,8 @@ int bindfix(lispval firstarg, lispval x, lispval y)
                        "It is called as if it has varargs.");
 #else
   VERIFY_NOT_PORTING(""); 
-  register lispval       *argp  = &firstarg;
-  register struct nament *mybnp = bnp;
+  lispval       *argp  = &firstarg;
+  struct nament *mybnp = bnp;
   while (*argp != nil)
   {
     mybnp->atm        = *argp++;

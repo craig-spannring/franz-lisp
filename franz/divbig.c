@@ -26,7 +26,7 @@ void divbig(lispval dividend, lispval divisor, lispval *quotient, lispval *remai
   int              d, negflag     = 0, m, n, carry, rem, qhat, j;
   int              borrow, negrem = 0;
   long            *utop = sp(), *ubot, *vbot, *qbot;
-  register lispval work;
+  lispval work;
   Keepxs();
 
   /* copy dividend */
@@ -111,7 +111,7 @@ d8:
  * asm code commented out due to optimizer bug
  * also, this file is now shared with the 68k version!
 calqhat(ujp,v1p)
-register int *ujp, *v1p;
+int *ujp, *v1p;
 {
 asm("   cmpl    (r10),(r11)             # v[1] == u[j] ??");
 asm("   beql    2f                      ");
@@ -145,8 +145,8 @@ asm("   jbr     1b");
 asm("3:");
 }
 mlsb(utop,ubot,vtop,nqhat)
-register int *utop, *ubot, *vtop;
-register int nqhat;
+int *utop, *ubot, *vtop;
+int nqhat;
 {
 asm("   clrl    r0");
 asm("loop2:     addl2   (r11),r0");
@@ -156,7 +156,7 @@ asm("   extv    $30,$32,r2,r0");
 asm("   acbl    r10,$-4,r11,loop2");
 }
 adback(utop,ubot,vtop)
-register int *utop, *ubot, *vtop;
+int *utop, *ubot, *vtop;
 {
 asm("   clrl    r0");
 asm("loop3:     addl2   -(r9),r0");
@@ -166,7 +166,7 @@ asm("   extv    $30,$2,r0,r0");
 asm("   acbl    r10,$-4,r11,loop3");
 }
 dsdiv(top,bot,div)
-register int* bot;
+int* bot;
 {
 asm("   clrl    r0");
 asm("loop4:     emul    r0,$0x40000000,(r11),r1");
@@ -174,7 +174,7 @@ asm("   ediv    12(ap),r1,(r11),r0");
 asm("   acbl    4(ap),$4,r11,loop4");
 }
 dsmult(top,bot,mult)
-register int* top;
+int* top;
 {
 asm("   clrl    r0");
 asm("loop5:     emul    12(ap),(r11),r0,r1");
@@ -184,9 +184,9 @@ asm("   acbl    8(ap),$-4,r11,loop5");
 asm("   movl    r1,4(r11)");
 }
 */
-lispval export(register long *top, register long *bot)
+lispval export(long *top, long *bot)
 {
-  register lispval p;
+  lispval p;
   lispval          result;
 
   top--; /* screwey convention matches original
@@ -225,7 +225,7 @@ int Ihau(int fix)
 lispval Lhau(void)
 {
   int              count;
-  register lispval handy;
+  lispval handy;
   lispval          Labsval();
 
   handy = lbot->val;
@@ -413,20 +413,20 @@ correct. */
 
 lispval Lsbiglsh(void)
 {
-  register struct argent *mylbot = lbot;
+  struct argent *mylbot = lbot;
   chkarg(2, "sticky-bignum-leftshift");
   return (Ibiglsh(lbot->val, lbot[1].val, STICKY));
 }
 lispval Lbiglsh(void)
 {
-  register struct argent *mylbot = lbot;
+  struct argent *mylbot = lbot;
   chkarg(2, "bignum-leftshift");
   return (Ibiglsh(lbot->val, lbot[1].val, TOEVEN));
 }
 lispval HackHex(void) /* this is a one minute function so drb and kls can debug biglsh */
 /* (HackHex i) returns a string which is the result of printing i in hex */
 {
-  register struct argent *mylbot = lbot;
+  struct argent *mylbot = lbot;
   char                    buf[32];
   sprintf(buf, "%lx", lbot->val->i);
   return ((lispval)inewstr(buf));

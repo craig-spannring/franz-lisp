@@ -697,9 +697,9 @@ void clrtt(int flag)
   /*  flag = 0 :: set to qlinker
    *  flag = 1 :: set to function bcd binding if possible
    */
-  register struct trtab *temptt;
-  register struct trent *tement;
-  register lispval       fnb;
+  struct trtab *temptt;
+  struct trent *tement;
+  lispval       fnb;
 
   for (temptt = trhead; temptt != 0; temptt = temptt->nxtt)
   {
@@ -729,9 +729,9 @@ void clrtt(int flag)
  */
 lispval chktt(void)
 {
-  register struct trtab *temptt;
-  register struct trent *tement;
-  register lispval       retlst, curv;
+  struct trtab *temptt;
+  struct trent *tement;
+  lispval       retlst, curv;
   Savestack(4);
 
   retlst = newdot(); /* build list of undef functions */
@@ -758,7 +758,7 @@ lispval chktt(void)
 ** we have to add the relocation offset in a slightly different manner.
 */
 #ifdef tahoe
-int add_offset(register int *addr, int relocoffset)
+int add_offset(int *addr, int relocoffset)
 {
   register int r11, r10, r9, r8;
   asm("  cvtbl   (r12), r0");
@@ -776,7 +776,7 @@ int add_offset(register int *addr, int relocoffset)
   asm("  cvtlb   r0,(r12)");
 }
 #else
-int add_offset(register int *addr, int relocoffset)
+int add_offset(int *addr, int relocoffset)
 {
   *addr += relocoffset;
 }

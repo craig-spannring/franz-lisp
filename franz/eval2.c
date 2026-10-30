@@ -28,7 +28,7 @@
  *  evalp - flag, if TRUE then the arguments should be evaluated when they
  *      are stacked.
  */
-lispval Iarray(register lispval fun, register lispval args, int evalp)
+lispval Iarray(lispval fun, lispval args, int evalp)
 {
   Savestack(2);
 
@@ -45,8 +45,8 @@ lispval Iarray(register lispval fun, register lispval args, int evalp)
 
 int dumpmydata(int thing)
 {
-  register int *ip  = &thing;
-  register int *lim = ip + nargs();
+  int *ip  = &thing;
+  int *lim = ip + nargs();
 
   printf("Dumpdata got %d args:\n", nargs());
   while (ip < lim)
@@ -67,10 +67,10 @@ int dumpmydata(int thing)
  */
 lispval Ifcall(lispval a)
 {
-  register int           *arglist;
-  register int            index;
-  register struct argent *mynp;
-  register lispval        ltemp;
+  int           *arglist;
+  int            index;
+  struct argent *mynp;
+  lispval        ltemp;
   pbuf                    pb;
   int                     nargs = np - lbot, kind, mysize, *ap;
   Keepxs();
@@ -205,7 +205,7 @@ lispval Ifcall(lispval a)
   return (ltemp);
 }
 
-void xbcopy(register char *to, register char *from, size_t size)
+void xbcopy(char *to, char *from, size_t size)
 {
   while (--size >= 0)
     *to++ = *from++;
@@ -214,7 +214,7 @@ void xbcopy(register char *to, register char *from, size_t size)
 lispval ftolsp_(lispval arg1)
 {
   int               count;
-  register lispval *ap = &arg1;
+  lispval *ap = &arg1;
   lispval           save;
   pbuf              pb;
   Savestack(1);
@@ -237,7 +237,7 @@ lispval ftolsp_(lispval arg1)
   return (save);
 }
 
-lispval ftlspn_(lispval func, register long *arglist)
+lispval ftlspn_(lispval func, long *arglist)
 {
   int     count;
   lispval save;
@@ -323,11 +323,11 @@ lispval ftlspn_(lispval func, register long *arglist)
 #define Case_B 1
 #define Case_C 2
 
-lispval Ifclosure(register lispval clos, int funcallp)
+lispval Ifclosure(lispval clos, int funcallp)
 {
   struct nament   *oldbnp = bnp, *lbnp;
-  register int     i;
-  register lispval vect;
+  int     i;
+  lispval vect;
   int              numvars, vlength, tcase, foundc;
   lispval          handy, atm_dtpr, value_dtpr;
   Savestack(3);
@@ -401,9 +401,9 @@ lispval Ifclosure(register lispval clos, int funcallp)
  * when we know there will be closure markers or when we can't
  * be sure that there won't be closure markers (eg. in non-local go's)
  */
-int xpopnames(register struct nament *llimit)
+int xpopnames(struct nament *llimit)
 {
-  register struct nament *rnp, *lbnp;
+  struct nament *rnp, *lbnp;
   lispval                 atm_dtpr, value_dtpr;
   int                     foundc;
 
@@ -457,7 +457,7 @@ int xpopnames(register struct nament *llimit)
 
 struct nament *locatevar(lispval clos, int *foundc, struct nament *rnp)
 {
-  register struct nament *retbnp;
+  struct nament *retbnp;
   lispval                 symb;
 
   retbnp  = (struct nament *)0;
@@ -479,7 +479,7 @@ struct nament *locatevar(lispval clos, int *foundc, struct nament *rnp)
 
 lispval LIfss(void)
 {
-  register lispval atm_dtpr, value_dtpr;
+  lispval atm_dtpr, value_dtpr;
   struct nament   *oldbnp = bnp, *lbnp;
   int              tcase, foundc = 0;
   lispval          newval;

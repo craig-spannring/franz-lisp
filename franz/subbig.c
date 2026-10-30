@@ -22,9 +22,9 @@
  */
 lispval subbig(lispval pos, lispval neg)
 {
-  register lispval work;
-  register long   *mysp   = sp() - 2;
-  register long   *ersatz = mysp;
+  lispval work;
+  long   *mysp   = sp() - 2;
+  long   *ersatz = mysp;
   Keepxs();
 
   for (work = neg; work != 0; work = work->s.CDR)

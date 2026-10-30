@@ -15,7 +15,7 @@
 void pbignum(lispval current, FILE *useport)
 {
   long         *top, *bot, *work, negflag = 0;
-  register int *digitp;
+  int *digitp;
   Keepxs();
 
   /* copy bignum onto stack */

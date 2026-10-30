@@ -92,8 +92,8 @@ void initial(void)
 
 static void makenv(void)
 {
-  register lispval env, temp;
-  register char   *p, *q;
+  lispval env, temp;
+  char   *p, *q;
   char           **envp, envstr[STRBLEN];
   extern char    **environ;
 
@@ -212,7 +212,7 @@ int delayoff(void)
 }
 int dosig(void)
 {
-  register int i;
+  int i;
   int          which;
   if (!sigdelay)
     for (which = 0, i = 1; i <= 65536; which++, i <<= 1)

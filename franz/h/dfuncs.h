@@ -30,7 +30,7 @@ extern long dsrsh(long *top, long *bot, long ncnt, long mask1);
 extern int dsmult(long *top, long *bot, long mul);
 
 /* calqhat.c */
-extern int calqhat(register long *uj, register long *v1);
+extern int calqhat(long *uj, long *v1);
 
 // char *getsp();
 // char *pinewstr();

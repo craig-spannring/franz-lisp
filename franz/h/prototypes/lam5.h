@@ -18,7 +18,7 @@ extern lispval Lfact(void);
 extern lispval Lfix(void);
 extern lispval Lfrexp(void);
 extern lispval Lfloat(void);
-extern double Ifloat(register lispval handy);
+extern double Ifloat(lispval handy);
 extern lispval Lbreak(void);
 extern lispval LDivide(void);
 extern lispval LEmuldiv(void);

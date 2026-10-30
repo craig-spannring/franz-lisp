@@ -101,7 +101,7 @@
  * Savestack and Restorestack are required at the beginning and end of
  * functions which modify the stack pointers np and lbot.
  * The Savestack(n) should appear at the end of the variable declarations
- * The n refers to the number of register variables declared in this routine.
+ * The n refers to the number of variables declared in this routine.
  * The information is required for the Vax version only.
  */
 #if PORTABLE

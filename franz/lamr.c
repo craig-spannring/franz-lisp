@@ -182,7 +182,7 @@ lispval Lputa(void)
 
 lispval Lmarray(void)
 {
-  register lispval handy;
+  lispval handy;
 
   chkarg(5, "marray");
 
@@ -266,7 +266,7 @@ lispval Lputloc(void)
 
 lispval Lmfunction(void)
 {
-  register lispval handy;
+  lispval handy;
   chkarg(2, "mfunction");
   handy                 = (newfunct());                 /*  get a new function cell  */
 //  handy->bcd.start      = (lispval (*)())((lbot)->val); /* insert entry point */
@@ -281,8 +281,8 @@ lispval Lmfunction(void)
 
 lispval Lreplace(void)
 {
-  register lispval a1, a2;
-  register int     t;
+  lispval a1, a2;
+  int     t;
   chkarg(2, "replace");
 
   if ((t = TYPE(a1 = (lbot)->val)) != TYPE(a2 = np[-1].val)) error("REPLACE ARGS MUST BE SAME TYPE", FALSE);
@@ -420,8 +420,8 @@ lispval Lslevel(void)
 
 lispval Lsimpld(void)
 {
-  register lispval pt;
-  register char   *cpt = strbuf;
+  lispval pt;
+  char   *cpt = strbuf;
 
   chkarg(1, "simpld");
 

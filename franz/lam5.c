@@ -44,9 +44,9 @@ lispval Lexpldx(int kind, int slashify /* kind = 0 => explode to characters
 {
   int              typ, i;
   char             ch, *strb, strbb[BUFSIZ]; /* temporary string buffer */
-  register lispval last, handy;
+  lispval last, handy;
   extern int       uctolc;
-  register char   *cp;
+  char   *cp;
   Savestack(3); /* kludge register save mask */
 #ifdef SPISFP
   Keepxs();
@@ -239,7 +239,7 @@ lispval Lxplda(void)
 
 lispval Largv(void)
 {
-  register lispval handy;
+  lispval handy;
   extern int       Xargc;
   extern char    **Xargv;
 
@@ -262,7 +262,7 @@ lispval Largv(void)
  */
 lispval Lchdir(void)
 {
-  register char *filenm;
+  char *filenm;
 
   chkarg(1, "chdir");
   filenm = (char *)verify(lbot->val, "chdir - non symbol or string arg");
@@ -282,7 +282,7 @@ lispval Lchdir(void)
 
 lispval Lascii(void)
 {
-  register lispval handy;
+  lispval handy;
 
   handy = lbot->val; /* get argument */
 
@@ -407,7 +407,7 @@ lispval Lfix(void)
  */
 lispval Lfrexp(void)
 {
-  register lispval handy, result;
+  lispval handy, result;
   int              exp, hi, lo;
 
   Savestack(2);
@@ -450,9 +450,9 @@ static double table[] = {1.0, B, B *B, B * B * B, B * B * B *B, 0.0};
 
 lispval Lfloat(void)
 {
-  register lispval handy, result;
-  register double  sum = 0;
-  register int     count;
+  lispval handy, result;
+  double  sum = 0;
+  int     count;
   chkarg(1, "float");
   handy = lbot->val;
   switch (TYPE(handy))
@@ -481,10 +481,10 @@ lispval Lfloat(void)
       /* NOTREACHED */
   }
 }
-double Ifloat(register lispval handy)
+double Ifloat(lispval handy)
 {
-  register double sum   = 0.0;
-  register int    count = 0;
+  double sum   = 0.0;
+  int    count = 0;
   for (; count < 5; count++, handy = handy->s.CDR)
   {
     sum += handy->s.I * table[count];
@@ -510,8 +510,8 @@ lispval Lbreak(void)
 
 lispval LDivide(void)
 {
-  register lispval        result, work;
-  register struct argent *mynp;
+  lispval        result, work;
+  struct argent *mynp;
   lispval                 quo, rem, arg1, arg2;
   struct sdot             dummy, dum2;
   Savestack(3);
@@ -556,8 +556,8 @@ lispval LDivide(void)
 
 lispval LEmuldiv(void)
 {
-  register struct argent *mynp = lbot + AD;
-  register lispval        work, result;
+  struct argent *mynp = lbot + AD;
+  lispval        work, result;
   int                     quo, rem;
   Savestack(3); /* fix register mask */
 

@@ -66,7 +66,7 @@ int blzero(void *where, int howmuch)
   return 0;
 }
 
-int calqhat(register long *uj, register long *v1)
+int calqhat(long *uj, long *v1)
 {
   assert(0);
   return 0;
@@ -161,7 +161,7 @@ int nargs(void)
   return 0;
 }
 
-int prunei(register lispval what)
+int prunei(lispval what)
 {
   assert(0);
   return 0;

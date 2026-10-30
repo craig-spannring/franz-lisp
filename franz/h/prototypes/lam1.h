@@ -9,7 +9,7 @@
 extern lispval Leval(void);
 extern lispval Lxcar(void);
 extern lispval Lxcdr(void);
-extern lispval cxxr(register int as, register int ds);
+extern lispval cxxr(int as, int ds);
 extern lispval Lcar(void);
 extern lispval Lcdr(void);
 extern lispval Lcadr(void);
@@ -49,7 +49,7 @@ extern lispval Lhunkp(void);
 extern lispval Lset(void);
 extern lispval Lequal(void);
 extern lispval oLequal(void);
-extern int Iequal(register lispval first, register lispval second);
+extern int Iequal(lispval first, lispval second);
 extern lispval Zequal(void);
 extern lispval Lprint(void);
 extern lispval Lpatom(void);
