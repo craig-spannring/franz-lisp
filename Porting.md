@@ -229,6 +229,157 @@ If you want, I can go one level deeper and sketch:
 
 ### Memory Map ###
 
+#### Allocation of Memory for a Lisp Object ####
+Yes. In this Franz Lisp codebase, a Lisp object is not created by
+`malloc()` in the usual C sense; it is created by a custom allocator
+that hands out cells from a Lisp-managed heap. 
+
+The key files are:
+- franz/alloc.c
+- franz/data.c
+- franz/h/global.h
+- franz/h/config.h
+
+The overall model
+
+- The system keeps a flat data region for Lisp objects.
+- Memory is divided into 512-byte pages (`LBPG`).
+- Each page is typed: atom, int, cons cell, string, vector, etc.
+- The type table is `typetable[]`, and the page allocator keeps free
+  lists per object type. 
+
+The critical definitions in franz/h/global.h show the page size and
+type structure: 
+
+- `#define LBPG 512`
+- `#define NUMSPACES (VECTORI+1)`
+- object families like `ATOMSPP`, `INTSPP`, `DTPRSPP`, `ARRAYSPP`, etc.
+
+This is the basis for a fixed-size, page-oriented memory arena.
+
+How an object is created
+
+Take the simplest one: an integer.
+
+In alloc.c:
+
+- `newint()` calls `next_one(&int_str)`
+- `newdot()` calls `next_one(&dtpr_str)`
+- `newatom()` calls `next_one(&atom_str)`
+- `newvec()` and similar call special vector allocators
+
+So the common path is:
+
+- `newX()` -> `next_one(...)` or `next_pure_one(...)`
+- `next_one` ensures there is free space for that object type
+- if there isn’t, it triggers GC or allocates a new page
+
+The `next_one` function does exactly this:
+- checks the type’s free list
+- if empty, calls `gc(type_struct)` if possible
+- if still empty, calls `get_more_space(type_struct, FALSE)`
+- takes the first free cell from the free list and returns it
+
+That free list is built page-by-page.
+
+How a new page is allocated
+
+The real page allocator is `get_more_space(type_struct, purep)` in alloc.c.
+
+It does this:
+
+- if it is using a hole model, it may allocate from the “hole” region
+  instead of normal data space 
+- otherwise it does `xsbrk(1)` to get one new 512-byte page
+- it sets the page type using `SETTYPE(start, type_struct->type, 20)`
+- it initializes the page as a linked list of free cells
+- each cell points to the next free cell on that type’s freelist
+
+So each page is not just a block of bytes; it is a structured chunk
+whose cells are linked together. 
+
+Example: creating a cons cell
+
+`newdot()` does roughly:
+
+- `temp = next_one(&dtpr_str)`
+- fills `temp->d.car = nil`
+- fills `temp->d.cdr = nil`
+- returns it
+
+So the cons cell is just a cell from a DTPR page, with the fields initialized.
+
+A more elaborate object: strings
+
+`newstr()` is special:
+- it uses a string buffer `strbuf`
+- if the current string area is full, it allocates a new string page
+- it copies the string into that page and returns the pointer
+
+This explains why strings are treated differently than ordinary cells.
+
+What allocates the memory region itself
+
+The low-level `sbrk`-style calls are in alloc.c:
+
+- `xsbrk(n)` allocates a page chunk in groups
+- `ysbrk(pages, type)` allocates a block and marks its pages as a given type
+- `csegment(typecode, nitems, useholeflag)` allocates a larger chunk
+  for arrays/vectors, then zeroes it and tags the pages 
+
+So the heap is built from raw pages, then subdivided into object pages
+and free-list cells. 
+
+Memory bookkeeping
+
+There are two important pieces of state:
+
+- `datalim`: pointer to the end of the current data area
+- `typetable`: one byte per 512-byte page telling what type the page
+  holds 
+
+This gives the runtime a fast way to tell:
+- what kind of object is at an address
+- whether an address is valid
+- where the heap ends
+
+Garbage collection
+
+When a freelist is empty, `next_one` may trigger `gc()`.
+
+The collector:
+- marks all reachable Lisp objects
+- sweeps the pages
+- rebuilds free lists by scanning the heap
+- reuses dead cells
+
+This is why a cell is not “allocated with malloc” in the usual sense;
+it is reclaimed and reused from the custom heap. 
+
+Simplified flow
+
+Here is the lifecycle in one sentence:
+
+- allocate raw heap pages with `sbrk`/`xsbrk`
+- subdivide them into type-specific pages
+- link free cells on per-type freelists
+- `newint`/`newdot`/`newatom`/`newvec` grab one free cell
+- if empty, GC or allocate a new page
+
+A good mental model is:
+
+- Franz Lisp uses a custom object heap, not the C runtime heap.
+- Objects are page-based, typed, and managed with per-type freelists.
+- The low-level memory allocator is up in alloc.c, while the object
+  constructors are the small `new*` wrappers in the same file. 
+
+If you want, I can next walk through one exact object in the codepath
+step-by-step, such as: 
+- how `newdot()` allocates a cons cell
+- how a vector is allocated
+- how the garbage collector rebuilds free lists after a GC cycle
+
+#### VAX-11 ####
 For the VAX/BSD 4.3 build, the memory model is a flat, page-based Lisp
 heap starting at address 0, not a segmented layout. 
 
@@ -262,6 +413,48 @@ There is also a second build variant in the tree that inserts a 2 MB
 “hole” between text and data (`-H 2097152`), but that is not the
 normal VAX/BSD 4.3 `rawlisp` layout; the standard build is the no-hole
 contiguous version.
+
+#### m68k ####
+For the m68k build, the map is the same idea as the VAX version, but
+shifted upward by a nonzero `OFFSET` instead of starting at zero. 
+
+The key definitions are in `franz/h/config.h` and `franz/h/global.h`:
+
+- For 68000 builds, `m_68k` is enabled.
+- `OFFSET` is not 0; it depends on the OS/port:
+  - Sun 4.2 / 4.1c / 4.2beta: `0x8000`
+  - Sun Unisoft: `0x40000`
+  - Dual Unisoft: `0x800000`
+  - Pixel / Lisa: `0x20000`
+- The heap pages are addressed as:
+  - `ATOX(a) = (((int)(a)) - OFFSET) >> 9`
+  - `TYPE(a) = typetable[ATOX(a)]`
+  - `CNIL = OFFSET - 4`
+
+So the m68k memory map is roughly:
+
+- low address region: text/code and OS/user areas
+- gap: addresses below `OFFSET` are reserved / not part of Lisp heap
+- Lisp heap starts at `OFFSET`
+- heap is broken into 512-byte pages (`LBPG == 512`)
+- each page has a type tag in `typetable`
+- `datalim` marks the current end of allocated data
+- the `nil` sentinel sits just below the heap, at `OFFSET-4`
+
+In other words, this is still a flat heap, but it is not anchored at
+address 0. It is a contiguous block beginning at a machine-specific
+offset, leaving room between the text segment and the Lisp data
+segment. That offset is exactly why the 68k code uses `OFFSET`
+throughout the allocator and GC logic instead of assuming a zero base. 
+
+Relevant source:
+- `https://github.com/craig-spannring/franz-lisp/blob/062bb7ad66217443c66a9467b5a86aefc8b15bbc/franz/h/config.h`
+- `https://github.com/craig-spannring/franz-lisp/blob/062bb7ad66217443c66a9467b5a86aefc8b15bbc/franz/h/global.h`
+- `https://github.com/craig-spannring/franz-lisp/blob/062bb7ad66217443c66a9467b5a86aefc8b15bbc/franz/alloc.c`
+
+If you want, I can also sketch the exact page layout for a specific
+m68k target (for example Sun 4.2 with `OFFSET=0x8000` versus Sun
+Unisoft with `OFFSET=0x40000`). 
 
 
 ## A More Human Oriented Perspective ##
