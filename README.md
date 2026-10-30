@@ -63,8 +63,9 @@ page about PEARL][pearl].
 
 The `utils/` directory contains some utilities used by the original developers.
 
-[ai]: http://www.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/0.html
-[manual]: https://softwarepreservation.computerhistory.org/LISP/franz/Foderaro_et_al-The_FRANZ_LISP_Manual-July_1983.pdf
-[op38.93b]: http://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/lang/others/franzlsp/op38_93b/0.html
-[pearl]: http://michaelfrankdeering.com/Projects/AI/PEARL/PEARL.html
-[spg]: http://www.softwarepreservation.org/
+## External References 
+- [CMU Artificial Intelligence Repository](http://www.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/0.html)
+- [The FRANZ LISP Manual-July 1983 (pdf)](https://softwarepreservation.computerhistory.org/LISP/franz/Foderaro_et_al-The_FRANZ_LISP_Manual-July_1983.pdf)
+- [Public domain version of Franz Lisp](http://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/lang/others/franzlsp/op38_93b/0.html)
+- [PEARL](http://michaelfrankdeering.com/Projects/AI/PEARL/PEARL.html)
+- [Software Preservation Group](http://www.softwarepreservation.org/)
