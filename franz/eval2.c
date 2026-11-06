@@ -53,8 +53,10 @@ int dumpmydata(int thing)
     printf("%x\n", *ip++);
   return (0);
 }
-/* Ifcall :: call foreign function/subroutine
- *   Ifcall is handed a binary object which is the function to call.
+
+/**
+ * @brief call foreign function/subroutine
+ * Ifcall is handed a binary object which is the function to call.
  * This function has already been determined to be a foreign function
  * by noticing that its discipline field is a string.
  * The arguments to pass have already been evaluated and stacked.  We
@@ -96,8 +98,8 @@ lispval Ifcall(lispval a)
         {
             /* fixnums and flonums must be reboxed */
           case INT:
-            stack(0);
-            arglist[index]         = (int)sp();
+            stack(0);            
+            arglist[index]         = (uintptr_t)sp(); VERIFY_STILL_PORTING("need to see if the stack pointer adjustment is still okay"); 
             *(int *)arglist[index] = ltemp->i;
             break;
           case DOUB:
@@ -133,6 +135,7 @@ lispval Ifcall(lispval a)
       /* make one pass over args
       calculating size of arglist */
       while (mynp < np)
+      {
         switch (TYPE(ltemp = mynp++->val))
         {
           case DOUB: nargs += ((sizeof(double) / sizeof(int)) - 1); break;
@@ -142,6 +145,7 @@ lispval Ifcall(lispval a)
               nargs += -1 + VecTotSize(ltemp->vl.vectorl[-2]);
             }
         }
+      }
       arglist  = (int *)alloca((nargs + 1) * sizeof(int));
       *arglist = nargs;
       ap       = arglist + 1;

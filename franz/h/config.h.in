@@ -129,6 +129,10 @@
 
 #define MACHINE "${OS_NAME} ${PROCESSOR_NAME}"
 
+/**
+ * @deprecated
+ * Only really used in the machine dependent assembly code. 
+ */
 #define PORTABLE  1
 
 //
@@ -138,24 +142,29 @@
 #define RTPORTS 1
 
 
-//
-// NILIS0 -- For any UNIX implementation in which the users
-//           address space starts at 0 (like m_vax, above).
-// 
-//           Modern systems don't map the first page (or more) in
-//           order to cause page faults if you reference through a
-//           null pointer.
-//
+/**
+ * NILIS0 -- For any UNIX implementation in which the users
+ *           address space starts at 0 (like m_vax, above).
+ *
+ *           Modern systems don't map the first page (or more) in
+ *           order to cause page faults if you reference through a
+ *           null pointer.
+ */
 #define NILIS0               0
 
+/**
+ * Do system provide an a.out.h  file?
+ *
+ * The tackon program works only with a.out file formats. 
+ */ 
 #define HAVE_A_OUT_H         ${HAVE_A_OUT_H}
 
-/*
-** NPINREG -- for the verison if lisp that keeps np and lbot in global
-**      registers.  On the 68000, there is a special `hacked' version
-**      of the C compiler that is needed to do this.
-** #define NPINREG              1
-*/
+/**
+ * NPINREG -- for the verison if lisp that keeps np and lbot in global
+ *      registers.  On the 68000, there is a special `hacked' version
+ *      of the C compiler that is needed to do this.
+ * #define NPINREG              1
+ */
 
 /*
  * SPISFP -- this is to indicate that the stack and frame pointer

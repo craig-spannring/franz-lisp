@@ -61,7 +61,7 @@ lispval Lgcstat(void)
       if ((gcstat = creat("gc.out", 0644)) < 0) error("cant open gc.out", FALSE);
       hhh.version = 5;
       hhh.lowdata = (int)beginsweep;
-      printf("writing %d bytes \n", sizeof(hhh));
+      printf("writing %lu bytes \n", sizeof(hhh));
       write(gcstat, (char *)&hhh, sizeof(hhh));
       gccount = 0;
       return (tatom);

@@ -30,7 +30,8 @@ typedef union lispobj *lispval;
 
 struct dtpr
 {
-  lispval cdr, car;
+    lispval cdr;
+    lispval car;
 };
 
 struct sdot

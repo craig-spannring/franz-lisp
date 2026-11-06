@@ -6,13 +6,13 @@
 
 /* eval.c */
 extern lispval eval(lispval actarg);
-extern lispval popnames(struct nament *llimit);
-extern int dumpnamestack(void);
+extern void    popnames(struct nament *llimit);
+extern void    dumpnamestack(void);
 extern lispval Lapply(void);
-extern void rebind(lispval argptr, struct argent * workp);
+extern void    rebind(lispval argptr, struct argent * workp);
 extern lispval Ifuncal(lispval fcn);
 extern lispval Lfuncal(void);
-extern int fchack(void);
+extern int     fchack(void);
 extern lispval Llexfun(void);
 extern lispval unprot(void);
 extern lispval linterp(void);

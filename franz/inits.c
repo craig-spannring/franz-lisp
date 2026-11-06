@@ -83,7 +83,7 @@ void initial(void)
   for (hash = 0; hash < hashtop; hash++)
     hasht[hash] = (struct atom *)CNIL;
 
-  sbrk(LBPG - (((int)sbrk(0)) % LBPG)); /* even up the break */
+  sbrk(LBPG - (((uintptr_t)sbrk(0)) % LBPG)); /* even up the break */
   makevals();
 
   orgnp = np;
@@ -165,7 +165,7 @@ void sginth(int signo)
   sigcall(signo);
 }
 
-int sigcall(int which)
+void sigcall(int which)
 {
   extern lispval Lfuncal();
   Savestack(1);
@@ -205,12 +205,8 @@ int sigcall(int which)
   sigstruck &= ~(1 << which);
   Restorestack();
 }
-int delayoff(void)
-{
-  sigdelay = FALSE;
-  if (sigstruck) dosig();
-}
-int dosig(void)
+
+static void dosig(void)
 {
   int i;
   int          which;
@@ -221,6 +217,13 @@ int dosig(void)
       if (sigstruck & i) sigcall(which);
     }
 }
+
+void delayoff(void)
+{
+  sigdelay = FALSE;
+  if (sigstruck) dosig();
+}
+
 void badmr(int number)
 {
   signal(number, badmr);

@@ -17,6 +17,7 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <string.h>
+#include <assert.h>
 
 #include "stubs.h"
 
@@ -31,6 +32,7 @@ static int   pagsiz, pagrnd;
 
 lispval Ndumplisp(void)
 {
+  assert(0); // we'll need to think about how we dump lisp
   struct exec *workp;
   lispval      argptr, temp;
   char        *fname;

@@ -1,3 +1,5 @@
+/** @brief error handler */
+
 /*
  *      error.c                         $Locker:  $
  * error handler
@@ -31,20 +33,23 @@ static int     IElimit;
  * the "cont" command is executed.
  */
 
-/* error from lisp C code, this temporarily replaces the old error
+/**
+ * @brief old error handler
+ * 
+ * error from lisp C code, this temporarily replaces the old error
  * allowing us to interface with the new errset scheme with minimum
  * difficulty.  We assume that an error which comes to this routine
  * is of an "undefined error type" ER%misc .  Soon all calls to this
  * routine will be removed.
  *
  */
-
 lispval error(char *mesg, int contvl)
 {
   return (errorh(Vermisc, mesg, nil, contvl, 0));
 }
 
-/* new error handler, works with errset
+/**
+ * @brief new error handler, works with errset
  *
  * call is errorh(type,message,valret,contuab) where
  * type is an atom which classifys the error, and whose clb, if not nil
@@ -60,7 +65,6 @@ static lispval Ierrorh(lispval type, char *message, lispval valret, int contuab,
   lispval               *work  = IEargs;
   int                    limit = IElimit;
   int                    pass, curdepth;
-//  lispval                Lread(), calhan();
   lispval                contatm;
   lispval                handy2;
   extern struct frame   *errp;
@@ -75,7 +79,10 @@ static lispval Ierrorh(lispval type, char *message, lispval valret, int contuab,
     handy         = Verall->a.clb;
     Verall->a.clb = nil; /* turn off before calling */
     handy         = calhan(limit, work, type, uniqid, contatm, message, handy);
-    if (contuab && (TYPE(handy) == DTPR)) return (handy->d.car);
+    if (contuab && (TYPE(handy) == DTPR))
+    {
+      return (handy->d.car);
+    }      
   }
 
   if ((handy = type->a.clb) != nil) /* if there is an error handler */

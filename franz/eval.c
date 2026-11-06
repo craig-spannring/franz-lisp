@@ -313,14 +313,13 @@
   return (a); /* other data types are considered constants */
 }
 
-/*
- *    popnames
+/**
  * removes from the name stack all entries above the first argument.
  * routine should usually be used to clean up the name stack as it
  * knows about the special cases.  bnp is returned pointing to the
  * same place as the argument passed.
  */
-lispval popnames(struct nament *llimit)
+void popnames(struct nament *llimit)
 {
   struct nament *rnp;
 
@@ -334,7 +333,7 @@ lispval popnames(struct nament *llimit)
  * from bottom to 5 above np
  * should be put elsewhere
  */
-int dumpnamestack(void)
+void dumpnamestack(void)
 {
   struct argent *newnp;
 
@@ -342,7 +341,7 @@ int dumpnamestack(void)
   for (newnp = orgnp; (newnp < np + 6) && (newnp < nplim); newnp++)
   {
     if (newnp == np) printf("**np:**\n");
-    printf("[%d]: ", newnp - orgnp);
+    printf("[%ld]: ", (long)(newnp - orgnp));
     printr(newnp->val, stdout);
     printf("\n");
   }

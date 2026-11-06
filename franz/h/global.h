@@ -15,6 +15,7 @@
 #include "ltypes.h"
 #include "gtabs.h"
 #include "structs.h"
+#include "stdint.h"
 
 #ifdef UNIXTS
 #include "tsfix.h"
@@ -142,7 +143,7 @@ extern long *xsp, xstack[];
 #endif
 
 extern char typetable[]; /*  the table with types for each page  */
-#define ATOX(a1) ((((int)(a1)) - OFFSET) >> 9)
+#define ATOX(a1) ((((uintptr_t)(a1)) - OFFSET) >> 9)
 #define TYPE(a1) ((typetable + 1)[ATOX(a1)])
 #define TYPL(a1) ((typetable + 1)[ATOX(a1)])
 #define SETTYPE(a1, b, c)                         \

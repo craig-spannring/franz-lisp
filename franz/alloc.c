@@ -161,12 +161,14 @@ struct types *gcableptr[] = {
     &sdot_str,         &val_str,          &hunk_str[0], &hunk_str[1], &hunk_str[2],      &hunk_str[3],
     &hunk_str[4],      &hunk_str[5],      &hunk_str[6], &vect_str,    &vecti_str};
 
-/*
- *   get_more_space(type_struct,purep)
+/**
+ * get_more_space(type_struct,purep)
  *
- *  Allocates and structures a new page, returning 0.
- *  If no space is available, returns positive number.
- *  If purep is TRUE, then pure space is allocated.
+ * Allocates and structures a new page,
+ *
+ * @return returning 0 on success.
+ * If no space is available, returns positive number.
+ * If purep is TRUE, then pure space is allocated.
  */
 int get_more_space(struct types *type_struct, int purep)
 {
@@ -175,7 +177,7 @@ int get_more_space(struct types *type_struct, int purep)
   int    *loop, *temp;
   lispval p;
 
-  if ((int)datalim >= TTSIZE * LBPG + OFFSET) return (2);
+  if ((uintptr_t)datalim >= TTSIZE * LBPG + OFFSET) return (2);
 
   /*
    * If the hole is defined, then we allocate binary objects
@@ -560,17 +562,17 @@ again:
        * is that we don't want to leave a zero sized vector which
        * isn't guaranteed to be followed by another vector
        */
-      if (debugin) fprintf(stderr, "breaking a %d vector into a ", current->vl.vectorl[-1]);
+      if (debugin) fprintf(stderr, "breaking a %ld vector into a ", current->vl.vectorl[-1]);
 
       current->v.vector[1 + sizewant + 1] = current->v.vector[0];                  /* free list pointer */
       current->vl.vectorl[1 + sizewant]   = VecTotToByte(thissize - sizewant - 2); /*size info */
       back->v.vector[0]                   = (lispval) & (current->v.vector[1 + sizewant + 1]);
       current->vl.vectorl[-1]             = size;
 
-      if (debugin) fprintf(stderr, " %d one and a %d one\n", current->vl.vectorl[-1], current->vl.vectorl[1 + sizewant]);
+      if (debugin) fprintf(stderr, " %ld one and a %ld one\n", current->vl.vectorl[-1], current->vl.vectorl[1 + sizewant]);
       current->v.vector[0] = nil; /* put nil in property */
       /* vector begins one after the property */
-      if (debugin) fprintf(stderr, " and returning vector at 0x%x\n", &current->v.vector[1]);
+      if (debugin) fprintf(stderr, " and returning vector at 0x%p\n", &current->v.vector[1]);
       return ((lispval)(&current->v.vector[1]));
     }
     back    = current;
