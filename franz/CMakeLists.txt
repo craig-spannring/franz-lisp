@@ -23,7 +23,6 @@ else()
 endif()
 
 
-
 add_executable(rawlisp)
 
 
@@ -60,55 +59,80 @@ set(MipSrc3
 
 # Bulk of the lisp run-time and interpreter
 set(MipSrc4
-#  mac          #     tahoe        #     68k              # vax       
-#  ----------------------------------------------------------------------
-   lisp.c       #     lisp.c       #     lisp.c           # lisp.c    
-   eval.c       #     eval.c       #     eval.c           # eval.c    
-   eval2.c      #     eval2.c      #     eval2.c          # eval2.c   
-   inits.c      #     inits.c      #     inits.c          # inits.c   
-   io.c         #     io.c         #     io.c             # io.c      
-   error.c      #     error.c      #     error.c          # error.c   
-   sysat.c      #     sysat.c      #     sysat.c          # sysat.c   
-   lam1.c       #     lam1.c       #     lam1.c           # lam1.c    
-   lam2.c       #     lam2.c       #     lam2.c           # lam2.c    
-   lam3.c       #     lam3.c       #     lam3.c           # lam3.c    
-   lam4.c       #     lam4.c       #     lam4.c           # lam4.c    
-   lam5.c       #     lam5.c       #     lam5.c           # lam5.c    
-   lam6.c       #     lam6.c       #     lam6.c           # lam6.c    
-   lam7.c       #     lam7.c       #     lam7.c           # lam7.c    
-   lam8.c       #     lam8.c       #     lam8.c           # lam8.c    
-   lam9.c       #     lam9.c       #     lam9.c           # lam9.c    
-   lamr.c       #     lamr.c       #     lamr.c           # lamr.c    
-   lamp.c       #     lamp.c       #     lamp.c           # lamp.c    
-   fex1.c       #     fex1.c       #     fex1.c           # fex1.c    
-   fex2.c       #     fex2.c       #     fex2.c           # fex2.c    
-   fex3.c       #     fex3.c       #     fex3.c           # fex3.c    
-   fex4.c       #     fex4.c       #     fex4.c           # fex4.c    
-   fexr.c       #     fexr.c       #     fexr.c           # fexr.c    
-   fpipe.c      #     fpipe.c      #     fpipe.c          # fpipe.c   
-   subbig.c     #     subbig.c     #     subbig.c         # subbig.c  
-   pbignum.c    #     pbignum.c    #     pbignum.c        # pbignum.c 
-   divbig.c     #     divbig.c     #     divbig.c         # divbig.c  
-   ffasl.c      #     ffasl.c      #     ffasl.c          # ffasl.c   
-   fasl.c       #     fasl.c       #     fasl.c           # fasl.c    
-   trace.c      #     trace.c      #     trace.c          # trace.c   
-   evalf.c      #     evalf.c      #     evalf.c          # evalf.c   
-   frame.c      #     frame.c      #     frame.c          # frame.c   
-   lamgc.c      #     lamgc.c      #     lamgc.c          # lamgc.c   
- )
+  lisp.c
+  eval.c
+  eval2.c
+  inits.c
+  io.c
+  error.c
+  sysat.c
+  lam1.c
+  lam2.c
+  lam3.c
+  lam4.c
+  lam5.c
+  lam6.c
+  lam7.c
+  lam8.c
+  lam9.c
+  lamr.c
+  lamp.c
+  fex1.c
+  fex2.c
+  fex3.c
+  fex4.c
+  fexr.c
+  fpipe.c
+  subbig.c
+  pbignum.c
+  divbig.c
+  ffasl.c
+  fasl.c
+  trace.c
+  evalf.c
+  frame.c
+  lamgc.c
+)
+ 
+set(Headers  
+  h/aout.h
+  h/bigmath.h
+  h/catchfram.h
+  h/chars.h
+  h/chkrtab.h
+  h/dfuncs.h
+  h/dualaout.h
+  h/duallispo.h
+  h/exarith.h
+  h/frame.h
+  h/gc.h
+  h/global.h
+  h/gtabs.h
+  h/hpagsiz.h
+  h/lconf.h
+  h/lfuncs.h
+  h/lispo.h
+  h/ltypes.h
+  h/myfrexpr.h
+  h/pbignum.h
+  h/prunei.h
+  h/sigtab.h
+  h/structs.h
+  h/stubs.h
+  h/types.h
+)
 
 target_sources(rawlisp PRIVATE
-  # ${MipSrc1}
-  # ${MipSrc2}
-  # ${MipSrc3}
-  ${MipSrc4}
-
   ${MipSrc1}
   ${MipSrc2}
   ${MipSrc3}
+  ${MipSrc4}
 
   stubs.c
+
+  ${Headers}
 )
+
 set(STILL_PORTING true)
 if(STILL_PORTING)
   target_compile_definitions(rawlisp PUBLIC STILL_PORTING=1)
@@ -121,14 +145,35 @@ endif()
 target_include_directories(rawlisp PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/./h
   ${CMAKE_CURRENT_BINARY_DIR}
-  )
+)
   
 configure_file(
   ${CMAKE_CURRENT_LIST_DIR}/h/config.h.in
   ${CMAKE_CURRENT_BINARY_DIR}/config.h
 )
 
-
 add_custom_command(TARGET rawlisp POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE:rawlisp> ${CMAKE_CURRENT_LIST_DIR}/rawlisp
-    COMMENT "creating symlink")
+  COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE:rawlisp> ${CMAKE_CURRENT_LIST_DIR}/rawlisp
+  COMMENT "creating symlink"
+)
+
+find_package(Doxygen)
+
+if(Doxygen_FOUND)
+    get_target_property(RawLispSrcs rawlisp SOURCES)
+    message("RawLispSrcs: ${RawLispSrcs}")
+    string(JOIN " ${CMAKE_CURRENT_LIST_DIR}/" RawLispSrcs ${RawLispSrcs})
+    
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/Doxyfile.in
+      ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/DoxygenLayout.xml.in
+      ${CMAKE_CURRENT_BINARY_DIR}/DoxygenLayout.xml)
+
+    add_custom_target(rawlisp_doxydocs ALL
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM)
+else()
+  message(STATUS "Doxygen not found, API documentation will not be generated")
+endif()
