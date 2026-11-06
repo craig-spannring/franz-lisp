@@ -1,3 +1,8 @@
+**Porting Status Summary**
+- Rawlisp compiles and links on macOS.  (Should also work on Linux, but haven't tried.)
+- Some platform dependent functions have been replaced with stubs
+- System crashes while initializing data
+
 # Franz Lisp: A Classic Lisp Implementation from UC Berkeley
 
 ## What Is Franz Lisp?
