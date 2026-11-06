@@ -42,84 +42,86 @@ target_compile_definitions(rawlisp PRIVATE
 # Lowest-level startup/runtime.  Must be linked at the beginning of executable
 # note- at one time MipSrc may have refered to machine independent part
 set(MipSrc1
-  low.c
-  lowaux.s
+  ${CMAKE_CURRENT_LIST_DIR}/low.c
+  ${CMAKE_CURRENT_LIST_DIR}/lowaux.s
 )
 
 # Memory allocation and data space setup. 
 set(MipSrc2
-  alloc.c
-  data.c
+  ${CMAKE_CURRENT_LIST_DIR}/alloc.c
+  ${CMAKE_CURRENT_LIST_DIR}/data.c
 )
 
 # Code positioned between low level support code and the lisp kernel.
 set(MipSrc3
-  rlc.c
+  ${CMAKE_CURRENT_LIST_DIR}/rlc.c
 )
 
 # Bulk of the lisp run-time and interpreter
 set(MipSrc4
-  lisp.c
-  eval.c
-  eval2.c
-  inits.c
-  io.c
-  error.c
-  sysat.c
-  lam1.c
-  lam2.c
-  lam3.c
-  lam4.c
-  lam5.c
-  lam6.c
-  lam7.c
-  lam8.c
-  lam9.c
-  lamr.c
-  lamp.c
-  fex1.c
-  fex2.c
-  fex3.c
-  fex4.c
-  fexr.c
-  fpipe.c
-  subbig.c
-  pbignum.c
-  divbig.c
-  ffasl.c
-  fasl.c
-  trace.c
-  evalf.c
-  frame.c
-  lamgc.c
+  ${CMAKE_CURRENT_LIST_DIR}/lisp.c
+  ${CMAKE_CURRENT_LIST_DIR}/eval.c
+  ${CMAKE_CURRENT_LIST_DIR}/eval2.c
+  ${CMAKE_CURRENT_LIST_DIR}/inits.c
+  ${CMAKE_CURRENT_LIST_DIR}/io.c
+  ${CMAKE_CURRENT_LIST_DIR}/error.c
+  ${CMAKE_CURRENT_LIST_DIR}/sysat.c
+  ${CMAKE_CURRENT_LIST_DIR}/lam1.c
+  ${CMAKE_CURRENT_LIST_DIR}/lam2.c
+  ${CMAKE_CURRENT_LIST_DIR}/lam3.c
+  ${CMAKE_CURRENT_LIST_DIR}/lam4.c
+  ${CMAKE_CURRENT_LIST_DIR}/lam5.c
+  ${CMAKE_CURRENT_LIST_DIR}/lam6.c
+  ${CMAKE_CURRENT_LIST_DIR}/lam7.c
+  ${CMAKE_CURRENT_LIST_DIR}/lam8.c
+  ${CMAKE_CURRENT_LIST_DIR}/lam9.c
+  ${CMAKE_CURRENT_LIST_DIR}/lamr.c
+  ${CMAKE_CURRENT_LIST_DIR}/lamp.c
+  ${CMAKE_CURRENT_LIST_DIR}/fex1.c
+  ${CMAKE_CURRENT_LIST_DIR}/fex2.c
+  ${CMAKE_CURRENT_LIST_DIR}/fex3.c
+  ${CMAKE_CURRENT_LIST_DIR}/fex4.c
+  ${CMAKE_CURRENT_LIST_DIR}/fexr.c
+  ${CMAKE_CURRENT_LIST_DIR}/fpipe.c
+  ${CMAKE_CURRENT_LIST_DIR}/subbig.c
+  ${CMAKE_CURRENT_LIST_DIR}/pbignum.c
+  ${CMAKE_CURRENT_LIST_DIR}/divbig.c
+  ${CMAKE_CURRENT_LIST_DIR}/ffasl.c
+  ${CMAKE_CURRENT_LIST_DIR}/fasl.c
+  ${CMAKE_CURRENT_LIST_DIR}/trace.c
+  ${CMAKE_CURRENT_LIST_DIR}/evalf.c
+  ${CMAKE_CURRENT_LIST_DIR}/frame.c
+  ${CMAKE_CURRENT_LIST_DIR}/lamgc.c
 )
  
 set(Headers  
-  h/aout.h
-  h/bigmath.h
-  h/catchfram.h
-  h/chars.h
-  h/chkrtab.h
-  h/dfuncs.h
-  h/dualaout.h
-  h/duallispo.h
-  h/exarith.h
-  h/frame.h
-  h/gc.h
-  h/global.h
-  h/gtabs.h
-  h/hpagsiz.h
-  h/lconf.h
-  h/lfuncs.h
-  h/lispo.h
-  h/ltypes.h
-  h/myfrexpr.h
-  h/pbignum.h
-  h/prunei.h
-  h/sigtab.h
-  h/structs.h
-  h/stubs.h
-  h/types.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/aout.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/bigmath.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/catchfram.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/chars.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/chkrtab.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/dfuncs.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/dualaout.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/duallispo.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/exarith.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/frame.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/gc.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/global.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/gtabs.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/hpagsiz.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/lconf.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/lfuncs.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/lispo.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/ltypes.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/myfrexpr.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/pbignum.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/prunei.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/sigtab.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/structs.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/stubs.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/types.h
+
+  ${CMAKE_CURRENT_LIST_DIR}/h/README.txt.h
 )
 
 target_sources(rawlisp PRIVATE
@@ -161,8 +163,7 @@ find_package(Doxygen)
 
 if(Doxygen_FOUND)
     get_target_property(RawLispSrcs rawlisp SOURCES)
-    message("RawLispSrcs: ${RawLispSrcs}")
-    string(JOIN " ${CMAKE_CURRENT_LIST_DIR}/" RawLispSrcs ${RawLispSrcs})
+    string(JOIN " " RawLispSrcs ${RawLispSrcs})
     
     configure_file(${CMAKE_CURRENT_LIST_DIR}/Doxyfile.in
       ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
