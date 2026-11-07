@@ -19,7 +19,7 @@ static char *rcsid =
 divbig(dividend, divisor, quotient, remainder)
 lispval dividend, divisor, *quotient, *remainder;
 {
-	register *ujp, *vip;
+	register int *ujp, *vip;
 	int *alloca(), d, negflag = 0, m, n, carry, rem, qhat, j;
 	int borrow, negrem = 0;
 	long *utop = sp(), *ubot, *vbot, *qbot;
@@ -217,7 +217,7 @@ register long *top, *bot;
 Ihau(fix)
 register int fix;
 {
-	register count;
+	register int count;
 	if(fix==MAXINT)
 		return(32);
 	if(fix < 0)
@@ -229,9 +229,9 @@ register int fix;
 lispval
 Lhau()
 {
-	register count;
+	register int count;
 	register lispval handy;
-	register dum1,dum2;
+	register int dum1,dum2;
 	lispval Labsval();
 
 	handy = lbot->val;
@@ -257,7 +257,7 @@ lispval
 Lhaipar()
 {
 	register lispval work;
-	register n;
+	register int n;
 	register int *top = sp() - 1;
 	register int *bot;
 	int mylen;
@@ -327,7 +327,7 @@ Ibiglsh(bignum,count,mode)
 lispval bignum, count;
 {
 	register lispval work;
-	register n;
+	register int n;
 	register int *top = sp() - 1;
 	register int *bot;
 	int mylen, guard = 0, sticky = 0, round = 0;

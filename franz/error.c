@@ -314,7 +314,7 @@ lispval
 calhan(limit,work,type,uniqid,contuab,message,handler)
 register lispval *work;
 lispval handler,type,contuab;
-register limit;
+register int limit;
 register char *message;
 int uniqid;
 {

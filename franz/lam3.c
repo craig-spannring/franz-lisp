@@ -158,7 +158,7 @@ lispval
 Ldiff()
 {
 	register lispval arg1,arg2; 
-	register handy = 0;
+	register int handy = 0;
 
 
 	chkarg(2,"Ldiff");
@@ -302,7 +302,7 @@ lispval
 Lnegp()
 {
 	register lispval handy = np[-1].val, work;
-	register flag = 0;
+	register int flag = 0;
 
 loop:
 	switch(TYPE(handy)) {
@@ -403,7 +403,7 @@ Lsetsyn()
 {
 	register lispval s, c;
 	register struct argent *mynp;
-	register index;
+	register int index;
 	lispval x   /*  ,debugmode  */;
 	extern unsigned char *ctable;
 	extern lispval Istsrch();

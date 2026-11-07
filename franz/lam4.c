@@ -652,7 +652,7 @@ out:
 
 lispval Lfp()
 {
-	register temp = 0;
+	register int temp = 0;
 	register struct argent *argp; 
 
 	for(argp = lbot; argp < np; argp++)
@@ -666,7 +666,7 @@ lispval Lfp()
 
 lispval Lfm()
 {
-	register temp;
+	register int temp;
 	register struct argent *argp;
 
 	if(lbot==np)return(inewint(0));
@@ -687,7 +687,7 @@ lispval Lfm()
 
 lispval Lft()
 {
-	register temp = 1;
+	register int temp = 1;
 	register struct argent *argp;
 
 	for(argp = lbot; argp < np; argp++)
@@ -702,7 +702,7 @@ lispval Lft()
 lispval Lflessp()
 {
 	register struct argent *argp = lbot;
-	register old, new;
+	register int old, new;
 
 	if(np < argp + 2) return(nil);
 	old = argp->val->i; argp++;
@@ -720,7 +720,7 @@ lispval Lflessp()
 
 lispval Lfd()
 {
-	register temp = 0;
+	register int temp = 0;
 	register struct argent *argp;
 
 	if(lbot==np)return(inewint(1));

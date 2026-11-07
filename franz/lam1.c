@@ -643,7 +643,7 @@ lispval
 Lequal()
 {
 	register lispval first, second;
-	register type1, type2;
+	register int type1, type2;
 	lispval Lsub(),Lzerop();
 	long *oldsp;
 	Keepxs();
@@ -725,7 +725,7 @@ oLequal()
 Iequal(first,second) 
 register lispval first, second;
 {
-	register type1, type2;
+	register int type1, type2;
 	lispval Lsub(),Lzerop();
 
 	if(first==second)
@@ -770,7 +770,7 @@ lispval
 Zequal()
 {
 	register lispval first, second;
-	register type1, type2;
+	register int type1, type2;
 	lispval Lsub(),Lzerop();
 	long *oldsp;
 	Keepxs();

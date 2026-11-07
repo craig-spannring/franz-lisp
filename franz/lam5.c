@@ -356,7 +356,7 @@ lispval
 Lfact()
 {
 	register lispval result, handy;
-	register itemp;
+	register int itemp;
 	Savestack(3); /* fixup entry mask */
 
 	result = lbot->val;

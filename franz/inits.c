@@ -149,7 +149,7 @@ sginth(signo){
 	sigcall(signo);
 }
 sigcall(which)
-register which;
+register int which;
 {
 	extern lispval Lfuncal();
 	Savestack(1);

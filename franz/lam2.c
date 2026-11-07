@@ -111,7 +111,7 @@ r(op)
 int op;
 {
 	unsigned char c; register lispval result;
-	register cc;
+	register int cc;
 	int orlevel; extern int rlevel;
 	FILE *ttemp;
 	struct nament *oldbnp = bnp;
@@ -527,7 +527,7 @@ int maptyp;		/* 0 = mapcar,  1 = maplist  */
 int join;		/* 0 = the above, 1 = s/car/can/ */
 {
 	register struct argent *namptr;
-	register index;
+	register int index;
 	register lispval temp;
 	register lispval current;
 

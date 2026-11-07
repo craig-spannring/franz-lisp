@@ -206,7 +206,7 @@ lispval a;
 
 xbcopy(to,from,size)
 register char *to, *from;
-register size;
+register int size;
 {
 	while(--size >= 0) *to++ = *from++;
 }

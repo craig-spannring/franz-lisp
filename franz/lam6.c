@@ -250,7 +250,7 @@ lispval
 Lsetarg()
 {
 	register lispval handy, work;
-	register limit, index;
+	register int limit, index;
 
 	chkarg(2,"setarg");
 	handy = lexpr_atom->a.clb;
@@ -464,7 +464,7 @@ Imkrtab(current)
 		*(struct rtab *)nextfree = initread;
 	else
 	{
-		register index = 0; register char *cp = nextfree;
+		register int index = 0; register char *cp = nextfree;
 		lispval c;
 
 		*(struct rtab *)cp = *(struct rtab *)ctable;
