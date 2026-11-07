@@ -94,16 +94,19 @@ set(MipSrc4
   ${CMAKE_CURRENT_LIST_DIR}/lamgc.c
 )
  
-set(Headers  
+set(Headers
+  ${CMAKE_CURRENT_BINARY_DIR}/config.h
+  
+  ${CMAKE_CURRENT_LIST_DIR}/h/README.txt.h
+
+  ${CMAKE_CURRENT_LIST_DIR}/h/68kframe.h
   ${CMAKE_CURRENT_LIST_DIR}/h/aout.h
-  ${CMAKE_CURRENT_LIST_DIR}/h/bigmath.h
   ${CMAKE_CURRENT_LIST_DIR}/h/catchfram.h
   ${CMAKE_CURRENT_LIST_DIR}/h/chars.h
   ${CMAKE_CURRENT_LIST_DIR}/h/chkrtab.h
   ${CMAKE_CURRENT_LIST_DIR}/h/dfuncs.h
   ${CMAKE_CURRENT_LIST_DIR}/h/dualaout.h
   ${CMAKE_CURRENT_LIST_DIR}/h/duallispo.h
-  ${CMAKE_CURRENT_LIST_DIR}/h/exarith.h
   ${CMAKE_CURRENT_LIST_DIR}/h/frame.h
   ${CMAKE_CURRENT_LIST_DIR}/h/gc.h
   ${CMAKE_CURRENT_LIST_DIR}/h/global.h
@@ -113,15 +116,12 @@ set(Headers
   ${CMAKE_CURRENT_LIST_DIR}/h/lfuncs.h
   ${CMAKE_CURRENT_LIST_DIR}/h/lispo.h
   ${CMAKE_CURRENT_LIST_DIR}/h/ltypes.h
-  ${CMAKE_CURRENT_LIST_DIR}/h/myfrexpr.h
-  ${CMAKE_CURRENT_LIST_DIR}/h/pbignum.h
-  ${CMAKE_CURRENT_LIST_DIR}/h/prunei.h
   ${CMAKE_CURRENT_LIST_DIR}/h/sigtab.h
   ${CMAKE_CURRENT_LIST_DIR}/h/structs.h
   ${CMAKE_CURRENT_LIST_DIR}/h/stubs.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/tahoeframe.h
   ${CMAKE_CURRENT_LIST_DIR}/h/types.h
-
-  ${CMAKE_CURRENT_LIST_DIR}/h/README.txt.h
+  ${CMAKE_CURRENT_LIST_DIR}/h/vaxframe.h
 )
 
 target_sources(rawlisp PRIVATE
