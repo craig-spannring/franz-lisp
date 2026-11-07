@@ -459,7 +459,6 @@ Unisoft with `OFFSET=0x40000`).
 
 ## A More Human Oriented Perspective ##
 
-
 ### Build System ###
 
 
@@ -467,7 +466,44 @@ Unisoft with `OFFSET=0x40000`).
 
 
 ### Building rawlisp ###
+#### ABI ###
 
+The original code is tied deeply to the Application Binary Interface
+(ABI).  The VAX-11 and 68k ABI differ significantly from modern ABIs.
+One type of ABI shenanigins include taking advantage of the side effects
+of falling off the end of a non-void function.  Here is an example
+```
+int bar(int x, int y)
+{
+   if (x<y) return x+y
+   else     return x-y;
+}
+
+int foo(int x, int y)
+{
+   static int z = 0; 
+   
+   bar(z++, x+y);
+   // On a VAX the return value from bar is in r0 when we exit this function
+   // Although foo never explicitly returns a value, the return from 
+   // bar is still in r0.  From the caller's point of view, this is the 
+   // same as if we had written
+   //    return bar(z++, x+y);
+}
+
+int fn(int x, int y)
+{
+    int z; 
+    z = foo(x, y) 
+    return z + 1;
+}
+```
+
+##### VAX-11 - BSD
+
+##### 68k - BSD
+
+##### AArch64 macOS
 
 ### Building liszt ###
 
