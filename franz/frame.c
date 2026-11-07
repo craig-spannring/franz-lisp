@@ -183,7 +183,7 @@ lispval arg1, arg2;
 
 #ifndef tahoe
 Iretfromfr(fram)
-register struct frame *fram;
+struct frame *fram;
 {
     xpopnames(fram->svbnp);
     qretfromfr();	/* modified in sed script to point to real function */

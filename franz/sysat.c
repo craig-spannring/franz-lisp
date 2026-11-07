@@ -497,9 +497,9 @@ struct ftab {
 
 lispval
 mftab(table)
-register struct ftab *table;
+struct ftab *table;
 {
-	register lispval v;
+	lispval v;
 	for(;table->string;table++) {
 		v = inewatom(table->string);
 		v = v->a.fnbnd = newfunct();

@@ -21,8 +21,8 @@ static char *rcsid =
 lispval
 Ndo()
 {
-	register lispval current, where, handy;
-	register struct nament *mybnp;
+	lispval current, where, handy;
+	struct nament *mybnp;
 	lispval temp, atom;
 	lispval body, endtest, endform, varstuff, renewals[NDOVARS] ;
 	struct argent *getem, *startnp;  
@@ -255,9 +255,9 @@ Ndo()
 lispval
 Nprogv()
 {
-	register lispval where, handy;
-	register struct nament *namptr;
-	register struct argent *vars;
+	lispval where, handy;
+	struct nament *namptr;
+	struct argent *vars;
 	struct nament *oldbnp = bnp;
 	Savestack(4);
 
@@ -301,7 +301,7 @@ Nprogv()
 lispval
 Nprogn()
 {
-	register lispval result, where;
+	lispval result, where;
 
 	result = nil;
 	for(where = lbot->val; where != nil; where = where->d.cdr)
@@ -313,7 +313,7 @@ Nprogn()
 lispval
 Nprog2()
 {
-	register lispval result, where;
+	lispval result, where;
 
 	where = lbot->val; 
 	eval(where->d.car);

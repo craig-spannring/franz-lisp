@@ -62,8 +62,8 @@ lispval type,valret;
 int uniqid,contuab;
 char *message;
 {
- 	register struct frame *curp, *uwpframe = (struct frame *)0; 
-	register lispval handy;
+ 	struct frame *curp, *uwpframe = (struct frame *)0; 
+	lispval handy;
 	lispval *work = IEargs; 
 	int limit = IElimit;
 	int pass, curdepth;
@@ -312,13 +312,13 @@ char *message;
 
 lispval
 calhan(limit,work,type,uniqid,contuab,message,handler)
-register lispval *work;
+lispval *work;
 lispval handler,type,contuab;
-register int limit;
-register char *message;
+int limit;
+char *message;
 int uniqid;
 {
-	    register lispval handy;
+	    lispval handy;
 	    Savestack(4);
 	    lbot = np;
 	    protect(handler);		/* funcall the handler */

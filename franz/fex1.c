@@ -23,7 +23,7 @@ static char *rcsid =
 
 lispval
 Nprog() {
-	register lispval where, temp;
+	lispval where, temp;
 	struct nament *savedbnp = bnp;
 	extern struct frame *errp;
 	pbuf pb;
@@ -112,7 +112,7 @@ lispval globtag;
 lispval
 Ncatch()
 {
-	register lispval tag;
+	lispval tag;
 	pbuf pb;
 	Savestack(3);		/* save stack pointers */
 
@@ -213,7 +213,7 @@ Nthrow()
 lispval
 Ngo() 
 {
-    register lispval temp;
+    lispval temp;
     chkarg(1,"go");
 
     temp = (lbot->val)->d.car;
@@ -245,7 +245,7 @@ Nreset()
 lispval
 Nbreak()
 {
-	register lispval hold; register FILE *port;
+	lispval hold; FILE *port;
 	port = okport(Vpoport->a.clb,stdout);
 	fprintf(port,"Breaking:");
 
@@ -281,7 +281,7 @@ Nsys()
 
 lispval
 Ndef() {
-	register lispval arglist, body, name, form;
+	lispval arglist, body, name, form;
 	
 	form = lbot->val;
 	name = form->d.car;
@@ -304,8 +304,8 @@ Nquote()
 
 lispval
 Nsetq()
-{	register lispval handy, where, value;
-	register int lefttype;
+{	lispval handy, where, value;
+	int lefttype;
 
 	value = nil;
 	
@@ -330,7 +330,7 @@ Nsetq()
 lispval
 Ncond()
 {
-	register lispval  where, last;
+	lispval  where, last;
 
 	where = lbot->val;
 	last = nil;
@@ -357,7 +357,7 @@ Ncond()
 lispval
 Nand()
 {
-	register lispval current, temp;
+	lispval current, temp;
 
 	current = lbot->val;
 	temp = tatom;
@@ -375,7 +375,7 @@ Nand()
 lispval
 Nor()
 {
-	register lispval current, temp;
+	lispval current, temp;
 
 	current = lbot->val;
 	temp = nil;

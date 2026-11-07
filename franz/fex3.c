@@ -23,9 +23,9 @@ static int pagsiz, pagrnd;
 lispval
 Ndumplisp()
 {
-	register struct exec *workp;
-	register lispval argptr, temp;
-	register char *fname;
+	struct exec *workp;
+	lispval argptr, temp;
+	char *fname;
 	extern int reborn;
 	struct exec work, old;
 	extern int dmpmode,usehole;
@@ -152,11 +152,11 @@ Ndumplisp()
 lispval
 Ndumplisp()
 {
-	register struct exec *workp;
-	register lispval argptr, temp;
+	struct exec *workp;
+	lispval argptr, temp;
 	char *fname;
-	register ISD *Isd;
-	register int i;
+	ISD *Isd;
+	int i;
 	extern lispval reborn;
 	struct exec work,old;
 	extern etext;
@@ -473,9 +473,9 @@ pagenorm() { }
 
 lispval
 Lgetaddress(){
-	register struct argent *mlbot = lbot;
-	register lispval work;
-	register int numberofargs, i;
+	struct argent *mlbot = lbot;
+	lispval work;
+	int numberofargs, i;
 	char ostabf[128];
 	struct nlist NTABLE[100];
 	lispval dispget();

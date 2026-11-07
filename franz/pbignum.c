@@ -13,12 +13,12 @@ static char *rcsid =
 #include "global.h"
 
 pbignum(current, useport)
-register lispval current;
-register FILE *useport;
+lispval current;
+FILE *useport;
 {
 	long  *top, *bot, *work, negflag = 0;
 	char *alloca();
-	register int *digitp;
+	int *digitp;
 	Keepxs();
 
 	/* copy bignum onto stack */

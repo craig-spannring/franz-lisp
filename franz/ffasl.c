@@ -58,9 +58,9 @@ char *messg;
 
 lispval
 Lcfasl(){
-	register struct argent *mlbot = lbot;
-	register lispval work;
-	register int fildes, totsize;
+	struct argent *mlbot = lbot;
+	lispval work;
+	int fildes, totsize;
 	int readsize;
 	lispval csegment();
 	char *sbrk(), *currend, *tfile, cbuf[6000], *mytemp(), *gstab();
@@ -239,7 +239,7 @@ Lcfasl(){
 char *
 gstab()
 {
-	register char *cp, *cp2; char *getenv();
+	char *cp, *cp2; char *getenv();
 	struct stat stbuf;
 	extern char **Xargv;
 
@@ -328,7 +328,7 @@ ungstab()
 }
 lispval
 verify(in,error)
-register lispval in;
+lispval in;
 char *error;
 {
 	for(EVER) {
@@ -383,9 +383,9 @@ long size;
 
 lispval
 Lrmadd(){
-	register struct argent *mlbot = lbot;
-	register struct nlist *q; 
-	register int i;
+	struct argent *mlbot = lbot;
+	struct nlist *q; 
+	int i;
 	int numberofargs, strsize;
 	char *gstab();
 	char ostabf[128];
@@ -588,7 +588,7 @@ alldone:
 char *
 Ilibdir()
 {
-	register lispval handy;
+	lispval handy;
 tryagain:
 	handy = Vlibdir->a.clb;
 	switch(TYPE(handy)) {

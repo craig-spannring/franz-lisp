@@ -28,7 +28,7 @@ Lfork() {
 lispval
 Lwait()
 {
-	register lispval ret, temp;
+	lispval ret, temp;
 	int status = -1, pid;
 	Savestack(2);
 
@@ -48,7 +48,7 @@ Lwait()
 lispval
 Lpipe()
 {
-	register lispval ret, temp;
+	lispval ret, temp;
 	int pipes[2];
 	Savestack(2);
 
@@ -69,7 +69,7 @@ Lpipe()
 lispval
 Lfdopen()
 {
-	register lispval fd, type;
+	lispval fd, type;
 	FILE *ptr;
 
 	chkarg(2,"fdopen");
@@ -298,8 +298,8 @@ struct heads
 lispval
 Lremprop()
 {
-	register struct argent *argp;
-	register lispval pptr, ind, opptr;
+	struct argent *argp;
+	lispval pptr, ind, opptr;
 	lispval atm;
 	int disemp = FALSE;
 
@@ -384,7 +384,7 @@ Lsymbolp()
 lispval
 Lrematom()
 {
-	register lispval temp;
+	lispval temp;
 
 	chkarg(1,"rematom");
 	temp = lbot->val;
@@ -407,7 +407,7 @@ lispval
 Lprname()
 {
 	lispval a, ret;
-	register lispval work, prev;
+	lispval work, prev;
 	char	*front, *temp; int clean;
 	char ctemp[100];
 	extern unsigned char *ctable;
@@ -457,7 +457,7 @@ Lprname()
 lispval
 Lexit()
 {
-	register lispval handy;
+	lispval handy;
 	if(np-lbot==0) franzexit(0);
 	handy = lbot->val;
 	if(TYPE(handy)==INT)
@@ -467,8 +467,8 @@ Lexit()
 lispval
 Iimplode(unintern)
 {
-	register lispval handy, work;
-	register char *cp = strbuf;
+	lispval handy, work;
+	char *cp = strbuf;
 	extern int atmlen;	/* used by newatom and getatom */
 	extern char *atomtoolong();
 
@@ -518,8 +518,8 @@ Limplode()
 lispval
 Lntern()
 {
-	register int hash;
-	register lispval handy,atpr;
+	int hash;
+	lispval handy,atpr;
 
 
 	chkarg(1,"intern");
@@ -554,7 +554,7 @@ Lntern()
 lispval
 Ibindvars()
 {
-    register lispval vars,vals,handy;
+    lispval vars,vals,handy;
     struct nament *oldbnp = bnp;
 
     chkarg(2,"int:bindvars");

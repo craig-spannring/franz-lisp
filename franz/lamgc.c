@@ -46,7 +46,7 @@ int consnil;
 lispval
 Lgcstat()
 {
-	register lispval handy;
+	lispval handy;
 	int nbytes;
 	struct gchead hhh;
 

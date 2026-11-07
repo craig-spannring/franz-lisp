@@ -81,8 +81,8 @@ initial()
 static
 makenv()
 {
-	register lispval env, temp;
-	register char *p, *q;
+	lispval env, temp;
+	char *p, *q;
 	char **envp, envstr[STRBLEN];
 	extern char **environ;
 
@@ -149,7 +149,7 @@ sginth(signo){
 	sigcall(signo);
 }
 sigcall(which)
-register int which;
+int which;
 {
 	extern lispval Lfuncal();
 	Savestack(1);
@@ -184,7 +184,7 @@ delayoff(){
 }
 dosig()
 {
-	register int i; int which;
+	int i; int which;
 	if(!sigdelay) 
 		for(which=0, i = 1;  i <= 65536;  which++,i<<=1) {
 			keywait = FALSE;

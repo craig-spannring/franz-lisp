@@ -13,8 +13,8 @@ static char *rcsid =
 #include "global.h"
 lispval
 Leval1(){
-    register struct nament *bindptr;
-    register lispval handy;
+    struct nament *bindptr;
+    lispval handy;
     if (np-lbot == 2) {	/*if two arguments to eval */
 	if (TYPE((lbot+1)->val) != INT)
 	    error("Eval: 2nd arg not legal alist pointer", FALSE);
@@ -42,8 +42,8 @@ Leval1(){
 lispval
 Levalhook()
 {
-    register lispval handy;
-    register lispval funhval = CNIL;
+    lispval handy;
+    lispval funhval = CNIL;
 
     switch (np-lbot) 
     {
@@ -79,8 +79,8 @@ Levalhook()
 lispval
 Lfunhook()
 {
-    register lispval handy;
-    register lispval evalhval = CNIL;
+    lispval handy;
+    lispval evalhval = CNIL;
     Savestack(2);
 
 

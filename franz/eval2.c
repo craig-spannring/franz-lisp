@@ -22,7 +22,7 @@ static char *rcsid =
  */
 lispval
 Iarray(fun,args,evalp)
-register lispval fun,args;
+lispval fun,args;
 {
 	Savestack(2);
 	
@@ -41,8 +41,8 @@ register lispval fun,args;
 dumpmydata(thing)
 int thing;
 {
-	register int *ip = &thing;
-	register int *lim = ip + nargs();
+	int *ip = &thing;
+	int *lim = ip + nargs();
 
 	printf("Dumpdata got %d args:\n",nargs());
 	while(ip < lim) printf("%x\n",*ip++);
@@ -66,10 +66,10 @@ lispval a;
 {
 	char *alloca();
 	long callg_();
-	register int *arglist;
-	register int index;
-	register struct argent *mynp;
-	register lispval ltemp;
+	int *arglist;
+	int index;
+	struct argent *mynp;
+	lispval ltemp;
 	pbuf pb;
 	int nargs = np - lbot, kind, mysize, *ap;
 	Keepxs();
@@ -205,8 +205,8 @@ lispval a;
 }
 
 xbcopy(to,from,size)
-register char *to, *from;
-register int size;
+char *to, *from;
+int size;
 {
 	while(--size >= 0) *to++ = *from++;
 }
@@ -216,7 +216,7 @@ ftolsp_(arg1)
 lispval arg1;
 {
 	int count; 
-	register lispval *ap = &arg1;
+	lispval *ap = &arg1;
 	lispval save;
 	pbuf pb;
 	Savestack(1);
@@ -238,7 +238,7 @@ lispval arg1;
 lispval
 ftlspn_(func,arglist)
 lispval func;
-register long *arglist;
+long *arglist;
 {
 	int count; 
 	lispval save;
@@ -329,11 +329,11 @@ register long *arglist;
 
 lispval
 Ifclosure(clos,funcallp)
-register lispval clos;
+lispval clos;
 {
     struct nament *oldbnp = bnp, *lbnp, *locatevar();
-    register int i;
-    register lispval vect;
+    int i;
+    lispval vect;
     int numvars, vlength, tcase, foundc;
     lispval handy, atm_dtpr, value_dtpr, Ifuncal(), Lapply();
     Savestack(3);
@@ -407,9 +407,9 @@ register lispval clos;
  * be sure that there won't be closure markers (eg. in non-local go's)
  */
 xpopnames(llimit)
-register struct nament *llimit;
+struct nament *llimit;
 {
-    register struct nament *rnp, *lbnp;
+    struct nament *rnp, *lbnp;
     lispval atm_dtpr, value_dtpr;
     int foundc;
 
@@ -465,7 +465,7 @@ struct nament *rnp;
 lispval clos;
 int *foundc;
 {
-    register struct nament  *retbnp;
+    struct nament  *retbnp;
     lispval symb;
 
     retbnp = (struct nament *) 0;
@@ -488,7 +488,7 @@ int *foundc;
 lispval
 LIfss()
 {
-	register lispval atm_dtpr, value_dtpr;
+	lispval atm_dtpr, value_dtpr;
 	struct nament *oldbnp = bnp, *lbnp;
 	int tcase, foundc = 0;
 	lispval newval;

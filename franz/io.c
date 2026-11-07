@@ -79,7 +79,7 @@ lispval
 readr(useport)
 FILE *useport;
 {
-	register lispval handy = Vreadtable->a.clb;
+	lispval handy = Vreadtable->a.clb;
 
 	chkrtab(handy);
 	rbktf = FALSE;
@@ -101,11 +101,11 @@ FILE *useport;
 /* pair, and quoted atom detection					*/
 lispval
 readrx(code)
-register int code;
+int code;
 {
-	register lispval work;
-	register lispval *current;
-	register struct argent *result;
+	lispval work;
+	lispval *current;
+	struct argent *result;
 	int inlbkt = FALSE;
 	lispval errorh();
 	Savestack(4); /* ???not necessary because np explicitly restored if
@@ -272,10 +272,10 @@ macrox()
 	return;
 }
 imacrox(current,inlist)
-register lispval current;
+lispval current;
 {
     	FILE *svport;
-	register lispval work;
+	lispval work;
 	lispval Lapply(), handy;
 
 	Savestack(2);
@@ -309,7 +309,7 @@ register lispval current;
 /* by the first argument						*/
 lispval
 ratomr(useport)
-register FILE	*useport;
+FILE	*useport;
 {
 	rdrport = useport;
 	switch(Iratom())
@@ -333,8 +333,8 @@ register FILE	*useport;
 					((c=0),(saweof = 1),(stats = SEPMASK)))
 Iratom()
 {
-	register FILE	*useport = rdrport;
-	register char	c, marker, *name;
+	FILE	*useport = rdrport;
+	char	c, marker, *name;
 	extern lispval finatom(), calcnum(), getnum();
 	int code, cc;
 	int strflag = FALSE;
@@ -462,11 +462,11 @@ again:	cc = getc(useport);
 
 lispval
 getnum(name)
-register char *name;
+char *name;
 {
 	unsigned char c;
-	register lispval result;
-	register FILE *useport=rdrport;
+	lispval result;
+	FILE *useport=rdrport;
 	unsigned char  stats;
 	int sawdigit = 0, saweof = 0,cc;
 	char *exploc = (char *) 0;
@@ -584,11 +584,11 @@ verylast:
 
 lispval
 dopow(part2,base)
-register char *part2;
+char *part2;
 {
-	register char *name = part2;
-	register FILE *useport = rdrport;
-	register int power;
+	char *name = part2;
+	FILE *useport = rdrport;
+	int power;
 	lispval work;
 	unsigned char stats,c;
 	int cc, saweof = 0;
@@ -627,11 +627,11 @@ register char *part2;
 
 lispval
 calcnum(strbuf,name,base)
-register char *name;
+char *name;
 char *strbuf;
 {
-	register char *p;
-	register lispval result, temp;
+	char *p;
+	lispval result, temp;
 	int negflag = 0;
 
 	result = temp = newsdot();		/* initialize sdot cell */
@@ -656,9 +656,9 @@ char *strbuf;
 }
 lispval
 finatom(name)
-register char *name;
+char *name;
 {
-	register FILE *useport = rdrport;
+	FILE *useport = rdrport;
 	unsigned char c, stats;
 	int cc, saweof = 0;
 
@@ -681,8 +681,8 @@ atomtoolong(copyto)
 char *copyto;
 {
     int size;
-    register char *oldp = strbuf;
-    register char *newp;
+    char *oldp = strbuf;
+    char *newp;
     lispval nveci();
     /*
      * the string buffer contains an string which is too long 
@@ -706,10 +706,10 @@ char *copyto;
  */
 
 printr(a,useport)
-register lispval a;
-register FILE *useport;
+lispval a;
+FILE *useport;
 {
-	register hsize, i;
+	hsize, i;
 	char strflag = 0;
 	char Idqc = 0;
 	char *chstr;
@@ -922,7 +922,7 @@ val_loop:
 				}
 
 			}  else {
-				register char *cp = front;
+				char *cp = front;
 				int handy = ctable[*cp & 0177];
 
 				if(synclass(handy)==CNUM)
@@ -955,10 +955,10 @@ val_loop:
  */
 
 vectorpr(vec,port)
-register lispval vec;
+lispval vec;
 FILE *port;
 {
-    register lispval handy;
+    lispval handy;
     int svplevel = plevel;	/* save these global values */
     int svplength = plength;
     Savestack(2);
@@ -993,7 +993,7 @@ lfltpr(buf,val)		/* lisp floating point printer */
 char *buf;
 double val;
 {
-	register char *cp1;
+	char *cp1;
 
 	sprintf(buf,(char *)Vfloatformat->a.clb,val);
 	for(cp1 = buf; *cp1; cp1++)

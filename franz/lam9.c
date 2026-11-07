@@ -80,7 +80,7 @@ return(nil);
 lispval
 Ltcx()
 {
-	register struct argent *mylbot = lbot;
+	struct argent *mylbot = lbot;
 	int line, column;
 
 	switch(np-lbot) {
@@ -162,7 +162,7 @@ return (0);
 lispval
 LIfranzcall()
 {
-    register lispval handy;
+    lispval handy;
     
     if((np-lbot) <= 0) argerr("int:franz-call");
 

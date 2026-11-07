@@ -27,7 +27,7 @@ char *strcpy();
 lispval
 Lflatsi()
 {
-	register lispval current;
+	lispval current;
 	Savestack(1); 			/* fixup entry mask */
 
 	fmax = 0x7fffffff;	/* biggest integer by default */
@@ -54,7 +54,7 @@ Lflatsi()
  * Iflatsi does the real work of the calculation for flatc
  */
 Iflatsi(current)
-register lispval current;
+lispval current;
 {
 
 	if(flen > fmax) return;
@@ -110,8 +110,8 @@ lispval
 r(op)
 int op;
 {
-	unsigned char c; register lispval result;
-	register int cc;
+	unsigned char c; lispval result;
+	int cc;
 	int orlevel; extern int rlevel;
 	FILE *ttemp;
 	struct nament *oldbnp = bnp;
@@ -183,8 +183,8 @@ int op;
 lispval
 Lload()
 {
-	register FILE *port;
-	register char *p, *ttemp; register lispval vtemp;
+	FILE *port;
+	char *p, *ttemp; lispval vtemp;
 	struct nament *oldbnp = bnp;
 	int orlevel,typ;
 	char longname[100];
@@ -248,9 +248,9 @@ Lload()
 lispval
 Iconcat(unintern)
 {
-	register struct argent *temnp;
-	register char *cp = strbuf;
-	register lispval cur;
+	struct argent *temnp;
+	char *cp = strbuf;
+	lispval cur;
 	int n;
 	char *atomtoolong();
 	lispval Lhau();
@@ -291,7 +291,7 @@ Iconcat(unintern)
 
 	    case SDOT: {
 		struct _iobuf _myiob;
-		register lispval handy = cur;
+		lispval handy = cur;
 
 		for(n = 12; handy->s.CDR!=(lispval) 0; handy = handy->s.CDR)
 			n += 12;
@@ -344,9 +344,9 @@ Lputprop()
  */
 lispval
 Iputprop(atm,prop,ind)
-register lispval prop, ind, atm;
+lispval prop, ind, atm;
 {
-	register lispval pptr;
+	lispval pptr;
 	lispval *tack;		/* place to begin property list */
 	lispval pptr2;
 	lispval errorh();
@@ -407,8 +407,8 @@ register lispval prop, ind, atm;
 lispval
 Lget()
 {
-	register lispval ind, atm;
-	register lispval dum1;
+	lispval ind, atm;
+	lispval dum1;
 	lispval Igetplist();
 
 	chkarg(2,"get");
@@ -456,7 +456,7 @@ top:
 	
 lispval
 Iget(atm,ind)
-register lispval atm, ind;
+lispval atm, ind;
 {
 	lispval Igetplist();
 
@@ -475,7 +475,7 @@ register lispval atm, ind;
 
 lispval
 Igetplist(pptr,ind)
-register lispval pptr,ind;
+lispval pptr,ind;
 {
 	while (pptr != nil)
 		{
@@ -488,7 +488,7 @@ register lispval pptr,ind;
 lispval
 Lgetd()
 {
-	register lispval typ;
+	lispval typ;
 	
 	chkarg(1,"getd");
 	typ = lbot->val;
@@ -504,7 +504,7 @@ Lgetd()
 lispval
 Lputd()
 {
-	register lispval atom, list;
+	lispval atom, list;
 	
 	chkarg(2,"putd");
 	list = lbot[1].val;
@@ -526,10 +526,10 @@ Lmapcrx(maptyp,join)
 int maptyp;		/* 0 = mapcar,  1 = maplist  */
 int join;		/* 0 = the above, 1 = s/car/can/ */
 {
-	register struct argent *namptr;
-	register int index;
-	register lispval temp;
-	register lispval current;
+	struct argent *namptr;
+	int index;
+	lispval temp;
+	lispval current;
 
 	struct argent *first, *last;
 	int count;
@@ -613,10 +613,10 @@ lispval
 Lmapcx(maptyp)
 int maptyp;		/* 0= mapc   , 1= map  */
 {
-	register struct argent *namptr;
-	register index;
-	register lispval temp;
-	register lispval result;
+	struct argent *namptr;
+	index;
+	lispval temp;
+	lispval result;
 
 	int count;
 	struct argent *first;

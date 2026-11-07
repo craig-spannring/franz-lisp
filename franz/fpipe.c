@@ -18,7 +18,7 @@ static char *rcsid =
 FILE *fpipe(info)
 FILE *info[2];
 {
-	register FILE *p;
+	FILE *p;
 	int fd[2];
 
 	if(0 > pipe(fd)) return( (FILE *) -1);
@@ -43,7 +43,7 @@ FILE *info[2];
 lispval
 Nioreset() {
 #ifndef	RTPORTS
-	register FILE *p;
+	FILE *p;
 
 	for(p = &_iob[3]; p < _iob + _NFILE; p++) {
 		if(p->_flag & (_IOWRT | _IOREAD)) fclose(p);
@@ -79,7 +79,7 @@ FILE **xports;
 lispval P(p)
 FILE *p;
 {
-	register FILE **q;
+	FILE **q;
 	extern int fakettsize;
 
 	if(xports==((FILE **) 0)) {
@@ -108,7 +108,7 @@ fstopen(base,count,flag)
 char *base;
 char *flag;
 {
-	register FILE *p = fdopen(0,flag);
+	FILE *p = fdopen(0,flag);
 
 	p->_flag |= _IOSTRG;
 	p->_cnt = count;
@@ -120,7 +120,7 @@ char *flag;
 #ifdef SPISFP
 char *
 alloca(howmuch)
-register int howmuch;
+int howmuch;
 {
 	howmuch += 3 ;
 	howmuch >>= 2;

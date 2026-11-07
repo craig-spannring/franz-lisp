@@ -34,9 +34,9 @@ int kind, slashify; 	/* kind = 0 => explode to characters
 {
 	int typ, i;
 	char ch, *strb, strbb[BUFSIZ], *alloca();  /* temporary string buffer */
-	register lispval last, handy;
+	lispval last, handy;
 	extern int uctolc;
-	register char *cp;
+	char *cp;
 	Savestack(3); /* kludge register save mask */
 #ifdef SPISFP
 	Keepxs();
@@ -233,7 +233,7 @@ Lxplda()
 lispval
 Largv()
 {
-	register lispval handy;
+	lispval handy;
 	extern int Xargc;
 	extern char **Xargv;
 
@@ -252,7 +252,7 @@ Largv()
  * if successful, return t otherwise returns nil
  */
 lispval Lchdir(){
-	register char *filenm;
+	char *filenm;
 
 	chkarg(1,"chdir");
 	filenm = (char *) verify(lbot->val,"chdir - non symbol or string arg");
@@ -275,7 +275,7 @@ lispval Lchdir(){
 lispval
 Lascii() 
 {
-	register lispval handy;
+	lispval handy;
 
 	handy = lbot->val;		/* get argument */
 
@@ -305,8 +305,8 @@ Lascii()
  */
 lispval
 Lboole(){
-	register x, y;
-	register struct argent *mynp;
+	x, y;
+	struct argent *mynp;
 	int k;
 
 	if(np - lbot < 3)
@@ -355,8 +355,8 @@ Lboole(){
 lispval
 Lfact()
 {
-	register lispval result, handy;
-	register int itemp;
+	lispval result, handy;
+	int itemp;
 	Savestack(3); /* fixup entry mask */
 
 	result = lbot->val;
@@ -385,7 +385,7 @@ to calculate fact of > 2^30 We will be here till doomsday!.",FALSE);
  */
  lispval Lfix() 
  {
-	register lispval handy;
+	lispval handy;
 	double floor();
 
 	chkarg(1,"fix");
@@ -415,7 +415,7 @@ to calculate fact of > 2^30 We will be here till doomsday!.",FALSE);
 lispval
 Lfrexp()
 {
-	register lispval handy, result;
+	lispval handy, result;
 	int exp, hi, lo;
 
 	Savestack(2);
@@ -451,9 +451,9 @@ static double table[] = { 1.0, B, B*B, B*B*B, B*B*B*B, 0.0};
 lispval
 Lfloat()
 {
-	register lispval handy,result;
-	register double sum = 0;
-	register int count;
+	lispval handy,result;
+	double sum = 0;
+	int count;
 	chkarg(1,"float");
 	handy = lbot->val;
 	switch(TYPE(handy))
@@ -484,9 +484,9 @@ Lfloat()
 }
 double
 Ifloat(handy)
-register lispval handy;
+lispval handy;
 {
-	register double sum = 0.0; register int count=0;
+	double sum = 0.0; int count=0;
 	for(; count < 5; count++, handy = handy->s.CDR) {
 		sum += handy->s.I * table[count];
 		if(handy->s.CDR==(lispval)0) goto done;
@@ -511,8 +511,8 @@ lispval Lbreak() {
 
 lispval
 LDivide() {
-	register lispval result, work;
-	register struct argent *mynp;
+	lispval result, work;
+	struct argent *mynp;
 	lispval quo, rem, arg1, arg2; struct sdot dummy, dum2;
 	Savestack(3);
 
@@ -558,8 +558,8 @@ LDivide() {
 }
 
 lispval LEmuldiv(){
-	register struct argent * mynp = lbot+AD;
-	register lispval work, result;
+	struct argent * mynp = lbot+AD;
+	lispval work, result;
 	int quo, rem;
 	Savestack(3); /* fix register mask */
 

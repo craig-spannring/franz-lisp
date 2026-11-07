@@ -18,7 +18,7 @@ static char *rcsid =
 lispval
 Leval()
 {
-	register lispval temp;
+	lispval temp;
 
 	chkarg(1,"eval");
 	temp = lbot->val;
@@ -27,8 +27,8 @@ Leval()
 
 lispval
 Lxcar()
-{	register int typ;
-	register lispval temp, result;
+{	int typ;
+	lispval temp, result;
 
 	chkarg(1,"xcar");
 	temp = lbot->val;
@@ -46,8 +46,8 @@ Lxcar()
 
 lispval
 Lxcdr()
-{	register int typ;
-	register lispval temp;
+{	int typ;
+	lispval temp;
 
 	chkarg(1,"xcdr");
 	temp = lbot->val;
@@ -69,10 +69,10 @@ Lxcdr()
 
 lispval
 cxxr(as,ds)
-register int as,ds;
+int as,ds;
 {
 
-	register lispval temp, temp2;
+	lispval temp, temp2;
 	int i, typ;
 	lispval errorh();
 
@@ -176,8 +176,8 @@ Lc14r()
 lispval
 Lnthelem()
 {
-	register lispval temp;
-	register int i;
+	lispval temp;
+	int i;
 
 	chkarg(2,"nthelem");
 
@@ -198,8 +198,8 @@ Lnthelem()
 lispval
 Lscons()
 {
-	register struct argent *argp = lbot;
-	register lispval retp, handy;
+	struct argent *argp = lbot;
+	lispval retp, handy;
 
 	chkarg(2,"scons");
 	retp = newsdot();
@@ -220,7 +220,7 @@ Lscons()
 
 lispval
 Lbigtol(){
-	register lispval handy,newp;
+	lispval handy,newp;
 
 	chkarg(1,"Bignum-to-list");
 	handy = lbot->val;
@@ -243,8 +243,8 @@ Lbigtol(){
 lispval
 Lcons()
 {
-	register lispval retp;
-	register struct argent *argp;
+	lispval retp;
+	struct argent *argp;
 
 	chkarg(2,"cons");
 	retp = newdot();
@@ -258,8 +258,8 @@ Lcons()
 lispval
 rpla(what)
 int what;
-{	register struct argent *argp;
-	register int typ; register lispval first, second;
+{	struct argent *argp;
+	int typ; lispval first, second;
 
 	chkarg(2,"rplac[ad]");
 	argp = np-1;
@@ -301,7 +301,7 @@ Lrplcd()
 lispval
 Leq()
 {
-	register struct argent *mynp = lbot + AD;
+	struct argent *mynp = lbot + AD;
 
 	chkarg(2,"eq");
 	if(mynp->val==(mynp+1)->val) return(tatom);
@@ -334,7 +334,7 @@ lispval
 Linfile()
 {
 	FILE *port;
-	register lispval name;
+	lispval name;
 
 	chkarg(1,"infile");
 	name = lbot->val;
@@ -359,7 +359,7 @@ loop:
 lispval
 Loutfile()
 {
-	FILE *port; register lispval name;
+	FILE *port; lispval name;
 	char *mode ="w";    /* mode is w for create new file, a for append */
 	char *given;
 
@@ -395,7 +395,7 @@ loop:
 lispval
 Lterpr()
 {
-	register lispval handy;
+	lispval handy;
 	FILE *port;
 
 	if(lbot==np) handy = nil;
@@ -440,9 +440,9 @@ Ltruename()
 lispval
 Lnwritn()
 {
-	register FILE *port;
-	register value;
-	register lispval handy;
+	FILE *port;
+	value;
+	lispval handy;
 
 	if(lbot==np) handy = nil;
 	else 
@@ -459,9 +459,9 @@ Lnwritn()
 lispval
 Ldrain()
 {
-	register FILE *port;
-	register int iodes;
-	register lispval handy;
+	FILE *port;
+	int iodes;
+	lispval handy;
 	struct sgttyb arg;
 
 	if(lbot==np) handy = nil;
@@ -487,8 +487,8 @@ lispval
 Llist()
 {
 	/* added for the benefit of mapping functions. */
-	register struct argent *ulim, *namptr;
-	register lispval temp, result;
+	struct argent *ulim, *namptr;
+	lispval temp, result;
 	Savestack(4);
 
 	ulim = np;
@@ -518,7 +518,7 @@ Lnumberp()
 lispval
 Latom()
 {
-	register struct argent *lb = lbot;
+	struct argent *lb = lbot;
 	chkarg(1,"atom");
 	if(TYPE(lb->val)==DTPR || (HUNKP(lb->val)))
 		return(nil);
@@ -642,8 +642,8 @@ Lset()
 lispval
 Lequal()
 {
-	register lispval first, second;
-	register int type1, type2;
+	lispval first, second;
+	int type1, type2;
 	lispval Lsub(),Lzerop();
 	long *oldsp;
 	Keepxs();
@@ -723,9 +723,9 @@ oLequal()
 }
 
 Iequal(first,second) 
-register lispval first, second;
+lispval first, second;
 {
-	register int type1, type2;
+	int type1, type2;
 	lispval Lsub(),Lzerop();
 
 	if(first==second)
@@ -769,8 +769,8 @@ dosub:
 lispval
 Zequal()
 {
-	register lispval first, second;
-	register int type1, type2;
+	lispval first, second;
+	int type1, type2;
 	lispval Lsub(),Lzerop();
 	long *oldsp;
 	Keepxs();
@@ -843,7 +843,7 @@ Zequal()
 lispval
 Lprint()
 {
-	register lispval handy;
+	lispval handy;
 	extern int plevel,plength;
 
 
@@ -877,9 +877,9 @@ Lprint()
 lispval
 Lpatom()
 {
-	register lispval temp;
-	register lispval handy;
-	register int typ;
+	lispval temp;
+	lispval handy;
+	int typ;
 	FILE *port;
 
 	handy = nil;			/* port is optional, default nil */
@@ -927,8 +927,8 @@ Lpntlen()
 }
 Ipntlen()
 {
-	register lispval temp;
-	register char *handy;
+	lispval temp;
+	char *handy;
 
 	temp = np[-1].val;
 loop:	switch(TYPE(temp)) {

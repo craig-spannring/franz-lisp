@@ -237,7 +237,7 @@ next_one(type_struct)
 struct types *type_struct;
 {
 
-	register char *temp;
+	char *temp;
 
 	while(type_struct->next_free == (char *) CNIL)
 		{
@@ -292,7 +292,7 @@ next_pure_one(type_struct)
 struct types *type_struct;
 {
 
-	register char *temp;
+	char *temp;
 
 	while(type_struct->next_pure_free == (char *) CNIL)
 		{
@@ -353,7 +353,7 @@ pnewdb()
 lispval
 newsdot()
 {
-	register lispval temp;
+	lispval temp;
 	temp = next_one(&sdot_str);
 	temp->d.car = temp->d.cdr = 0;
 	return(temp);
@@ -362,7 +362,7 @@ newsdot()
 lispval
 pnewsdot()
 {
-	register lispval temp;
+	lispval temp;
 	temp = next_pure_one(&sdot_str);
 	temp->d.car = temp->d.cdr = 0;
 	return(temp);
@@ -386,7 +386,7 @@ char *
 newstr(purep) {
 	char *save, *strcpy();
 	int atmlen;
-	register struct str_x *p = str_current + purep;
+	struct str_x *p = str_current + purep;
 
 	atmlen = strlen(strbuf)+1;
 	if(atmlen > p->space_left) {
@@ -430,7 +430,7 @@ char *pinewstr(s) char *s;
 lispval
 newarray()
 	{
-	register lispval temp;
+	lispval temp;
 
 	temp = next_one(&array_str);
 	temp->ar.data = (char *)nil;
@@ -444,7 +444,7 @@ newarray()
 lispval
 newfunct()
 	{
-	register lispval temp;
+	lispval temp;
 	lispval Badcall();
 	temp = next_one(&funct_str);
 	temp->bcd.start = Badcall;
@@ -455,7 +455,7 @@ newfunct()
 lispval
 newval()
 	{
-	register lispval temp;
+	lispval temp;
 	temp = next_one(&val_str);
 	temp->l = nil;
 	return(temp);
@@ -464,7 +464,7 @@ newval()
 lispval
 pnewval()
 	{
-	register lispval temp;
+	lispval temp;
 	temp = next_pure_one(&val_str);
 	temp->l = nil;
 	return(temp);
@@ -474,7 +474,7 @@ lispval
 newhunk(hunknum)
 int hunknum;
 	{
-	register lispval temp;
+	lispval temp;
 
 	temp = next_one(&hunk_str[hunknum]);	/* Get a hunk */
 	return(temp);
@@ -484,7 +484,7 @@ lispval
 pnewhunk(hunknum)
 int hunknum;
 	{
-	register lispval temp;
+	lispval temp;
 
 	temp = next_pure_one(&hunk_str[hunknum]);	/* Get a hunk */
 	return(temp);
@@ -544,9 +544,9 @@ pnveci(size)
  */
 lispval
 getvec(size,typestr,purep)
-register struct types *typestr;
+struct types *typestr;
 {
-    register lispval back, current;
+    lispval back, current;
     int sizewant, bytes, thissize, pages, pindex, triedgc = FALSE;
 
     /* we have to round up to a multiple of 4 bytes to determine the
@@ -669,7 +669,7 @@ lispval element;
 pruneb(bignum)
 lispval bignum;
 {
-	register lispval temp = bignum;
+	lispval temp = bignum;
 
 	if(TYPE(temp) != SDOT) 
 	    errorh(Vermisc,"value to pruneb not a sdot",nil,FALSE,0);
@@ -771,8 +771,8 @@ gc(type_struct)
 gc1()
 {
 	int j, k;
-	register int *start,bvalue,type_len; 
-	register struct types *s;
+	int *start,bvalue,type_len; 
+	struct types *s;
 	int *point,i,freecnt,itemstogo,bits,bindex,type,bytestoclear;
 	int usedcnt;
 	char *pindex;
@@ -1174,8 +1174,8 @@ lispval tname; long npages;
 lispval
 csegment(typecode,nitems,useholeflag)
 {
-	register int ii, jj;
-	register char *charadd;
+	int ii, jj;
+	char *charadd;
 
 	ii = typecode;
 
@@ -1241,7 +1241,7 @@ char *
 gethspace(segsiz,type)
 {
 	extern usehole; extern char holend[]; extern char *curhbeg;
-	register char *value;
+	char *value;
 
 	if(usehole) {	
 		curhbeg = (char *) roundup(((int)curhbeg),LBPG);
@@ -1263,7 +1263,7 @@ gethspace(segsiz,type)
 gcrebear()
 {
 #ifdef HOLE
-        register int i; register struct types *p;
+        int i; struct types *p;
 
 	/* this gets done upon rebirth */
 	str_current[1].space_left = 0;
@@ -1294,12 +1294,12 @@ markit(p) lispval *p; { markdp(*p); }
  *  An iterative method is used to mark list structure, to avoid
  *  excessive recursion.
  */
-markdp(p) register lispval p;
+markdp(p) lispval p;
 	{
 #ifdef tahoe
-	register int r, s;	/* (goes with non-asm readbit, oksetbit) */
+	int r, s;	/* (goes with non-asm readbit, oksetbit) */
 #endif
-/*	register hsize, hcntr;						 */
+/*	hsize, hcntr;						 */
 	int hsize, hcntr;
 
 #ifdef METER
@@ -1386,8 +1386,8 @@ ptr_loop:
 				setbit;
 			     }
 			} else {
-/*			register int i, l; int d;		*/
-/*			register char *dataptr = p->ar.data;	*/
+/*			int i, l; int d;		*/
+/*			char *dataptr = p->ar.data;	*/
 			int i,l,d;
 			char *dataptr = p->ar.data;
 
@@ -1432,7 +1432,7 @@ ptr_loop:
 			
 		case VECTOR:
 			{
-			    register int vsize;
+			    int vsize;
 			    ftstbit;
 			    vsize = VecSize(p->vl.vectorl[VSizeOff]);
 			    if(debugin)
@@ -1509,9 +1509,9 @@ char *ysbrk(pages,type) int pages, type;
  */
 lispval
 getatom(purep)
-{   register lispval aptr;
-    register char *name, *endname;
-    register int hash;
+{   lispval aptr;
+    char *name, *endname;
+    int hash;
     lispval	b;
     char	c;
 
@@ -1569,9 +1569,9 @@ getatom(purep)
  */
 lispval
 inewatom(name)
-register char *name;
-{   register struct atom *aptr;
-    register int hash;
+char *name;
+{   struct atom *aptr;
+    int hash;
     extern struct types atom_str;
     char	c;
 
@@ -1596,9 +1596,9 @@ register char *name;
 /* our hash function */
 
 hashfcn(symb)
-register char *symb;
+char *symb;
 {
-	register int i;
+	int i;
 /*	for (i=0 ; *symb ; i += i + *symb++); return(i & (HASHTOP-1)); */
 	for (i=0 ; *symb ; i += i*2 + *symb++);
 	return(i&077777 % HASHTOP);

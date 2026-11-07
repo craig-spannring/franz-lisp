@@ -22,8 +22,8 @@ extern int current;
 lispval Imath(func)
 double (*func)();
 {
-	register lispval handy;
-	register double res;
+	lispval handy;
+	double res;
 	chkarg(1,"Math functions");
 
 	switch(TYPE(handy=lbot->val)) {
@@ -78,9 +78,9 @@ lispval Llog()
  */
 lispval Latan()
 {
-	register lispval arg;
-	register double arg1v;
-	register double res;
+	lispval arg;
+	double arg1v;
+	double res;
 	chkarg(2,"arctan");
 
 	switch(TYPE(arg=lbot->val)) {
@@ -115,7 +115,7 @@ lispval Latan()
 lispval
 Lrandom()
 {
-	register int curval;
+	int curval;
 	float pow();
 
 	curval = rand();	/* get numb from 0 to 2**31-1 */
@@ -132,7 +132,7 @@ Lrandom()
 lispval
 Lmakunb()
 {
-	register lispval work;
+	lispval work;
 
 	chkarg(1,"makunbound");
 	work = lbot->val;
@@ -175,8 +175,8 @@ Lfseek()
 /* function hashtabstat  : return list of number of members in  each bucket */
 lispval Lhashst()
 {
-	register lispval handy,cur;
-	register struct atom *pnt;
+	lispval handy,cur;
+	struct atom *pnt;
 	int i,cnt;
 	extern int hashtop;
 	Savestack(3);
@@ -209,7 +209,7 @@ lispval Lhashst()
 lispval
 Lctcherr()
 {
-	register lispval handy;
+	lispval handy;
 	lispval type,messg,valret,contuab,uniqid,datum1,datum2;
 
 	chkarg(1,"I-throw-err");
@@ -272,8 +272,8 @@ Lctcherr()
 lispval
 LMakhunk()
 {
-	register int hsize, hcntr;
-	register lispval result;
+	int hsize, hcntr;
+	lispval result;
 
 	chkarg(1,"Makehunk");
 	if (TYPE(lbot->val)==INT)
@@ -303,7 +303,7 @@ LMakhunk()
 lispval
 Lcxr()
 {
-	register lispval temp;
+	lispval temp;
 
 	chkarg(2,"cxr");
 	if (TYPE(lbot->val)!=INT)
@@ -399,7 +399,7 @@ Lstarrpx()
 lispval
 Lhunksize()
 {
-	register int size,i;
+	int size,i;
 
 	chkarg(1,"hunksize");
 	if (HUNKP(lbot->val))
@@ -426,8 +426,8 @@ Lhunksize()
 lispval
 Lhtol()
 {
-    register lispval handy,retval,last;
-    register int i;
+    lispval handy,retval,last;
+    int i;
     int size;
     Savestack(4);
 
@@ -467,10 +467,10 @@ lispval
 Lfileopen()
 {
 	FILE *port;
-	register lispval name;
-	register lispval mode;
-	register char *namech;
-	register char *modech;
+	lispval name;
+	lispval mode;
+	char *namech;
+	char *modech;
 
 	chkarg(2,"fileopen");
 	name = lbot->val;
@@ -506,7 +506,7 @@ Lfileopen()
 static lispval
 Ibalmod(invmodp)
 {
-	register long mod_div_2, number, modulus;
+	long mod_div_2, number, modulus;
 
 	chkarg(2,"*mod");
 	if ((TYPE(lbot->val) == INT) && (TYPE(lbot[1].val) == INT))
@@ -578,7 +578,7 @@ LstarMod()
 lispval
 Llsh()
 {
-	register struct argent *mylbot = lbot;
+	struct argent *mylbot = lbot;
 	int val,shift;
 
 	chkarg(2,"lsh");
@@ -608,8 +608,8 @@ Llsh()
 
 bndchk()
 {  
-	register struct nament *npt;
-	register lispval in2;
+	struct nament *npt;
+	lispval in2;
 
 	in2 = inewint(200);
 	for(npt=orgbnp; npt < bnp; npt++)
@@ -666,8 +666,8 @@ Lcprintf()
 lispval
 Lsprintf()
 {
-	register struct argent *argp;
-	register int j;
+	struct argent *argp;
+	int j;
 	char sbuf[600];			/* better way? */
 	Keepxs();
 
@@ -727,8 +727,8 @@ Lprobef()
 
 lispval
 Lsubstring()
-{	register char *name;
-	register lispval index,length;
+{	char *name;
+	lispval index,length;
 	int restofstring = FALSE;
 	int len,ind,reallen;
 
@@ -776,8 +776,8 @@ Lsubstring()
 lispval
 Lsstrn()
 {
-	register char *name;
-	register int len,ind,reallen;
+	char *name;
+	int len,ind,reallen;
 	lispval index,length;
 	int restofstring = FALSE;
 	Savestack(4);
@@ -844,8 +844,8 @@ Lsstrn()
 lispval
 Lcharindex()
 {
-    register char *string;
-    register char ch;
+    char *string;
+    char ch;
     char *str2;
     
     chkarg(2,"character-index");
@@ -880,7 +880,7 @@ Ipurcopy(handy)
 lispval handy;
 {
     extern int *beginsweep;
-    register lispval retv, curv, lv;
+    lispval retv, curv, lv;
     int i,size;
 
     switch(TYPE(handy)) {
@@ -1043,9 +1043,9 @@ Lnvecl()
 lispval
 Inewvector(class)
 {
-    register int i;
-    register lispval handy;
-    register lispval *handy2;
+    int i;
+    lispval handy;
+    lispval *handy2;
     char *chandy;
     short *whandy;
     long *lhandy;
@@ -1128,8 +1128,8 @@ Lpvp()
 lispval
 LIvref()
 {
-    register lispval vect;
-    register int index;
+    lispval vect;
+    int index;
     int class;
     double value;
     
@@ -1166,8 +1166,8 @@ LIvref()
 lispval
 LIvset()
 {
-    register lispval vect,value;
-    register int index;
+    lispval vect,value;
+    int index;
     int class;
     
     chkarg(4,"int:vset");

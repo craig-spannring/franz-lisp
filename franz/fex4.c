@@ -30,9 +30,9 @@ static char *rcsid =
 */
 lispval
 Lsyscall() {
-	register lispval temp;
-	register struct argent *aptr;
-	register int acount = 1;
+	lispval temp;
+	struct argent *aptr;
+	int acount = 1;
 	extern syscall();
 	int args[50];
 	Savestack(3);
@@ -84,8 +84,8 @@ Lsyscall() {
 lispval
 Nevwhen()
 {
-	register lispval handy;
-	register lispval handy2;
+	lispval handy;
+	lispval handy2;
 	Savestack(2);
 
 	for (handy=(lbot->val)->d.car ; handy != nil ; handy = handy->d.cdr) {
@@ -153,7 +153,7 @@ Nevwhen()
 lispval
 Nstatus()
 {
-	register lispval handy,curitm,valarg;
+	lispval handy,curitm,valarg;
 	int indx,ctim;
 	int typ;
 	char *cp;
@@ -270,7 +270,7 @@ Nstatus()
 lispval
 Nsstatus()
 {
-	register lispval handy;
+	lispval handy;
 	lispval Isstatus();
 
 	handy = lbot->val;
@@ -286,7 +286,7 @@ lispval
 Isstatus(curnam,curval)
 lispval curnam,curval;
 {
-	register lispval curitm,head;
+	lispval curitm,head;
 	lispval Istsrch(),Iaddstat();
 	int badmr(),clrtt();
 	extern int uctolc, dmpmode, bcdtrsw, gcstrings;
@@ -390,7 +390,7 @@ lispval curnam,curval;
 lispval Istsrch(nam)
 lispval nam;
 {
-	register lispval handy; 
+	lispval handy; 
 
 	for(handy = stlist ; handy != nil ; handy = handy->d.cdr)
 	  if(handy->d.car->d.car == nam) return(handy->d.car);
@@ -406,7 +406,7 @@ Iaddstat(name,readcode,setcode,valu)
 lispval name,valu;
 int readcode,setcode;
 {
-	register lispval handy,handy2;
+	lispval handy,handy2;
 	Savestack(2);
 
 

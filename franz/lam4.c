@@ -17,8 +17,8 @@ double Ifloat();
 lispval
 Ladd()
 {
-	register lispval work;
-	register struct argent *result, *mynp, *oldnp;
+	lispval work;
+	struct argent *result, *mynp, *oldnp;
 	long restype,prunep,hi,lo=0;
 	struct sdot dummybig;
 	double flacc;
@@ -162,8 +162,8 @@ Ladd()
 lispval
 Lsub()
 {
-	register lispval work;
-	register struct argent *result, *mynp, *oldnp;
+	lispval work;
+	struct argent *result, *mynp, *oldnp;
 	long prunep,restype,hi,lo=0;
 	struct sdot dummybig;
 	double flacc;
@@ -364,8 +364,8 @@ out:
 lispval
 Ltimes()
 {
-	register lispval work;
-	register struct argent *result, *mynp, *oldnp;
+	lispval work;
+	struct argent *result, *mynp, *oldnp;
 	long restype,prunep,hi,lo=1;
 	struct sdot dummybig;
 	double flacc;
@@ -484,8 +484,8 @@ Ltimes()
 lispval
 Lquo()
 {
-	register lispval work;
-	register struct argent *result, *mynp, *oldnp;
+	lispval work;
+	struct argent *result, *mynp, *oldnp;
 	int restype; lispval quotient; double flacc;
 	struct sdot dummybig;
 	Savestack(4);
@@ -652,8 +652,8 @@ out:
 
 lispval Lfp()
 {
-	register int temp = 0;
-	register struct argent *argp; 
+	int temp = 0;
+	struct argent *argp; 
 
 	for(argp = lbot; argp < np; argp++)
 	    if(TYPE(argp->val) != INT)
@@ -666,8 +666,8 @@ lispval Lfp()
 
 lispval Lfm()
 {
-	register int temp;
-	register struct argent *argp;
+	int temp;
+	struct argent *argp;
 
 	if(lbot==np)return(inewint(0));
 	   if(TYPE(lbot->val) != INT)
@@ -687,8 +687,8 @@ lispval Lfm()
 
 lispval Lft()
 {
-	register int temp = 1;
-	register struct argent *argp;
+	int temp = 1;
+	struct argent *argp;
 
 	for(argp = lbot; argp < np; argp++)
 	    if(TYPE(argp->val) != INT)
@@ -701,8 +701,8 @@ lispval Lft()
 
 lispval Lflessp()
 {
-	register struct argent *argp = lbot;
-	register int old, new;
+	struct argent *argp = lbot;
+	int old, new;
 
 	if(np < argp + 2) return(nil);
 	old = argp->val->i; argp++;
@@ -720,8 +720,8 @@ lispval Lflessp()
 
 lispval Lfd()
 {
-	register int temp = 0;
-	register struct argent *argp;
+	int temp = 0;
+	struct argent *argp;
 
 	if(lbot==np)return(inewint(1));
 	if(TYPE(lbot->val) != INT)
@@ -754,9 +754,9 @@ lispval Lfadd1()
  */
 lispval Lfexpt()
 {
-    register int base;
-    register int exp;
-    register int res;
+    int base;
+    int exp;
+    int res;
     
     chkarg(2,"^");
     if((TYPE(lbot[0].val) != INT ) || (TYPE(lbot[1].val) != INT))
@@ -846,7 +846,7 @@ Ldbtofl()
 lispval
 Lfltodb()
 {
-	register lispval handy;
+	lispval handy;
 	chkarg(1,"float-to-double");
 
 	if(TYPE(lbot->val) != INT)

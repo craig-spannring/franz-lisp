@@ -22,9 +22,9 @@ static char *rcsid =
 lispval
 Lreadli()
 {
-	register lispval work, handy;
-	register FILE *p;
-	register char *string; char *alloca();
+	lispval work, handy;
+	FILE *p;
+	char *string; char *alloca();
 	FILE *fstopen();
 	lispval Lread();
 	int count;
@@ -115,7 +115,7 @@ Lgetenv()
 lispval
 Lboundp()
 {
-	register lispval result, handy;
+	lispval result, handy;
 
 	chkarg(1,"boundp");
 
@@ -132,7 +132,7 @@ Lboundp()
 lispval
 Lplist()
 {	
-	register lispval atm;
+	lispval atm;
 	/* get property list of an atom or disembodied property list */
 
 	chkarg(1,"plist");
@@ -152,7 +152,7 @@ Lplist()
 lispval
 Lsetpli()
 {	/* set the property list of the given atom to the given list */
-	register lispval atm, vall;
+	lispval atm, vall;
 
 	chkarg(2,"setplist");
 	atm = lbot->val;
@@ -171,7 +171,7 @@ Lsetpli()
 lispval
 Lsignal()
 {
-	register lispval handy, old, routine;
+	lispval handy, old, routine;
 	int i;
 	int sginth();
 
@@ -212,7 +212,7 @@ Lsignal()
 lispval
 Lassq()
 {
-	register lispval work, handy;
+	lispval work, handy;
 
 	chkarg(2,"assq");
 
@@ -233,7 +233,7 @@ Lkilcopy()
 lispval
 Larg()
 {
-	register lispval handy; register offset, count;
+	lispval handy; offset, count;
 
 	handy = lexpr_atom->a.clb;
 	if(handy==CNIL || TYPE(handy)!=DTPR)
@@ -249,8 +249,8 @@ Larg()
 lispval
 Lsetarg()
 {
-	register lispval handy, work;
-	register int limit, index;
+	lispval handy, work;
+	int limit, index;
 
 	chkarg(2,"setarg");
 	handy = lexpr_atom->a.clb;
@@ -270,7 +270,7 @@ Lptime(){
 	extern int gctime;
 	int lgctime = gctime;
 	struct tms current;
-	register lispval result, handy;
+	lispval result, handy;
 	Savestack(2);
 
 	times(&current);
@@ -321,8 +321,8 @@ lispval Lerr()
 lispval
 Ltyi()
 {
-	register FILE *port;
-	register lispval handy;
+	FILE *port;
+	lispval handy;
 	lispval eofval;
 	int val;	/* really char but getc returns int on eof */
 	int eofvalgiven;
@@ -389,8 +389,8 @@ Luntyi()
 lispval
 Ltyipeek()
 {
-	register FILE *port;
-	register lispval handy;
+	FILE *port;
+	lispval handy;
 	int val;
 
 	switch(np-lbot)
@@ -415,8 +415,8 @@ Ltyipeek()
 lispval
 Ltyo()
 {
-	register FILE *port;
-	register lispval handy, where;
+	FILE *port;
+	lispval handy, where;
 	char val;
 
 	switch(np-lbot)
@@ -444,7 +444,7 @@ Imkrtab(current)
 	extern struct rtab {
 		unsigned char ctable[132];
 	} initread;
-	register lispval handy; extern lispval lastrtab;
+	lispval handy; extern lispval lastrtab;
 
 	static int cycle = 0;
 	static char *nextfree;
@@ -464,7 +464,7 @@ Imkrtab(current)
 		*(struct rtab *)nextfree = initread;
 	else
 	{
-		register int index = 0; register char *cp = nextfree;
+		int index = 0; char *cp = nextfree;
 		lispval c;
 
 		*(struct rtab *)cp = *(struct rtab *)ctable;
@@ -510,7 +510,7 @@ Lmakertbl()
 lispval
 Lcpy1()
 {
-	register lispval handy = lbot->val, result = handy;
+	lispval handy = lbot->val, result = handy;
 
 top:
 	switch(TYPE(handy))
@@ -539,8 +539,8 @@ top:
 lispval
 Lcopyint()
 {
-	register lispval handy = lbot->val;
-	register lispval ret;
+	lispval handy = lbot->val;
+	lispval ret;
 
   	while (TYPE(handy) != INT)
 	{ handy=errorh1(Vermisc,"copyint* : non integer arg",nil,TRUE,0,handy);}
