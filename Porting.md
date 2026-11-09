@@ -1,11 +1,11 @@
-# Porting to Modern Architecture #
+# Porting to Modern Architecture
 
 (Franz Lisp)[https://en.wikipedia.org/wiki/Franz_Lisp] ran on VAX-11
 and Sun 68k based machines running BSD Unix. It would be fun to be
 able to run this lisp on a modern system such as MacOS on an Apple
 Silicon CPU.
 
-## Overview ##
+## Overview
 
 The original code was was written for a ILP32 target and abuses the
 equivalent sizes of int and pointers.  It also makes assumptions about
@@ -22,9 +22,9 @@ this port using a new IDEs like Visual Studio or Xcode (or even Emacs
 with the newer IDE capabilities.  Make won't provide that capability.
 We will change to a cmake based build system. 
 
-## AI Perspective ##
+## AI Perspective
 
-### lisplib ###
+### lisplib
 The parts of lisplib/ most obviously still tied to the original
 Berkeley Unix toolchain are: 
 
@@ -62,7 +62,7 @@ Unix syscall layer (syscall.l), and the architecture-specific startup
 scripts in autorun/. Those are the pieces still most visibly tied to
 the original Berkeley Unix toolchain.
 
-### franz ###
+### franz
 
 The right modernization strategy is not “port it blindly to
 Windows/Linux/macOS.” It is “re-architect the machine-dependent layer
@@ -227,9 +227,9 @@ If you want, I can go one level deeper and sketch:
 - or a migration plan for replacing the old native backend with LLVM.
 
 
-### Memory Map ###
+### Memory Map
 
-#### Allocation of Memory for a Lisp Object ####
+#### Allocation of Memory for a Lisp Object
 Yes. In this Franz Lisp codebase, a Lisp object is not created by
 `malloc()` in the usual C sense; it is created by a custom allocator
 that hands out cells from a Lisp-managed heap. 
@@ -379,7 +379,7 @@ step-by-step, such as:
 - how a vector is allocated
 - how the garbage collector rebuilds free lists after a GC cycle
 
-#### VAX-11 ####
+#### VAX-11
 For the VAX/BSD 4.3 build, the memory model is a flat, page-based Lisp
 heap starting at address 0, not a segmented layout. 
 
@@ -414,7 +414,7 @@ There is also a second build variant in the tree that inserts a 2 MB
 normal VAX/BSD 4.3 `rawlisp` layout; the standard build is the no-hole
 contiguous version.
 
-#### m68k ####
+#### m68k
 For the m68k build, the map is the same idea as the VAX version, but
 shifted upward by a nonzero `OFFSET` instead of starting at zero. 
 
@@ -457,16 +457,16 @@ m68k target (for example Sun 4.2 with `OFFSET=0x8000` versus Sun
 Unisoft with `OFFSET=0x40000`). 
 
 
-## A More Human Oriented Perspective ##
+## A More Human Oriented Perspective
 
-### Build System ###
-
-
-### Building Documentation ###
+### Build System
 
 
-### Building rawlisp ###
-#### ABI ###
+### Building Documentation
+
+
+### Building rawlisp
+#### ABI
 
 The original code is tied deeply to the Application Binary Interface
 (ABI).  The VAX-11 and 68k ABI differ significantly from modern ABIs.
@@ -499,14 +499,29 @@ int fn(int x, int y)
 }
 ```
 
+**See also**
+
+- [ABIs Cheat Sheet](https://shell-storm.org/abi/)
+
 ##### VAX-11 - BSD
+
+The VAX pushes all function arguments onto the stack from right to
+left.  Values are returned in r0 (and r1 for 64 bit floats.)
+
+
+**See also**
+
+- [VAX Natice Architecture](https://gordonbell.azurewebsites.net/computer_structures_principles_and_examples/csp0733.htm)
+- [Basic Calling Conventions](http://odl.sysworks.biz/disk$axpdocdec971/progtool/deccv56/5492profile0017.html)
+- [OpenVMS VAX Conventions](https://docs.vmssoftware.com/vsi-openvms-calling-standard/#VAX_CONVEN_CHAP) 
+
 
 ##### 68k - BSD
 
 ##### AArch64 macOS
 
-### Building liszt ###
+### Building liszt
 
 
-### Building snlisp and nlisp ### 
+### Building snlisp and nlisp
 
