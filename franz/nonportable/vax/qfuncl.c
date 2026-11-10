@@ -1,4 +1,4 @@
-  .asciz "$Header: qfuncl.c,v 1.10 84/02/29 16:44:30 sklower Exp $"
+.asciz "$Header: qfuncl.c,v 1.10 84/02/29 16:44:30 sklower Exp $"
 
 /*					-[Mon Mar 21 17:04:58 1983 by jkf]-
  * 	qfuncl.c				$Locker:  $
@@ -7,7 +7,7 @@
  * (c) copyright 1982, Regents of the University of California
  */
 
-/* 
+/*
  * This is written in assembler but must be passed through the C preprocessor
  * before being assembled.
  */
@@ -22,52 +22,37 @@
 #define Arrayaccfun 0
 
 #ifdef PROF
-	.set	indx,0
-#define Profile \
-	movab	prbuf+indx,r0 \
-	.set 	indx,indx+4 \
-	jsb 	mcount
-#define Profile2 \
-	movl   r0,r5 \
-	Profile	\
-	movl   r5,r0 
+    .set indx,
+    0
+#define Profile movab prbuf + indx, r0.set indx, indx + 4 jsb mcount
+#define Profile2 movl r0, r5 Profile movl r5, r0
 #else
 #define Profile
 #define Profile2
 #endif
 
 #ifdef PORTABLE
-#define NIL	_nilatom
-#define NP	_np
-#define LBOT	_lbot
+#define NIL _nilatom
+#define NP _np
+#define LBOT _lbot
 #else
-#define NIL	0
-#define NP	r6
-#define LBOT	r7
+#define NIL 0
+#define NP r6
+#define LBOT r7
 #endif
 
+        /*   transfer  table linkage routine  */
 
-/*   transfer  table linkage routine  */
-
-	.globl	_qlinker
-_qlinker:
-	.word 	0xfc0			# save all possible registers
-	Profile
-	tstl	_exception	        # any pending exceptions
-	jeql	noexc
-	tstl	_sigintcnt		# is it because of SIGINT
-	jeql	noexc			# if not, just leave
-	pushl	$2			# else push SIGINT
-	calls	$1,_sigcall
-noexc:
-	movl	16(fp),r0		# get return pc
-	addl2	-4(r0),r0		# get pointer to table
-	movl	4(r0),r1		# get atom pointer
-retry:					# come here after undef func error
-	movl	Atomfnbnd(r1),r2	# get function binding
-	jleq	nonex			# if none, leave
-	tstl	_stattab+2*4		# see if linking possible (Strans)
-	jeql	nolink			# no, it isn't
+        .globl _qlinker _qlinker :.word 0xfc0 #save all possible registers Profile tstl _exception #any pending
+                                      exceptions jeql noexc tstl _sigintcnt #is it because of SIGINT jeql noexc #if not,
+    just leave pushl $2 #else push SIGINT calls $1,
+    _sigcall                                    noexc : movl 16(fp),
+                     r0 #get return pc addl2 - 4(r0),
+                     r0 #get pointer to table movl 4(r0),
+                     r1 #get atom pointer retry : #come here after undef func error movl Atomfnbnd(r1),
+                                                  r2 #get function binding jleq nonex #if none,
+                                                  leave tstl _stattab + 2 * 4 #see if linking possible(Strans)
+        jeql	nolink			# no, it isn't
 	ashl	$-9,r2,r3		# check type of function
 	cmpb	$/**/BCD,_typetable+1[r3]	
 	jeql	linkin			# bcd, link it in!
@@ -257,85 +242,73 @@ _qnewdot:
 	incl	*_lispsys+28*4			# inc count of dtprs
 	movl	(r0),_dtpr_str			# advance free list
 	clrq	(r0)
-	rsb
-mustallo:
-	calls	$0,_newdot
-	rsb
+        rsb mustallo : calls $0,
+                       _newdot rsb
 
-/*  prunel  - return a list of dtpr cells to the free list
- * this is called by the pruneb after it has discarded the top bignum 
- * the dtpr cells are linked through their cars not their cdrs.
- * this returns with an rsb
- *
- * method of operation: the dtpr list we get is linked by car's so we
- * go through the list and link it by cdr's, then have the last dtpr
- * point to the free list and then make the free list begin at the
- * first dtpr.
- */
-qprunel:
-	movl	r0,r2				# remember first dtpr location
-rep:	decl	*_lispsys+28*4			# decrement used dtpr count
-	movl	4(r0),r1			# put link value into r1
-	jeql	endoflist			# if nil, then end of list
-	movl	r1,(r0)				# repl cdr w/ save val as car
-	movl	r1,r0				# advance to next dtpr
-	jbr	rep				# and loop around
-endoflist:
-	movl	_dtpr_str,(r0)			# make last 1 pnt to free list
-	movl	r2,_dtpr_str			# & free list begin at 1st 1
-	rsb
+                           /*  prunel  - return a list of dtpr cells to the free list
+                            * this is called by the pruneb after it has discarded the top bignum
+                            * the dtpr cells are linked through their cars not their cdrs.
+                            * this returns with an rsb
+                            *
+                            * method of operation: the dtpr list we get is linked by car's so we
+                            * go through the list and link it by cdr's, then have the last dtpr
+                            * point to the free list and then make the free list begin at the
+                            * first dtpr.
+                            */
+                                               qprunel
+            : movl                             r0,
+              r2 #remember first dtpr location rep : decl *_lispsys + 28 * 4 #decrement used dtpr count movl 4(r0),
+              r1 #put link value into r1 jeql endoflist #if nil,
+              then end of list movl r1,
+              (r0) #repl cdr w / save val as car movl r1,
+              r0 #advance to next dtpr jbr rep #and loop around endoflist
+            : movl _dtpr_str,
+              (r0) #make last 1 pnt to free list movl r2,
+              _dtpr_str #&free list begin at 1st 1 rsb
 
-/*
- * qpruneb - called by the arithmetic routines to free an sdot and the dtprs
- * which hang on it.
- * called by
- *	pushl	sdotaddr
- *	jsb	_qpruneb
- */
-	.globl	_qpruneb
-_qpruneb:
-	Profile
-	movl	4(sp),r0				# get address
-	decl	*_lispsys+48*4		# decr count of used sdots
-	movl	_sdot_str,(r0)		# have new sdot point to free list
-	movl	r0,_sdot_str		# start free list at new sdot
-	movl	4(r0),r0		# get address of first dtpr
-	jneq	qprunel			# if exists, prune it
-	rsb				# else return.
+                  /*
+                   * qpruneb - called by the arithmetic routines to free an sdot and the dtprs
+                   * which hang on it.
+                   * called by
+                   *	pushl	sdotaddr
+                   *	jsb	_qpruneb
+                   */
+                  .globl _qpruneb _qpruneb : Profile movl 4(sp),
+              r0 #get address decl *_lispsys + 48 * 4 #decr count of used sdots movl _sdot_str,
+              (r0) #have new sdot point to free list movl r0,
+              _sdot_str #start free list at new sdot movl 4(r0),
+              r0 #get address of first dtpr jneq qprunel #if exists,
+              prune it rsb #else return
+                  .
 
+                  /*
+                   * _qprunei
+                   *	called by the arithmetic routines to free a fixnum cell
+                   * calling sequence
+                   *	pushl	fixnumaddr
+                   *	jsb	_qprunei
+                   */
 
-/*
- * _qprunei 	 
- *	called by the arithmetic routines to free a fixnum cell
- * calling sequence
- *	pushl	fixnumaddr
- *	jsb	_qprunei
- */
+                  .globl _qprunei _qprunei : Profile movl 4(sp),
+              r0 #get address of fixnum cmpl r0,
+              $_Lastfix #is it a small fixnum jleq skipit #if so,
+              leave decl *_lispsys + 24 * 4 #decr count of used ints movl _int_str,
+              (r0) #link the fixnum into the free list movl r0,
+              _int_str skipit : rsb
 
-	.globl	_qprunei
-_qprunei:
-	Profile
-	movl	4(sp),r0		# get address of fixnum
-	cmpl	r0,$_Lastfix		# is it a small fixnum
-	jleq	skipit			# if so, leave
-	decl	*_lispsys+24*4		# decr count of used ints
-	movl	_int_str,(r0)		# link the fixnum into the free list
-	movl	r0,_int_str
-skipit:
-	rsb
-
-
-	.globl	_qpopnames
-_qpopnames:			# equivalent of C-code popnames, entered by jsb.
-	movl	(sp)+,r0	# return address
-	movl	(sp)+,r1	# Lower limit
-	movl	_bnp,r2		# pointer to bind stack entry
-qploop:
-	subl2	$8,r2		# for(; (--r2) > r1;) {
-	cmpl	r2,r1		# test for done
+                                    .globl _qpopnames _qpopnames : #equivalent of C
+                  - code popnames,
+              entered by jsb.movl(sp) +,
+              r0 #return address movl(sp) +,
+              r1 #Lower limit movl _bnp,
+              r2 #pointer to bind stack entry qploop : subl2 $8,
+                                                       r2 #for (; (--r2) > r1;)
+        {
+        cmpl	r2,r1		# test for done
 	jlss	qpdone		
 	movl	(r2),*4(r2)	# r2->atm->a.clb = r2 -> val;
-	brb	qploop		# }
+        brb qploop #
+        }
 qpdone:
 	movl	r1,_bnp		# restore bnp
 	jmp	(r0)		# return
@@ -452,7 +425,7 @@ _qpushframe:
 #endif
 
 /*
- * Ipushf : stack a frame, where space is preallocated on the stack. 
+ * Ipushf : stack a frame, where space is preallocated on the stack.
  * this is like pushframe, except that it doesn't alter the stack pointer
  * and will save more registers.
  * This might be written a little more quickly by having a bigger register
@@ -594,7 +567,6 @@ return:
 #endif
 	rsb
 
-	
 /* This must be at the end of the file.  If we are profiling, allocate
  * space for the profile buffer
  */

@@ -16,29 +16,30 @@
 #include <stdio.h>
 
 char mybuf[BUFSIZ];
-int mask;
+int  mask;
 
 main()
 {
- register savesize = 0;
- char *cp;
+  register savesize = 0;
+  char *cp;
 
- while(fgets(mybuf,BUFSIZ,stdin) != NULL)
+  while (fgets(mybuf, BUFSIZ, stdin) != NULL)
+  {
+    if (*mybuf == '#')
+      if (strcmpn(mybuf, "#protect", 8) == 0)
       {
-       if(*mybuf=='#')
-	  if(strcmpn(mybuf,"#protect", 8)==0)
-	    {
-	     savesize = 1;
-	    }
-
-       if(savesize && strcmpn(mybuf,"	.set	L",7)==0)
-         {
-	  for(cp=mybuf;*cp++!=',';) ;
-	  sscanf(cp, "0x%x", &mask);
-	  sprintf(cp,"0x%X\n", mask | 0x0C0);
-	  savesize = 0;
-	 }
-
-       fputs(mybuf,stdout);
+        savesize = 1;
       }
+
+    if (savesize && strcmpn(mybuf, "	.set	L", 7) == 0)
+    {
+      for (cp = mybuf; *cp++ != ',';)
+        ;
+      sscanf(cp, "0x%x", &mask);
+      sprintf(cp, "0x%X\n", mask | 0x0C0);
+      savesize = 0;
+    }
+
+    fputs(mybuf, stdout);
+  }
 }

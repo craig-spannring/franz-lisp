@@ -3,7 +3,7 @@
  * lisp to C interface
  *
  * (c) copyright 1982, Regents of the University of California
- * 
+ *
  * This is written in assembler but must be passed through the C preprocessor
  * before being assembled.
  */
@@ -18,51 +18,36 @@
 #define Arrayaccfun 0
 
 #ifdef PROF
-	.set	indx,0
-#define Profile \
-	movab	prbuf+indx,r0 \
-	.set 	indx,indx+4 \
-	jsb 	mcount
-#define Profile2 \
-	movl   r0,r5 \
-	Profile	\
-	movl   r5,r0 
+.set indx,
+    0
+#define Profile movab prbuf + indx, r0.set indx, indx + 4 jsb mcount
+#define Profile2 movl r0, r5 Profile movl r5, r0
 #else
 #define Profile
 #define Profile2
 #endif
 
 #ifdef PORTABLE
-#define NIL	_nilatom
-#define NP	_np
-#define LBOT	_lbot
+#define NIL _nilatom
+#define NP _np
+#define LBOT _lbot
 #else
-#define NIL	0
-#define NP	r6
-#define LBOT	r7
+#define NIL 0
+#define NP r6
+#define LBOT r7
 #endif
 
+        /*   transfer  table linkage routine  */
 
-/*   transfer  table linkage routine  */
-
-	.globl	_qlinker
-_qlinker:
-	.word 	0x1fc0			# save all possible registers
-	Profile
-	tstl	_exception	        # any pending exceptions
-	jeql	noexc
-	tstl	_sigintcnt		# is it because of SIGINT
-	jeql	noexc			# if not, just leave
-	pushl	$2			# else push SIGINT
-	callf	$8,_sigcall
-noexc:
-	movl	r2, r0			# stick linktable entry in r0
-	movl	4(r2),r1		# get atom pointer
-retry:					# come here after undef func error
-	movl	Atomfnbnd(r1),r2	# get function binding
-	jleq	nonex			# if none, leave
-	tstl	_stattab+2*4		# see if linking possible (Strans)
-	jeql	nolink			# no, it isn't
+        .globl _qlinker _qlinker :.word 0x1fc0 #save all possible registers Profile tstl _exception #any pending
+                                      exceptions jeql noexc tstl _sigintcnt #is it because of SIGINT jeql noexc #if not,
+    just leave pushl $2 #else push SIGINT callf $8,
+    _sigcall noexc : movl                            r2,
+                     r0 #stick linktable entry in r0 movl 4(r2),
+                     r1 #get atom pointer retry : #come here after undef func error movl Atomfnbnd(r1),
+                                                  r2 #get function binding jleq nonex #if none,
+                                                  leave tstl _stattab + 2 * 4 #see if linking possible(Strans)
+        jeql	nolink			# no, it isn't
 	shar	$9,r2,r3		# check type of function
 	cmpb	$BCD,_typetable+1[r3]	
 	jeql	linkin			# bcd, link it in!
@@ -342,11 +327,13 @@ _qpopnames:			# equivalent of C-code popnames, entered by jsb.
 	movl	(sp)+,r1	# Lower limit
 	movl	_bnp,r2		# pointer to bind stack entry
 qploop:
-	subl2	$8,r2		# for(; (--r2) > r1;) {
-	cmpl	r2,r1		# test for done
+	subl2	$8,r2		# for(; (--r2) > r1;)
+        {
+        cmpl	r2,r1		# test for done
 	jlss	qpdone		
 	movl	(r2),*4(r2)	# r2->atm->a.clb = r2 -> val;
-	brb	qploop		# }
+        brb qploop #
+        }
 qpdone:
 	movl	r1,_bnp		# restore bnp
 	jmp	(r0)		# return
@@ -578,7 +565,6 @@ return:
 #endif
 	ret
 
-	
 /* This must be at the end of the file.  If we are profiling, allocate
  * space for the profile buffer
  */

@@ -11,26 +11,27 @@
  */
 
 struct vl
-       {long high;
-	long low;
-       };
+{
+  long high;
+  long low;
+};
 
-long exarith(mul1,mul2,add,hi,lo)
-long *hi, *lo;
+long          exarith(mul1, mul2, add, hi, lo)
+long         *hi, *lo;
 register long add;
 {
-	register long rlo;
-	struct vl work;
+  register long rlo;
+  struct vl     work;
 
-            asm("	emul	4(fp),8(fp),r12,-60(fp)");
+  asm("	emul	4(fp),8(fp),r12,-60(fp)");
 
-	    add = work.high;
-	    add <<= 2;
-	    if((rlo = work.low) < 0) add += 2;
-	    if(rlo & 0x40000000) add += 1;
-	    *lo = rlo &0x3fffffff;
-	    (*hi = add);
-	    if((add==0) || (add!=-1)) return(add);
-	    *lo = rlo;
-	    return(0);
+  add = work.high;
+  add <<= 2;
+  if ((rlo = work.low) < 0) add += 2;
+  if (rlo & 0x40000000) add += 1;
+  *lo = rlo & 0x3fffffff;
+  (*hi = add);
+  if ((add == 0) || (add != -1)) return (add);
+  *lo = rlo;
+  return (0);
 }

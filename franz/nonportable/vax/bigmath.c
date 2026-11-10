@@ -2,7 +2,7 @@
 
 #include "config.h"
 
-	.globl	_dmlad
+        .globl	_dmlad
 /*
 	routine for destructive multiplication and addition to a bignum by
 	two fixnums.
@@ -84,7 +84,7 @@ loop3:	mnegl	(r1),r0		#negate and take carry into account.
 	extzv	$0,$30,r0,(r1)
 	extv	$30,$2,r0,r2
 	acbl	8(ap),$-4,r1,loop3
-				#decrease r1, and branch back if appropriate.
+#decrease r1, and branch back if appropriate.
 	ret
 
 /*
@@ -106,8 +106,8 @@ _adbig:	.word	0x0fc0		#save registers 6-11
 	clrl	r5		#r5   = carry
 	movl	$0xC0000000,r4	#r4   = clear constant.
 	movl	sp,r10		#save start address of bignum on stack.
-				#note well that this is 4 above the actual
-				#low order word.
+#note well that this is 4 above the actual
+#low order                      word.
 /*
 	first loop is to waltz through both bignums adding
 	bigits, pushing them onto stack. 
@@ -116,7 +116,7 @@ loop4:	addl3	(r1),(r2),r0	#add bigits
 	addl2	r5,r0		#add carry
 	bicl3	r4,r0,-(sp)	#save sum, no overflow possible
 	extv	$30,$2,r0,r5	#sign extend two high order bits
-				#to be next carry.
+#to be next carry.
 	movl	4(r1),r1	#get cdr
 	bleq	out1		#negative indicates end of list.
 	movl	4(r2),r2	#get cdr of second bignum
@@ -128,7 +128,7 @@ loop4:	addl3	(r1),(r2),r0	#add bigits
 loop5:	addl3	(r1),r5,r0	#add bigits and carry
 	bicl3	r4,r0,-(sp)	#save sum, no overflow possible
 	extv	$30,$2,r0,r5	#sign extend two high order bits
-				#to be next carry.
+#to be next carry.
 	movl	4(r1),r1	#get cdr
 out2:	bgtr	loop5		#negative indicates end of list.
 out2a:	pushl	r5
@@ -162,7 +162,7 @@ negchk:
 */
 out1:	movl	4(r2),r1	#get next addr of list to continue.
 	brb	out2		#if second list simult. exhausted, do
-				#right thing.
+#right thing.
 /*
 	loop6 is a faster version of loop5 when carries are no
 	longer necessary.
@@ -188,9 +188,9 @@ backfr:
 	addl2	$4,_np
 #else
 	movl	r0,(r6)+	#push address of cell on
-				#arg stack to save from garbage collection.
-				#There is guaranteed to be slop for a least 1
-				#push without checking.
+#arg stack to save from garbage       collection.
+#There is guaranteed to be slop for a least 1
+#push without                         checking.
 #endif
 loop7:	movl	-(r10),(r0)	#save bigit
 	movl	r0,r9		#r9 = old cell, to link
@@ -252,11 +252,14 @@ m4:	addl2	-(r5),r2	#add w[i + j] to carry (no ofl poss)
 	extzv	$0,$30,r0,(r5)	#get new bigit
 	extv	$30,$32,r0,r2	#get new carry
 
-m5:	acbl	r10,$-4,r3,m4	#r3 =- 4; if(r3 >= r10) goto m4; r10 = &[u1];
-	movl	r2,-(r5)	#save w[j] = carry
+m5:	acbl	r10,$-4,r3,m4	#r3 =- 4;
+        if (r3 >= r10) goto m4;
+        r10 = &[u1];
+        movl	r2,-(r5)	#save w[j] = carry
 
 m6:	subl2	$4,r7		#add just &w[j+n] (+4 for autodec)
-	acbl	r9,$-4,r4,m3	#r4 =- 4; if(r4>=r9) goto m5; r9 = &v[1]
+	acbl	r9,$-4,r4,m3	#r4 =- 4;
+        if (r4 >= r9) goto m5; r9 = &v[1]
 
 	movl	r9,r10		#set up for output routine
 	movl	$0xC0000000,r4	#r4   = clear constant.
@@ -274,31 +277,31 @@ _calqhat:
 	movl	4(ap),r11		# &u[j] into r11
 	movl	8(ap),r10		# &v[1] into r10
 	cmpl	(r10),(r11)		# v[1] == u[j] ??
-	beql	L102			
-	# calculate qhat and rhat simultaneously,
-	#  qhat in r0
-	#  rhat in r1
+	beql	L102
+#calculate qhat and rhat simultaneously,
+#qhat in r0
+#rhat in r1
 	emul	(r11),$0x40000000,4(r11),r4 # u[j]b+u[j+1] into r4,r5
 	ediv	(r10),r4,r0,r1		# qhat = ((u[j]b+u[j+1])/v[1]) into r0
-					# (u[j]b+u[j+1] -qhat*v[1]) into r1
-					# called rhat
+#(u[j] b + u[j + 1] - qhat * v[1]) into r1
+#called rhat
 L101:
-	# check if v[2]*qhat > rhat*b+u[j+2]
+#check if v[2] * qhat> rhat *b + u[j + 2]
 	emul	r0,4(r10),$0,r2		# qhat*v[2] into r3,r2
 	emul	r1,$0x40000000,8(r11),r8 #rhat*b + u[j+2] into r9,r8
-	# give up if r3,r2 <= r9,r8, otherwise iterate
+#give up if r3, r2 <= r9, r8, otherwise iterate
 	subl2	r8,r2			# perform r3,r2 - r9,r8
 	sbwc	r9,r3
 	bleq	L103			# give up if negative or equal
 	decl	r0			# otherwise, qhat = qhat - 1
 	addl2	(r10),r1		# since dec'ed qhat, inc rhat by v[1]
 	jbr	L101
-L102:	
-	# get here if v[1]==u[j]
-	# set qhat to b-1
-	# rhat is easily calculated since if we substitute b-1 for qhat in
-	# the formula, then it simplifies to (u[j+1] + v[1])
-	# 
+L102:
+#get here if v[1] == u[j]
+#set qhat to                                      b - 1
+#rhat is easily calculated since if we substitute b - 1 for qhat in
+#the formula, then it simplifies to(u[j + 1] + v[1])
+# 
 	addl3	4(r11),(r10),r1		# rhat = u[j+1] + v[1]
 	movl	$0x3fffffff,r0		# qhat = b-1
 	jbr	L101
@@ -416,7 +419,7 @@ L301:
 	extzv	$7,$8,r0,r2	# r2 := biased exponent
 	movab	-129(r2),*12(ap)# subtract bias, store exp
 	insv	$154,$7,$8,r0	# lie about exponent to get out
-				# high 24 bits easily with emodd.
+#high 24 bits easily with emodd.
 /*
 	This instruction does the following:
 
@@ -425,35 +428,33 @@ L301:
 		in hi, and the fractional part of the result in r0-r1.
 */
 	emodd	r0,$0,$0f1.0,*16(ap),r0	# How did you like
-					# THAT, sports fans? [jfr's comment]
+#THAT, sports fans ? [jfr's comment]
 
 	tstd	r0		# if zero, exit;
-	bneq	L401
-	ret
-L401:
-	insv	$158,$7,$8,r0	# lie about exponent to get out
-				# next 30 bits easily with emodd.
-				# (2^29 takes 30 bits).
-	emodd	r0,$0,$0f1.0,*20(ap),r0	# Get last bits out likewise!
-	ret				# (r0 should be zero by now!)
-	.globl	_inewint
-_inewint:.word	0
-	movl	4(ap),r0
-	cmpl	r0,$1024
-	jgeq	Ialloc
-	cmpl	r0,$-1024
-	jlss	Ialloc
-	moval	_Fixzero[r0],r0
-	ret
-Ialloc:
-	calls	$0,_newint
-	movl	4(ap),0(r0)
-	ret
-	.globl	_blzero
-_blzero:				# blzero(where,howmuch)
-					# char *where;
-					# zeroes a block of length howmuch
-					# beginning at where.
-	.word	0
-	movc5	$0,*4(ap),$0,8(ap),*4(ap)
-	ret
+        bneq L401 ret L401
+            : insv    $158,
+              $7,
+              $8,
+              r0 #lie about exponent to get out
+#next 30 bits easily with emodd.
+#(2 ^ 29 takes 30 bits).
+                  emodd r0,
+              $0,
+              $0f1.0,
+              *20(ap),
+              r0 #Get last bits out likewise !ret #(r0 should be zero by now !).globl _inewint _inewint :.word 0 movl 4(ap),
+              r0 cmpl r0,
+              $1024 jgeq Ialloc cmpl r0,
+              $ - 1024 jlss Ialloc moval _Fixzero[r0],
+              r0 ret Ialloc : calls $0,
+                              _newint movl 4(ap),
+                              0(r0)ret
+                                  .globl _blzero _blzero : #blzero(where, howmuch)
+#char             *where;
+#zeroes a block of length howmuch
+#beginning at      where.
+                                  .word 0 movc5 $0,
+                              *4(ap),
+                              $0,
+                              8(ap),
+                              *4(ap)ret

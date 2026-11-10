@@ -8,9 +8,9 @@
 #include "global.h"
 
 myfrexp()
-{error("myfrexp called", FALSE);
+{
+  error("myfrexp called", FALSE);
 }
-
 
 /*
 ** Comment from bigmath.c:

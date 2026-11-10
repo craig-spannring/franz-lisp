@@ -15,7 +15,7 @@
 
 #include "ltypes.h"
 #include "config.h"
- 
+
 /* important offsets within data types for atoms */
 #define Atomfnbnd 8
 
@@ -23,66 +23,49 @@
 #define Arrayaccfun 0
 
 /* register defines */
-#define FIXREG	d2
+#define FIXREG d2
 
 #ifdef NPINREG
 #define _np a2
 #define _lbot d3
 #endif
 
-
 #ifdef PROF
-	.set	indx,0
-#define Profile \
-	lea	prbuf+indx,a0 \
-	.set 	indx,indx+4 \
-	jsr 	mcount 
-#define Profile2 \
-	movl	a0,sp@-
-	lea	prbuf+indx,a0 \
-	.set 	indx,indx+4 \
-	jsr 	mcount 
-	movl	sp@+,a0
+.set indx,
+    0
+#define Profile lea prbuf + indx, a0.set indx, indx + 4 jsr mcount
+#define Profile2 movl a0, sp @-
+        lea prbuf
+        + indx,
+    a0.set indx, indx + 4 jsr mcount movl sp @+,
+    a0
 #else
 #define Profile
 #define Profile2
 #endif
 
 #ifdef PORTABLE
-#define	NILtest(p)	cmpl	#/**/OFFSET,p
-#define	NILsub(p)	subl	#/**/OFFSET,p
+#define NILtest(p) cmpl #/**/ OFFSET, p
+#define NILsub(p) subl #/**/ OFFSET, p
 #else
 #define NILtest(p)
 #define NILsub(p)
 #endif
 
+        .text
 
-	.text
-	
-/*   transfer  table linkage routine  */
-	.globl	_qlinker
-_qlinker:
-	Profile
-	link	a6,#-28
-	tstb	sp@(-132)
-	moveml	#036000,a6@(-28)		|a(2,3,4,5)
+        /*   transfer  table linkage routine  */
+        .globl _qlinker _qlinker : Profile link a6,
+    # - 28 tstb                                 sp @(-132) moveml #036000,
+    a6 @(-28)
+        | a(2, 3, 4, 5)
 
-	tstl	_exception	        	|any pending exceptions
-	jeq	noexc
-	tstl	_sigintcnt			|is it because of SIGINT
-	jeq	noexc				|if not, just leave
-	movl	#2,sp@-				|else push SIGINT
-	jsr	_sigcall
-noexc:
-	movl	a6@(4),a4			|get return pc
-	movl	a4@(-6),a4			|get pointer to table
-	movl	a4@(4),a5			|get atom pointer
-retry:						|come here after undeffunc err
-	movl	a5@(8),a0			|get function binding
-	cmpl	a0,d7				|if nil,
-	jeq	nonex				|then leave
-	tstl	2*4+_stattab			|see if linkin posble (Strans)
-	jeq	nolink				|no, it isn't
+            tstl _exception
+        | any pending exceptions jeq noexc tstl _sigintcnt | is it because of SIGINT jeq noexc | if not,
+    just leave movl #2, sp @-| else push SIGINT jsr _sigcall noexc : movl a6 @(4), a4 | get return pc movl a4 @(-6),
+    a4 | get pointer to table movl a4 @(4), a5 | get atom pointer retry : | come here after undeffunc err movl a5 @(8),
+    a0 | get function binding cmpl a0, d7 | if nil, jeq nonex | then leave tstl 2 * 4 + _stattab | see if linkin posble(Strans)
+jeq	nolink				|no, it isn't
 	movl	a0,d0				|check type of function
 	NILsub(d0)
 	moveq	#9,d1
@@ -197,112 +180,75 @@ _qnewint:
 alloc:
 	movl	_int_str,a0			|move next cell addr to r0
 	NILtest(a0)
-	jmi	callnewi			|if no space, allocate
-	movl	4*24+_lispsys,a1
-	addql	#1,a1@				|inc count of ints
-	movl	a0@,_int_str			|advance free list
-	movl	FIXREG,a0@			|put baby to bed.
-	movl	a0,d0
-	rts
-callnewi:
-	movl	FIXREG,sp@-
-	movl	a2,_np				|gc could occur
-	movl	a2,_lbot
-	jsr	_newint
-	movl	d0,a0
-	movl	sp@+,a0@
-	rts
+jmi callnewi | if no space, allocate movl 4 * 24 + _lispsys, a1 addql #1, a1 @ | inc count of ints movl a0 @,
+    _int_str | advance free list movl FIXREG, a0 @ | put baby to bed.movl a0,
+    d0 rts callnewi : movl                      FIXREG,
+                      sp @-movl                 a2,
+                      _np | gc could occur movl a2,
+                      _lbot jsr _newint movl    d0,
+                      a0 movl                   sp @+,
+                      a0 @rts
 
-/*  _qoneplus adds one to the boxed fixnum in r0
- * and returns a boxed fixnum.
- */
+                          /*  _qoneplus adds one to the boxed fixnum in r0
+                           * and returns a boxed fixnum.
+                           */
 
-	.globl	_qoneplus
-_qoneplus:
-	Profile
-	movl	a0@,FIXREG
-	addql	#1,FIXREG
-	bra	_qnewint
+                          .globl _qoneplus _qoneplus : Profile movl a0 @,
+                      FIXREG                                        addql #1,
+                      FIXREG bra                                    _qnewint
 
-/* _qoneminus  subtracts one from the boxes fixnum in r0 and returns a
- * boxed fixnum
- */
-	.globl	_qoneminus
-_qoneminus:
-	Profile
-	movl	a0@,FIXREG
-	subql	#1,FIXREG
-	bra	_qnewint
+                          /* _qoneminus  subtracts one from the boxes fixnum in r0 and returns a
+                           * boxed fixnum
+                           */
+                          .globl _qoneminus _qoneminus : Profile movl a0 @,
+                      FIXREG                                          subql #1,
+                      FIXREG bra                                      _qnewint
 
-/*
- *	_qnewdoub quick allocation of a initialized double (float) cell.
- *	This entry point is required by the compiler for symmetry reasons.
- *	Passed to _qnewdoub in d0,d1 is a double precision floating point
- *	number.  This routine allocates a new cell, initializes it with
- *	the given value and then returns the cell.
- */
+                          /*
+                           *	_qnewdoub quick allocation of a initialized double (float) cell.
+                           *	This entry point is required by the compiler for symmetry reasons.
+                           *	Passed to _qnewdoub in d0,d1 is a double precision floating point
+                           *	number.  This routine allocates a new cell, initializes it with
+                           *	the given value and then returns the cell.
+                           */
 
-	.globl	_qnewdoub
-    
-_qnewdoub:
-	Profile
-	movl	_doub_str,a0			|move next cell addr to r0
-	NILtest(a0)
-	jmi	callnewd			|if no space, allocate
-	|incl	*_lispsys+30*4			|inc count of doubs
-	lea	30*4+_lispsys,a1
-	addl	#1,a1@
-	movl	a0@,_doub_str			|advance free list
-strdb:
-	movl	d0,a0@				|put baby to bed.
-	movl	d1,a0@(4)			|put baby to bed.
-	rts
+                          .globl _qnewdoub
 
-callnewd:
-	movl	d0,sp@-				|stack initial value
-	movl	d1,sp@-				|stack initial value
-	movl	a2,_np				|gc could occur
-	movl	a2,_lbot
-	jsr	_newdoub
-	movl	d0,a0
-	movl	sp@+,d1				|restore initial value
-	movl	sp@+,d0				|restore initial value
-	bra	strdb
+                              _qnewdoub : Profile movl _doub_str,
+                      a0 | move next cell addr to r0   NILtest(a0)
+jmi callnewd | if no space, allocate | incl *_lispsys + 30 * 4 | inc count of doubs lea 30 * 4 + _lispsys, a1 addl #1,
+    a1 @movl a0 @, _doub_str | advance free list strdb : movl d0, a0 @ | put baby to bed.movl d1,
+    a0 @(4)
+        | put baby to bed.rts
 
+          callnewd : movl d0,
+    sp @-| stack initial value movl d1, sp @-| stack initial value movl a2, _np | gc could occur movl a2,
+    _lbot jsr _newdoub movl d0, a0 movl sp @+, d1 | restore initial value movl sp @+,
+    d0
+        | restore initial value bra strdb
 
+              /*
+               * quick cons call, the car and cdr are stacked on the namestack
+               * and this function is jsb'ed to.
+               */
+              .globl _qcons _qcons : Profile movl _dtpr_str,
+    a0 | move next cell addr to a0 NILtest(a0)
+jmi getnew | if ran out of space jump movl 28 * 4 + _lispsys, a1 | inc count of dtprs addql #1, a1 @movl a0 @,
+    _dtpr_str | advance free list storit : movl a2 @-, a0 @ | store in cdr movl a2 @-, a0 @(4) | store in car movl a0,
+    d0 rts
 
-/*
- * quick cons call, the car and cdr are stacked on the namestack
- * and this function is jsb'ed to.
- */
-	.globl	_qcons
-_qcons:
-	Profile
-	movl	_dtpr_str,a0			|move next cell addr to a0
-	NILtest(a0)
-	jmi	getnew				|if ran out of space jump
-	movl	28*4+_lispsys,a1		|inc count of dtprs
-	addql	#1,a1@
-	movl	a0@,_dtpr_str			|advance free list
-storit:	movl	a2@-,a0@			|store in cdr
-	movl	a2@-,a0@(4)			|store in car
-	movl	a0,d0
-	rts
+    getnew : movl a2,
+             _np jsr _newdot | must gc to get one jra storit
+                 | now initialize it
+                       .
 
-getnew:	movl	a2,_np
-	jsr	_newdot				|must gc to get one
-	jra	storit				|now initialize it.
+                       /*
+                        * Fast equivalent of newdot, entered by jsb
+                        */
 
-/*
- * Fast equivalent of newdot, entered by jsb
- */
-
-	.globl	_qnewdot
-_qnewdot:
-	Profile
-	movl	_dtpr_str,a0			|mov next cell addr t0 r0
-	NILtest(a0)
-	jmi	mustallo			|if ran out of space
+                       .globl _qnewdot _qnewdot : Profile movl _dtpr_str,
+             a0 | mov next cell addr t0 r0 NILtest(a0)
+jmi	mustallo			|if ran out of space
 
 	movl	a0,sp@-
 	movl	28*4+_lispsys,a0		|inc count of dtprs

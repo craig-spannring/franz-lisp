@@ -1,4 +1,4 @@
 /* ./eval.c */
-extern int dumpnamestack(void);
+extern int            dumpnamestack(void);
 extern struct argent *workp;
-extern int fchack(void);
+extern int            fchack(void);
