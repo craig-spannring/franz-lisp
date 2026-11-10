@@ -1,4 +1,8 @@
 /* ./stubs.c */
+#ifndef STUBS_1448669f13c97bec18c1b2081484e1ea_h
+#define STUBS_1448669f13c97bec18c1b2081484e1ea_h
+
+
 extern char holbeg[];
 extern char holend[];
 extern char _sobuf[];
@@ -26,3 +30,5 @@ extern int  qoneminus(void);
 extern int  qpushframe(void);
 extern void qretfromfr(void);
 extern long adback(long *utop, long *ubot, long *vtop);
+
+#endif
