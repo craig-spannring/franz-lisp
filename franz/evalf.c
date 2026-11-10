@@ -114,8 +114,8 @@ Levalf ()
     return(result);
 }
 
-struct frame *searchforpdl (myfp)
-struct frame *myfp;
+struct frame *
+searchforpdl (struct frame *myfp)
 {
     /*
      * for safety sake, we verify that this is a real pdl pointer by
@@ -135,8 +135,8 @@ struct frame *myfp;
  * vfypdlp :: verify pdl pointer as existing,  do not return unless
  * it is valid
  */
-vfypdlp(curfp)
-struct frame *curfp;
+int 
+vfypdlp (struct frame *curfp)
 {
     struct frame *myfp;
 

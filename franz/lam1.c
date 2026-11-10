@@ -925,7 +925,8 @@ Lpntlen()
 {
 	return(inewint((long)Ipntlen()));
 }
-Ipntlen()
+int 
+Ipntlen (void)
 {
 	lispval temp;
 	char *handy;

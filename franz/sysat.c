@@ -36,7 +36,8 @@ extern int ttsize;	/* need to know how much of pagetable to set to other */
 extern lispval Iaddstat(), Isstatus();
 lispval inewatom();
 
-makevals()
+int 
+makevals (void)
 	{
 	int i;
 	lispval temp;
@@ -790,4 +791,5 @@ static struct ftab cfuns[] = {
   {"gcafter", Ngcafter, &(nlambda)},	/* garbage collection wind-up */
   {0}
 };
-static dofuns(){mftab(cfuns);}
+static 
+dofuns (void){mftab(cfuns);}

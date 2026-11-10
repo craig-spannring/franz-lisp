@@ -248,7 +248,8 @@ out:
 	Restorestack();
 	return(work);
 }
-macrox()
+int 
+macrox (void)
 {
     	FILE *svport;
 	lispval handy, Lapply();
@@ -331,7 +332,8 @@ FILE	*useport;
 #define push(); *name++ = c; if(name>=endstrb) name = atomtoolong(name);
 #define next() (((cc=getc(useport))!=EOF)?(stats = ctable[c = cc &0177]):\
 					((c=0),(saweof = 1),(stats = SEPMASK)))
-Iratom()
+int 
+Iratom (void)
 {
 	FILE	*useport = rdrport;
 	char	c, marker, *name;
@@ -677,8 +679,7 @@ char *name;
 }
 
 char *
-atomtoolong(copyto)
-char *copyto;
+atomtoolong (char *copyto)
 {
     int size;
     char *oldp = strbuf;
@@ -989,9 +990,11 @@ FILE *port;
 
 
 
-lfltpr(buf,val)		/* lisp floating point printer */
-char *buf;
-double val;
+int 
+lfltpr (		/* lisp floating point printer */
+    char *buf,
+    double val
+)
 {
 	char *cp1;
 

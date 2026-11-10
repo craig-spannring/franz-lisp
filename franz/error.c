@@ -344,8 +344,8 @@ int uniqid;
 
 /* lispend **************************************************************/
 /* Fatal errors come here, with their epitaph.				*/
-lispend(mesg)
-	char	mesg[];
+int 
+lispend (char mesg[])
 	{
 	dmpport(poport);
 	fprintf(errport,"%s\n",mesg);
@@ -357,7 +357,8 @@ lispend(mesg)
 /* namerr ***************************************************************/
 /* handles namestack overflow, at present by simply giving a message	*/
 
-namerr()
+int 
+namerr (void)
 {
 	if((nplim = np + NAMINC) > orgnp + NAMESIZE) 
 	{  
@@ -372,24 +373,28 @@ namerr()
 	/* NOT REACHED */
 }
 
-binderr()
+int 
+binderr (void)
 {
 	bnp -= 10;
 	error("Bindstack overflow.",FALSE);
 	/* NOT REACHED */
 }
 
-rtaberr()
+int 
+rtaberr (void)
 {
 	bindfix(Vreadtable,strtab,nil);
 	error("Illegal read table.",FALSE);
 	/* NOT REACHED */
 }
-xserr()
+int 
+xserr (void)
 {
 	error("Ran out of alternate stack",FALSE);
 }
-badmem(n)
+int 
+badmem (int n)
 {
 	char errbuf[256];
 
@@ -397,8 +402,8 @@ badmem(n)
 	error(errbuf,FALSE);
 	/* NOT REACHED */
 }
-argerr(msg)
-char *msg;
+int 
+argerr (char *msg)
 {
 	errorh1(Vermisc,"incorrect number of args to",
 				  nil,FALSE,0,matom(msg));

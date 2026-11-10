@@ -532,8 +532,8 @@ Ibalmod(invmodp)
 	/* NOTREACHED */
 }
 
-invmod (n,modulus)
-long n , modulus;
+int 
+invmod (long n, long modulus)
 
 { 
 	long a1,a2,a3,y1,y2,y3,q;
@@ -606,7 +606,8 @@ Llsh()
 
 /* very temporary function to test the validity of the bind stack */
 
-bndchk()
+int 
+bndchk (void)
 {  
 	struct nament *npt;
 	lispval in2;

@@ -119,8 +119,7 @@ char *flag;
 
 #ifdef SPISFP
 char *
-alloca(howmuch)
-int howmuch;
+alloca (int howmuch)
 {
 	howmuch += 3 ;
 	howmuch >>= 2;

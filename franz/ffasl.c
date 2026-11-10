@@ -237,7 +237,7 @@ Lcfasl(){
 #define oktox(n) \
 	(0==stat(n,&stbuf)&&(stbuf.st_mode&S_IFMT)==S_IFREG&&0==access(n,M))
 char *
-gstab()
+gstab (void)
 {
 	char *cp, *cp2; char *getenv();
 	struct stat stbuf;
@@ -309,7 +309,7 @@ gstab()
 }
 static char mybuff[40]; 
 char *
-mytemp()
+mytemp (void)
 {
 	/*if(mypid==0) mypid = (getpid() & 0xffff);
 	  fails if you do a dumplisp after doing a
@@ -317,7 +317,8 @@ mytemp()
 	sprintf(mybuff,"/tmp/Li%d.%d",(getpid() & 0xffff),seed++);
 	return(mybuff);
 }
-ungstab()
+int 
+ungstab (void)
 {
 	seed--;
 	sprintf(mybuff,"/tmp/Li%d.%d",(getpid() & 0xffff),seed-1);
@@ -586,7 +587,7 @@ alldone:
 	{Freexs(); return(tatom);}
 }
 char *
-Ilibdir()
+Ilibdir (void)
 {
 	lispval handy;
 tryagain:

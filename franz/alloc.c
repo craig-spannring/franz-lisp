@@ -158,8 +158,8 @@ struct types *gcableptr[] = {
  *  If no space is available, returns positive number.
  *  If purep is TRUE, then pure space is allocated.
  */
-get_more_space(type_struct,purep)                                 
-struct types *type_struct;
+int 
+get_more_space (struct types *type_struct, int purep)
 {
 	int cntr;
 	char *start;
@@ -273,7 +273,8 @@ struct types *type_struct;
  * Warn about exhaustion of space,
  * shared with next_pure_free().
  */
-space_warn(g)
+int 
+space_warn (int g)
 {
 	if( g==1 ) {
 	    plimit->i += NUMSPACES; /*  allow a few more pages  */
@@ -369,7 +370,7 @@ pnewsdot()
 }
 
 struct atom *
-newatom(pure) {
+newatom (int pure) {
 	struct atom *save; char *mypname;
 
 	mypname = newstr(pure);
@@ -383,7 +384,7 @@ newatom(pure) {
 }
 
 char *
-newstr(purep) {
+newstr (int purep) {
 	char *save, *strcpy();
 	int atmlen;
 	struct str_x *p = str_current + purep;
@@ -408,7 +409,8 @@ newstr(purep) {
 	return(save);
 }
 
-static char * Iinewstr(s,purep) char *s;
+static char *
+Iinewstr (char *s, int purep)
 {
 	int len = strlen(s);
 	while(len > (endstrb - strbuf - 1)) atomtoolong(strbuf);
@@ -417,12 +419,14 @@ static char * Iinewstr(s,purep) char *s;
 }
 
 
-char *inewstr(s) char *s;
+char *
+inewstr (char *s)
 {
 	Iinewstr(s,0);
 }
 
-char *pinewstr(s) char *s;
+char *
+pinewstr (char *s)
 {
 	Iinewstr(s,1);
 }
@@ -768,7 +772,8 @@ gc(type_struct)
 /*									*/
 /*  Mark-and-sweep phase						*/
 
-gc1()
+int 
+gc1 (void)
 {
 	int j, k;
 	int *start,bvalue,type_len; 
@@ -1238,7 +1243,7 @@ chek:	for(ii=0; ii<NUMSPACES; ++ii)
 	
 	}
 char *
-gethspace(segsiz,type)
+gethspace (int segsiz, int type)
 {
 	extern usehole; extern char holend[]; extern char *curhbeg;
 	char *value;
@@ -1260,7 +1265,8 @@ gethspace(segsiz,type)
 	datalim = (lispval)(value + segsiz);
 	return(value);
 }
-gcrebear()
+int 
+gcrebear (void)
 {
 #ifdef HOLE
         int i; struct types *p;
@@ -1455,7 +1461,7 @@ ptr_loop:
  */
 
 char *
-xsbrk(n)
+xsbrk (int n)
 	{
 	static char *xx;	/*  pointer to next available blank page  */
 	extern int xcycle;	/*  number of blank pages available  */
@@ -1481,7 +1487,8 @@ xsbrk(n)
 	return(xx);
 	}
 
-char *ysbrk(pages,type) int pages, type;
+char *
+ysbrk (int pages, int type)
 	{
 	char *xx;	/*  will point to block of storage  */
 	int i;
@@ -1595,8 +1602,8 @@ char *name;
 
 /* our hash function */
 
-hashfcn(symb)
-char *symb;
+int 
+hashfcn (char *symb)
 {
 	int i;
 /*	for (i=0 ; *symb ; i += i + *symb++); return(i & (HASHTOP-1)); */
@@ -1627,4 +1634,5 @@ LImemory()
 }
 
 extern struct atom *hasht[HASHTOP];
-myhook(){}
+int 
+myhook (void){}

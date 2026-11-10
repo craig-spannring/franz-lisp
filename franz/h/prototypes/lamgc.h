@@ -1,0 +1,9 @@
+/* ./lamgc.c */
+extern int gcstat;
+extern int mrkdpcnt;
+extern int gccount;
+extern int conssame;
+extern int consdiff;
+extern int consnil;
+extern char *bitmapc;
+extern int gcdump(void);

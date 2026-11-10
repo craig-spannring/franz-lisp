@@ -38,8 +38,8 @@ lispval fun,args;
 }
 
     
-dumpmydata(thing)
-int thing;
+int 
+dumpmydata (int thing)
 {
 	int *ip = &thing;
 	int *lim = ip + nargs();
@@ -204,9 +204,8 @@ lispval a;
 	return(ltemp);
 }
 
-xbcopy(to,from,size)
-char *to, *from;
-int size;
+int 
+xbcopy (char *to, char *from, int size)
 {
 	while(--size >= 0) *to++ = *from++;
 }
@@ -406,8 +405,8 @@ lispval clos;
  * when we know there will be closure markers or when we can't
  * be sure that there won't be closure markers (eg. in non-local go's)
  */
-xpopnames(llimit)
-struct nament *llimit;
+int 
+xpopnames (struct nament *llimit)
 {
     struct nament *rnp, *lbnp;
     lispval atm_dtpr, value_dtpr;

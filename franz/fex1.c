@@ -261,7 +261,8 @@ Nbreak()
 
 /* Nexit ****************************************************************/
 /* Just calls lispend with no message.					*/
-Nexit()
+int 
+Nexit (void)
 	{
 	lispend("");
 	}

@@ -506,9 +506,8 @@ Lsetsyn()
  * puts that character in Xesc or Xdqc (whichever is pointed to by
  * addr).
  */
-rpltab(cclass,addr)
-char cclass;
-unsigned char *addr;
+int 
+rpltab (char cclass, unsigned char *addr)
 {
 	int i;
 	extern unsigned char *ctable;

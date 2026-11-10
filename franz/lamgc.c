@@ -90,7 +90,8 @@ extern int bitmapi[];		/* a bit of a lie it is really a double array*/
 char *bitmapc = (char *)bitmapi;
 /* called in the garbage collector after the bit maps have been made 
    only if gcstat is non zero */
-gcdump()
+int 
+gcdump (void)
 {
 #ifdef
 	extern struct vtimes premark,presweep,alldone;

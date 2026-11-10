@@ -98,10 +98,8 @@ Ltcx()
 }
 
 
-static
-show(option,line,colum)
-char *option;
-int  *line,*colum;
+static 
+show (char *option, int *line, int *colum)
 {
 int found;
 char clbuf[20];

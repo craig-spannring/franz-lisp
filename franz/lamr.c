@@ -367,7 +367,8 @@ Lvaluep()
 	if( TYPE(lbot->val) == VALUE ) return(tatom); else return(nil);
 	}
 
-CNTTYP() { return; /* HI! COUNT ONE TYPE CALL! */ }
+int 
+CNTTYP (void) { return; /* HI! COUNT ONE TYPE CALL! */ }
 
 lispval
 Lod()

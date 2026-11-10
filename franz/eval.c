@@ -333,7 +333,8 @@ struct nament *llimit;
  * from bottom to 5 above np
  * should be put elsewhere
  */
-dumpnamestack()
+int 
+dumpnamestack (void)
 {
     struct argent *newnp;
 
@@ -711,7 +712,8 @@ Lfuncal()
 
 /* The following must be the next "function" after Lfuncal, for the
 sake of Levalf.  */
-fchack () {}
+int 
+fchack (void) {}
 
 
 /*

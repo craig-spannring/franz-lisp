@@ -214,8 +214,8 @@ long *top, *bot;
 
 #define MAXINT 0x80000000L
 
-Ihau(fix)
-int fix;
+int 
+Ihau (int fix)
 {
 	int count;
 	if(fix==MAXINT)

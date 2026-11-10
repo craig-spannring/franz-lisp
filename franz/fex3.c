@@ -444,14 +444,20 @@ Ndumplisp()
 #include <vadvise.h>
 #endif
 
-pagerand() { vadvise(VA_ANOM); }
-pageseql() { vadvise(VA_SEQL); }
-pagenorm() { vadvise(VA_NORM); }
+int 
+pagerand (void) { vadvise(VA_ANOM); }
+int 
+pageseql (void) { vadvise(VA_SEQL); }
+int 
+pagenorm (void) { vadvise(VA_NORM); }
 #endif
 #if (os_unisoft | os_vms | os_unix_ts | os_masscomp)
-pagerand() { }
-pageseql() { }
-pagenorm() { }
+int 
+pagerand (void) { }
+int 
+pageseql (void) { }
+int 
+pagenorm (void) { }
 #endif
 
 /* getaddress --
@@ -517,7 +523,8 @@ Lgetaddress(){
 	return(lbot[1].val->a.fnbnd);
 };
 
-Igtpgsz()
+int 
+Igtpgsz (void)
 {
 #if (os_4_1c | os_4_2 | os_4_3)
 	return(getpagesize());
