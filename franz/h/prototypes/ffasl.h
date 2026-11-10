@@ -1,4 +1,8 @@
 /* ./ffasl.c */
+#ifndef FFASL_aeb7442694422b9710c186c92fc71e4c_h
+#define FFASL_aeb7442694422b9710c186c92fc71e4c_h
+
+
 extern char *stabf;
 /* static seed; */
 /* static mypid; */
@@ -11,3 +15,5 @@ extern int   ungstab(void);
 extern char *error;
 extern long  size;
 extern char *Ilibdir(void);
+
+#endif

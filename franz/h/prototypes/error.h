@@ -1,4 +1,8 @@
 /* ./error.c */
+#ifndef ERROR_65bd11e26e9cb1a40692379f80eee61c_h
+#define ERROR_65bd11e26e9cb1a40692379f80eee61c_h
+
+
 /* static int IElimit; */
 extern int   contvl;
 extern int   uniqid;
@@ -12,3 +16,5 @@ extern int   rtaberr(void);
 extern int   xserr(void);
 extern int   badmem(int n);
 extern int   argerr(char *msg);
+
+#endif

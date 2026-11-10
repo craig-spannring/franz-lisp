@@ -1,4 +1,8 @@
 /* ./alloc.c */
+#ifndef ALLOC_e03ca4903c3680ce69cd3d3422d2ddc8_h
+#define ALLOC_e03ca4903c3680ce69cd3d3422d2ddc8_h
+
+
 extern int     debugin;
 extern int     bitmapi[BITLONGS];
 extern double  zeroq;
@@ -23,3 +27,5 @@ extern char *xsbrk(int n);
 extern char *ysbrk(int pages, int type);
 extern int   hashfcn(char *symb);
 extern int   myhook(void);
+
+#endif

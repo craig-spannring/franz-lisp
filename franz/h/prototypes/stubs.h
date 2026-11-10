@@ -2,7 +2,6 @@
 #ifndef STUBS_1448669f13c97bec18c1b2081484e1ea_h
 #define STUBS_1448669f13c97bec18c1b2081484e1ea_h
 
-
 extern char holbeg[];
 extern char holend[];
 extern char _sobuf[];

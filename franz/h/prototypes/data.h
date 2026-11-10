@@ -1,4 +1,8 @@
 /* ./data.c */
+#ifndef DATA_9071de900b570f28dcd759af16b39b61_h
+#define DATA_9071de900b570f28dcd759af16b39b61_h
+
+
 extern int            lineleng;
 extern int            rlevel;
 extern char           keybin;
@@ -76,3 +80,5 @@ extern struct atom   *hasht[HASHTOP];
 extern char           typetable[TTSIZE + 1];
 extern char           lsbrkpnt;
 extern char           zfreespace;
+
+#endif
