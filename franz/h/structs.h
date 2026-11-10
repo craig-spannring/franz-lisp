@@ -9,7 +9,7 @@
 #ifndef STRUCTS_84f7ff55d41fab5d469ea0150321828b_h
 #define STRUCTS_84f7ff55d41fab5d469ea0150321828b_h
 
-
+#include "global.h"
 
 /*
  * this file contains auxiliary structure definitions which are used by
