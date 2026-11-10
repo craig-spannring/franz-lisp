@@ -59,7 +59,7 @@ int dumpmydata(int thing)
 lispval Ifcall(a)
 lispval a;
 {
-  char          *alloca();
+  char          *alloconstack();
   long           callg_();
   int           *arglist;
   int            index;
@@ -82,7 +82,7 @@ lispval a;
     case 'i':
     case 's':
     case 'r':
-      arglist  = (int *)alloca((nargs + 1) * sizeof(int));
+      arglist  = (int *)alloconstack((nargs + 1) * sizeof(int));
       *arglist = nargs;
       for (index = 1; index <= nargs; index++)
       {
@@ -136,7 +136,7 @@ lispval a;
               nargs += -1 + VecTotSize(ltemp->vl.vectorl[-2]);
             }
         }
-      arglist  = (int *)alloca((nargs + 1) * sizeof(int));
+      arglist  = (int *)alloconstack((nargs + 1) * sizeof(int));
       *arglist = nargs;
       ap       = arglist + 1;
       /* make another pass over the args

@@ -120,7 +120,7 @@ char *flag;
 }
 
 #ifdef SPISFP
-char *alloca(int howmuch)
+char *alloconstack(int howmuch)
 {
   howmuch += 3;
   howmuch >>= 2;

@@ -15,7 +15,7 @@ pbignum(current, useport) lispval current;
 FILE *useport;
 {
   long *top, *bot, *work, negflag = 0;
-  char *alloca();
+  char *alloconstack();
   int  *digitp;
   Keepxs();
 
@@ -35,7 +35,7 @@ FILE *useport;
   }
 
   /* save space for printed digits*/
-  work = (int *)alloca((top - bot) * 2 * sizeof(int));
+  work = (int *)alloconstack((top - bot) * 2 * sizeof(int));
   if (*bot < 0)
   {
     negflag = 1;

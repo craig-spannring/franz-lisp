@@ -17,7 +17,7 @@ static char *rcsid = "$Header: divbig.c,v 1.4 83/11/26 12:10:16 sklower Exp $";
 divbig(dividend, divisor, quotient, remainder) lispval dividend, divisor, *quotient, *remainder;
 {
   int    *ujp, *vip;
-  int    *alloca(), d, negflag = 0, m, n, carry, rem, qhat, j;
+  int    *alloconstack(), d, negflag = 0, m, n, carry, rem, qhat, j;
   int     borrow, negrem = 0;
   long   *utop = sp(), *ubot, *vbot, *qbot;
   lispval work;
@@ -71,7 +71,7 @@ divbig(dividend, divisor, quotient, remainder) lispval dividend, divisor, *quoti
     Freexs();
     return;
   }
-  qbot = alloca(toint(utop) + toint(vbot) - 2 * toint(ubot));
+  qbot = alloconstack(toint(utop) + toint(vbot) - 2 * toint(ubot));
 d1:
   d = b / (*vbot + 1);
   dsmult(utop - 1, ubot, d);

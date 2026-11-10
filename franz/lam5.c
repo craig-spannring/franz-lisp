@@ -31,7 +31,7 @@ int     kind, slashify; /* kind = 0 => explode to characters
                         */
 {
   int        typ, i;
-  char       ch, *strb, strbb[BUFSIZ], *alloca(); /* temporary string buffer */
+  char       ch, *strb, strbb[BUFSIZ], *alloconstack(); /* temporary string buffer */
   lispval    last, handy;
   extern int uctolc;
   char      *cp;
@@ -131,7 +131,7 @@ int     kind, slashify; /* kind = 0 => explode to characters
       int           count;
       for ((handy = lbot->val), count = 12; handy->s.CDR != (lispval)0; (handy = handy->s.CDR), count += 12)
         ;
-      strb = alloca(count);
+      strb = alloconstack(count);
 
       _strbuf._flag = _IOWRT + _IOSTRG;
       _strbuf._ptr  = strb;

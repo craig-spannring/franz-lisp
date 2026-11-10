@@ -379,7 +379,7 @@ lispval Lrmadd()
   char          *gstab();
   char           ostabf[128];
   char          *nstabf, *mytemp();
-  char          *strtbl, *alloca();
+  char          *strtbl, *alloconstack();
   int            i2, n, m, nargleft, savem;
   FILE          *f, *fa;
   FILE          *fnew;
@@ -463,7 +463,7 @@ lispval Lrmadd()
     fread((char *)&strsize, sizeof(int), 1, f);     /* find size of string table */
     fwrite((char *)&strsize, sizeof(int), 1, fnew); /* find size of string table */
     strsize -= 4;
-    strtbl = alloca(strsize);
+    strtbl = alloconstack(strsize);
     fread(strtbl, strsize, 1, f);     /* read and save string table*/
     fwrite(strtbl, strsize, 1, fnew); /* copy out string table     */
 #endif
@@ -529,7 +529,7 @@ lispval Lrmadd()
       fseek(f, (long)N_STROFF(buf), 0);
       fread((char *)&strsize, sizeof(int), 1, f);
       strsize -= 4;
-      strtbl = alloca(strsize);
+      strtbl = alloconstack(strsize);
       fread(strtbl, strsize, 1, f);
     }
 #endif

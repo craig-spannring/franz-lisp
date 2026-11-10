@@ -92,7 +92,7 @@ extern char          _erthrow[];
 
 extern int initflag; /* when TRUE, inhibits gc */
 
-char *alloca(); /* stack space allocator */
+char *alloconstack(); /* stack space allocator */
 
 /* mini symbol table, contains the only external symbols compiled code
    is allowed to reference
@@ -346,7 +346,7 @@ lispval Lfasl()
 
   lbot = np; /* set up base for later calls */
              /* allocate space for string table on the stack */
-  string_core_org = alloca(string_size - 4);
+  string_core_org = alloconstack(string_size - 4);
 
   if (read(fileno(filp), string_core_org, string_size - 4) != string_size - 4) error("fasl: string table read error ", FALSE);
   /* read in symbol table and set the ordinal values */
@@ -448,7 +448,7 @@ lispval Lfasl()
 
   /* read the binder table and literals onto the stack */
 
-  binder_core_org = alloca(lit_end - bind_org);
+  binder_core_org = alloconstack(lit_end - bind_org);
   read(fileno(filp), binder_core_org, lit_end - bind_org);
 
   literal_core_org = binder_core_org + lit_org - bind_org;

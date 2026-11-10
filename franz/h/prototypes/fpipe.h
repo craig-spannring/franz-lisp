@@ -1,3 +1,3 @@
 /* ./fpipe.c */
 extern char *flag;
-extern char *alloca(int howmuch);
+extern char *alloconstack(int howmuch);

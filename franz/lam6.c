@@ -22,7 +22,7 @@ lispval Lreadli()
   lispval work, handy;
   FILE   *p;
   char   *string;
-  char   *alloca();
+  char   *alloconstack();
   FILE   *fstopen();
   lispval Lread();
   int     count;
@@ -43,7 +43,7 @@ lispval Lreadli()
   /* compute length of list */
   for (work = lbot->val; TYPE(work) == DTPR; work = work->d.cdr)
     count++;
-  string = alloca(count);
+  string = alloconstack(count);
   p      = fstopen(string, count - 1, "r");
   for (work = lbot->val; TYPE(work) == DTPR; work = work->d.cdr)
   {
