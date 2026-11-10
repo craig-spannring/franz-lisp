@@ -6,6 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
+#ifndef FRAME_19a7ba4737962a3137ad78dc829c1583_h
+#define FRAME_19a7ba4737962a3137ad78dc829c1583_h
+
+
 
 /* classes of frames: */
 #define F_PROG 1
@@ -63,3 +67,5 @@ typedef struct pframe
   long         regs[16];
   struct frame f;
 } pbuf;
+
+#endif

@@ -1,4 +1,8 @@
 /*	%M%	%I%	%E%	*/
+#ifndef DUALAOUT_9c9aff7f0b80e6d0b78967b9045d6e2c_h
+#define DUALAOUT_9c9aff7f0b80e6d0b78967b9045d6e2c_h
+
+
 /*
  * Header prepended to each a.out file.
  */
@@ -27,3 +31,5 @@ struct exec
 #define N_TXTOFF(x) ((x).a_magic == ZMAGIC ? 1024 : sizeof(struct exec))
 #define N_SYMOFF(x) (N_TXTOFF(x) + (x).a_text + (x).a_data + (x).a_trsize + (x).a_drsize)
 #include <a.out.h>
+
+#endif

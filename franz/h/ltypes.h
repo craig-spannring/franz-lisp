@@ -6,6 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
+#ifndef LTYPES_c9be7b70068e71430cc84e99156b3360_h
+#define LTYPES_c9be7b70068e71430cc84e99156b3360_h
+
+
 
 /* type flags */
 
@@ -32,3 +36,5 @@
 
 #define VECTOR 18
 #define VECTORI 19
+
+#endif

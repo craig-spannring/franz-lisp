@@ -6,6 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
+#ifndef DFUNCS_68f33c80330fca7e62f06a943413f710_h
+#define DFUNCS_68f33c80330fca7e62f06a943413f710_h
+
+
 
 char        *brk();
 char        *getsp();
@@ -64,3 +68,5 @@ lispval      typred();
 lispval      unprot();
 lispval      verify();
 struct atom *newatom();
+
+#endif

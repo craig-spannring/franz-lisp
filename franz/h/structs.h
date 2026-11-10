@@ -6,6 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
+#ifndef STRUCTS_84f7ff55d41fab5d469ea0150321828b_h
+#define STRUCTS_84f7ff55d41fab5d469ea0150321828b_h
+
+
 
 /*
  * this file contains auxiliary structure definitions which are used by
@@ -49,3 +53,5 @@ struct str_x
   char *next_free;
   int   space_left;
 };
+
+#endif

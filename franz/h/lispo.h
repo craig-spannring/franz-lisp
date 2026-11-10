@@ -1,6 +1,10 @@
 /*
  * Header prepended to each a.out file.
  */
+#ifndef LISPO_9aa4def5cedcc896ea77703be1ced44a_h
+#define LISPO_9aa4def5cedcc896ea77703be1ced44a_h
+
+
 struct exec
 {
   long          a_magic;  /* magic number */
@@ -83,3 +87,5 @@ struct nlist
  * Format for namelist values.
  */
 #define N_FORMAT "%08x"
+
+#endif

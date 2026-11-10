@@ -6,6 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
+#ifndef CHARS_1a88deb300affa69a81b888be22bc1b1_h
+#define CHARS_1a88deb300affa69a81b888be22bc1b1_h
+
+
 
 /* the format of the entries are:       ab..xxxx			*/
 /*									*/
@@ -76,3 +80,5 @@
 #define TSQ 8
 #define TLBKT 9
 #define TINF 10
+
+#endif

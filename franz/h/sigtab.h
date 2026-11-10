@@ -6,6 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
+#ifndef SIGTAB_cd5cd9400e3506ddfd617bbee7e4824b_h
+#define SIGTAB_cd5cd9400e3506ddfd617bbee7e4824b_h
+
+
 
 /*
  *  lispvals in use by the program should be in this table.
@@ -158,3 +162,5 @@ extern lispval stattab[16];
 #define Sautor (stattab[1])
 #define Strans (stattab[2])
 #define evalhsw (stattab[3])
+
+#endif

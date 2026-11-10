@@ -1,6 +1,10 @@
 /*
  * Header prepended to each a.out file.
  */
+#ifndef AOUT_a2cd20997853fc3ebed7a75c85e2dc3c_h
+#define AOUT_a2cd20997853fc3ebed7a75c85e2dc3c_h
+
+
 struct exec
 {
   long          a_magic;  /* magic number */
@@ -83,3 +87,5 @@ struct nlist
  * Format for namelist values.
  */
 #define N_FORMAT "%08x"
+
+#endif

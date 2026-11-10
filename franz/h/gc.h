@@ -6,6 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
+#ifndef GC_756dc0c62df68da222bd8c90d7759cea_h
+#define GC_756dc0c62df68da222bd8c90d7759cea_h
+
+
 
 struct gchead
 {
@@ -13,3 +17,5 @@ struct gchead
   int lowdata;               /* low address of sharable lisp data */
   int dummy, dummy2, dummy3; /* to be used later	*/
 };
+
+#endif

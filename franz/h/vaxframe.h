@@ -6,6 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
+#ifndef VAXFRAME_dab91188139bc49e58177d3830cd920f_h
+#define VAXFRAME_dab91188139bc49e58177d3830cd920f_h
+
+
 
 struct machframe
 {
@@ -17,3 +21,5 @@ struct machframe
   lispval *r6;
   lispval *r7;
 };
+
+#endif

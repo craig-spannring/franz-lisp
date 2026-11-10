@@ -6,6 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
+#ifndef GLOBAL_584b15126f4905532df5ce164f77c304_h
+#define GLOBAL_584b15126f4905532df5ce164f77c304_h
+
+
 
 #include <stdio.h>
 #include "config.h"
@@ -476,3 +480,5 @@ extern int lctrace;
 
 #define saveonly(n) asm("#save	n")
 #define snpand(n) asm("#protect	n")
+
+#endif

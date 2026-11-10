@@ -6,6 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
+#ifndef TYPES_03bf5bdcf37fa167e33984e4a7b0392f_h
+#define TYPES_03bf5bdcf37fa167e33984e4a7b0392f_h
+
+
 
 typedef struct
 {
@@ -29,3 +33,5 @@ typedef unsigned short ushort;
 
 /* make a device number */
 #define makedev(x, y) (dev_t)(((x) << 8) | (y))
+
+#endif

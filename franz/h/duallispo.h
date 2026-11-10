@@ -1,4 +1,8 @@
 /*	a.out.h	1.1	82/08/26	*/
+#ifndef DUALLISPO_ec7175eee706a58d4bb00e9ffbb4be6e_h
+#define DUALLISPO_ec7175eee706a58d4bb00e9ffbb4be6e_h
+
+
 /*
  * Header prepended to each a.out file.
  */
@@ -84,3 +88,5 @@ struct nlist
  * Format for namelist values.
  */
 #define N_FORMAT "%08x"
+
+#endif

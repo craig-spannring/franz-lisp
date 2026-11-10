@@ -6,6 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
+#ifndef LFUNCS_02d992c35088b83ad79f4be3f462f174_h
+#define LFUNCS_02d992c35088b83ad79f4be3f462f174_h
+
+
 
 /* these functions never return values.  The declarations
    are merely to shut lint up. */
@@ -315,3 +319,5 @@ lispval Nsetq();
 lispval Nsstatus();
 lispval Nstatus();
 lispval Zequal();
+
+#endif

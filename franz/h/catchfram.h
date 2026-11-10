@@ -6,6 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
+#ifndef CATCHFRAM_b41218a4a15e3af752690c8c6deb38ca_h
+#define CATCHFRAM_b41218a4a15e3af752690c8c6deb38ca_h
+
+
 
 struct catchfr
 {                             /* catch and errset frame */
@@ -23,3 +27,5 @@ struct savblock
   lispval          envir[10];
   struct savblock *savlnk;
 };
+
+#endif

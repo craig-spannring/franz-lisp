@@ -6,6 +6,10 @@
  *
  * (c) copyright 1982, Regents of the University of California
  */
+#ifndef CHKRTAB_00475ab3e9e61ffdd8069ae2a75de4c3_h
+#define CHKRTAB_00475ab3e9e61ffdd8069ae2a75de4c3_h
+
+
 
 #define chkrtab(p)                                              \
   ;                                                             \
@@ -19,3 +23,5 @@
     }                                                           \
   }
 extern lispval lastrtab;
+
+#endif
