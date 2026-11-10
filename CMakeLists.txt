@@ -15,41 +15,41 @@ include("${CMAKE_CURRENT_LIST_DIR}/cmake/common.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/system_info.cmake")
 
 
-add_compile_definitions(
-  # HOLE=2097152
-  
-  os_unix=1
-  os_unix_ts=1
-  # OS="unix"
-  # OS="vms"
-
-  NO_A_OUT=1
-  OFFSET=0x0                  
-  # HOLE=2097152
-  PORTABLE=1
-    SPISFP=1
-
-  #OFFSET=0x8000               # on sun_4_2beta || sun_4_2 || sun_4_1c 
-  #OFFSET=0x40000              # on sun_unisoft 
-  #OFFSET=0x800000             # on dual_unisoft 
-  #OFFSET=0x20000              # pixel_unisoft 
-  #OFFSET=0x20000              # lisa_unisys3 
-  #OFFSET=0x0                  # mc500_2_0  
-  #OFFSET=0x0                  # m_vax || m_tahoe 
-
-  
-  SPISFP=1                       # sun_4_2beta 
-  
-  #SPISFP=1       /* sun_4_2beta */ 
-  #NPINREG=1       /* m_vax || m_tahoe */ 
-  
-  # DOMAIN="nowhere"
-  # define DOMAIN  "ucb"
-  
-  #TTSIZE=10216  
-  #define TTSIZE 10216  /* sun_4_2 || sun_4_2beta || HOLE */
-  #define TTSIZE 6120
-)
+# add_compile_definitions(
+#   # HOLE=2097152
+#   
+#   os_unix=1
+#   os_unix_ts=1
+#   # OS="unix"
+#   # OS="vms"
+# 
+#   NO_A_OUT=1
+#   $ OFFSET=0x0                  
+#   # HOLE=2097152
+#   PORTABLE=1
+#     SPISFP=1
+# 
+#   #OFFSET=0x8000               # on sun_4_2beta || sun_4_2 || sun_4_1c 
+#   #OFFSET=0x40000              # on sun_unisoft 
+#   #OFFSET=0x800000             # on dual_unisoft 
+#   #OFFSET=0x20000              # pixel_unisoft 
+#   #OFFSET=0x20000              # lisa_unisys3 
+#   #OFFSET=0x0                  # mc500_2_0  
+#   #OFFSET=0x0                  # m_vax || m_tahoe 
+# 
+#   
+#   SPISFP=1                       # sun_4_2beta 
+#   
+#   #SPISFP=1       /* sun_4_2beta */ 
+#   #NPINREG=1       /* m_vax || m_tahoe */ 
+#   
+#   # DOMAIN="nowhere"
+#   # define DOMAIN  "ucb"
+#   
+#   #TTSIZE=10216  
+#   #define TTSIZE 10216  /* sun_4_2 || sun_4_2beta || HOLE */
+#   #define TTSIZE 6120
+# )
 
 
   

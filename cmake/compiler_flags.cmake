@@ -29,8 +29,3 @@ endif()
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # no gcc specific flags yet
 endif()
-
-
-
-
-

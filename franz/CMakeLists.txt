@@ -24,8 +24,6 @@ endif()
 
 
 add_executable(rawlisp)
-
-
 list(APPEND rawlisp_cc_flags "${fl_cc_flags}")
 
 target_compile_options(rawlisp PRIVATE ${rawlisp_cc_flags})
@@ -35,8 +33,9 @@ target_include_directories(rawlisp PRIVATE
 )
 target_link_libraries(rawlisp PRIVATE ${TERMCAP_LIBRARY})
 
-
-target_compile_definitions(rawlisp PRIVATE
+target_include_directories(rawlisp PRIVATE
+  ${CMAKE_CURRENT_LIST_DIR}/./h
+  ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 # Lowest-level startup/runtime.  Must be linked at the beginning of executable
@@ -137,30 +136,46 @@ target_sources(rawlisp PRIVATE
 
 set(STILL_PORTING true)
 if(STILL_PORTING)
-  target_compile_definitions(rawlisp PUBLIC STILL_PORTING=1)
-  target_compile_definitions(rawlisp PUBLIC FINISHED_PORTING=0)
+  target_compile_definitions(rawlisp PRIVATE STILL_PORTING=1)
+  target_compile_definitions(rawlisp PRIVATE FINISHED_PORTING=0)
 else()
-  target_compile_definitions(rawlisp PUBLIC STILL_PORTING=0)
-  target_compile_definitions(rawlisp PUBLIC FINISHED_PORTING=1)
+  target_compile_definitions(rawlisp PRIVATE STILL_PORTING=0)
+  target_compile_definitions(rawlisp PRIVATE FINISHED_PORTING=1)
 endif()
 
-target_include_directories(rawlisp PRIVATE
-  ${CMAKE_CURRENT_LIST_DIR}/./h
-  ${CMAKE_CURRENT_BINARY_DIR}
-)
-  
+
+#############################################################
+#
+# Configure the build settings 
+# 
+#############################################################
+cmake_host_system_information(RESULT FL_SITE QUERY HOSTNAME)
+set(FL_MACHINE "${CMAKE_SYSTEM_NAME} ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+set(FL_NILIS0    0)
+set(FL_NPINREG   0)
+set(FL_GCSTRINGS 0) 
+set(FL_TTSIZE    10216) 
 configure_file(
   ${CMAKE_CURRENT_LIST_DIR}/h/config.h.in
   ${CMAKE_CURRENT_BINARY_DIR}/config.h
 )
 
+#############################################################
+#
+# install a convenience symlink 
+# 
+#############################################################
 add_custom_command(TARGET rawlisp POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE:rawlisp> ${CMAKE_CURRENT_LIST_DIR}/rawlisp
   COMMENT "creating symlink"
 )
 
+#############################################################
+#
+# Create doxydocs for rawlisp
+# 
+#############################################################
 find_package(Doxygen)
-
 if(Doxygen_FOUND)
     get_target_property(RawLispSrcs rawlisp SOURCES)
     string(JOIN " " RawLispSrcs ${RawLispSrcs})

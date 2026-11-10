@@ -25,9 +25,8 @@ endfunction()
 add_util(append)
 add_util(divide)
 add_util(tackon)
-target_compile_definitions(tackon PRIVATE
-  HAVE_A_OUT_H=${HAVE_A_OUT_H}
-)
+message("Adding HAVE_A_OUT_H to compiler defs.  It is equal to |${HAVE_A_OUT_H}|")
+target_compile_definitions(tackon PRIVATE HAVE_A_OUT_H=${HAVE_A_OUT_H})
 
 message("PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 configure_file(
