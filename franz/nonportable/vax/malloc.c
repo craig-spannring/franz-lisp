@@ -1,7 +1,3 @@
-#ifndef lint
-static char sccsid[] = "@(#)malloc.c	4.3 (Berkeley) 9/16/83";
-#endif
-
 /*
  * malloc.c (Caltech) 2/21/82
  * Chris Kingsley, kingsley@cit-20.

@@ -1,7 +1,3 @@
-#ifndef lint
-static char *rcsid = "$Header: lam9.c,v 1.7 85/03/13 17:19:15 sklower Exp $";
-#endif
-
 /*					-[Sat Oct  1 19:44:47 1983 by jkf]-
  * 	lam9.c				$Locker:  $
  * lambda functions

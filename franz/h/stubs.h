@@ -81,7 +81,7 @@ extern void*         lToVP(long l); // convert long to a void*
 extern void*         iToVP(int i);  // convert int to a void*   
 
 #if STILL_PORTING
-#define TODO_FIX(s)  do { int todoFix; assert(0); } while(0)
+#define TODO_FIX(s)  do { int todoFix; assert(!s); } while(0)
 #else
 #define TODO_FIX(s)  static_assert(0, s)
 #endif

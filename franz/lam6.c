@@ -1,8 +1,3 @@
-#include "stubs.h"
-#ifndef lint
-static char *rcsid = "$Header: lam6.c,v 1.7 85/03/24 11:04:21 sklower Exp $";
-#endif
-
 /*					-[Sun Sep  4 08:56:19 1983 by jkf]-
  * 	lam6.c				$Locker:  $
  * lambda functions
@@ -16,6 +11,7 @@ static char *rcsid = "$Header: lam6.c,v 1.7 85/03/24 11:04:21 sklower Exp $";
 #include "frame.h"
 #include "chkrtab.h"
 #include "chars.h"
+#include "stubs.h"
 
 #include "prototypes/fpipe.h"
 #include "prototypes/ffasl.h"

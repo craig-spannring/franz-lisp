@@ -1,7 +1,3 @@
-#ifndef lint
-static char *rcsid = "$Header: error.c,v 1.6 87/12/14 14:40:57 sklower Exp $";
-#endif
-
 /*
  * 	error.c				$Locker:  $
  * error handler

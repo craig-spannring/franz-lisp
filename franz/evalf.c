@@ -1,7 +1,3 @@
-#ifndef lint
-static char *sccsid = "%W% %G%";
-#endif
-
 #include "prototypes/evalf.h"
 
 #include "global.h"
