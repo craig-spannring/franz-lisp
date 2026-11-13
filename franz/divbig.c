@@ -24,7 +24,10 @@ void divbig(lispval dividend, lispval divisor, lispval *quotient, lispval *remai
   int    *ujp, *vip;
   int     d, negflag = 0, m, n, carry, rem, qhat, j;
   int     borrow, negrem = 0;
-  long   *utop = sp(), *ubot, *vbot, *qbot;
+  long   *utop = sp();
+  long   *ubot;
+  long   *vbot;
+  long   *qbot;  
   lispval work;
   Keepxs();
 

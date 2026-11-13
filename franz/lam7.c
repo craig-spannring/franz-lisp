@@ -348,7 +348,7 @@ lispval Lbcdad()
   temp = temp->a.fnbnd;
   if (TYPE(temp) != BCD) return (nil);
   ret    = newint();
-  ret->i = (int)temp;
+  ret->i = (uintptr_t)temp;
   return (ret);
 }
 

@@ -61,9 +61,9 @@ lispval Lsyscall()
     temp = aptr->val;
     switch (TYPE(temp))
     {
-      case ATOM: args[acount++] = (int)temp->a.pname; break;
+      case ATOM: args[acount++] = (uintptr_t)temp->a.pname; break;
 
-      case STRNG: args[acount++] = (int)temp; break;
+      case STRNG: args[acount++] = (uintptr_t)temp; break;
 
       case INT: args[acount++] = (int)temp->i; break;
 

@@ -360,7 +360,7 @@ lispval Lfake()
 lispval Lmaknum()
 {
   chkarg(1, "maknum");
-  return (inewint(iToVP((int)(lbot->val)))); TODO_FIX("need to remove this cast. "); 
+  return (inewint(iToVP((uintptr_t)(lbot->val)))); TODO_FIX("need to remove this cast. "); 
 }
 lispval Lderef()
 {
@@ -410,7 +410,7 @@ lispval Lptr()
 lispval Llctrace()
 {
   chkarg(1, "lctrace");
-  lctrace = (int)(lbot->val->a.clb);
+  lctrace = (uintptr_t)(lbot->val->a.clb);
   return ((lispval)lctrace);
 }
 

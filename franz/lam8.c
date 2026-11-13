@@ -553,7 +553,7 @@ int bndchk(void)
   in2 = inewint(iToVP(200));
   for (npt = orgbnp; npt < bnp; npt++)
   {
-    if ((int)npt->atm < (int)in2) abort();
+    if ((uintptr_t)npt->atm < (uintptr_t)in2) abort();
   }
 }
 
@@ -1135,8 +1135,8 @@ int vecequal(lispval v, lispval w)
 {
   int            i;
   lispval        vv, ww, ret;
-  int            vsize   = (int)v->v.vector[VSizeOff];
-  int            wsize   = (int)w->v.vector[VSizeOff];
+  int            vsize   = (uintptr_t)v->v.vector[VSizeOff];
+  int            wsize   = (uintptr_t)w->v.vector[VSizeOff];
   struct argent *oldlbot = lbot;
   lispval        Lequal();
 
@@ -1175,8 +1175,8 @@ int veciequal(lispval v, lispval w)
 {
   char vv, ww;
   int  i;
-  int  vsize = (int)v->v.vector[VSizeOff];
-  int  wsize = (int)w->v.vector[VSizeOff];
+  int  vsize = (uintptr_t)v->v.vector[VSizeOff];
+  int  wsize = (uintptr_t)w->v.vector[VSizeOff];
 
   if (vsize != wsize) return (FALSE);
 

@@ -43,7 +43,7 @@ static lispval NiorUtil(FILE *p);
 
 static int NiorUtil_wrapper(FILE *p)
 {
-  return (int)NiorUtil(p);
+  return (uintptr_t)NiorUtil(p);
 }  
 
 /* Nioreset *************************************************************/

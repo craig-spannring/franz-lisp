@@ -100,27 +100,27 @@ lispval Ifcall(lispval a)
             /* fixnums and flonums must be reboxed */
           case INT:
             stack(0);
-            arglist[index]         = (int)sp();
+            arglist[index]         = (uintptr_t)sp();
             *(int *)arglist[index] = ltemp->i;
             break;
           case DOUB:
             stack(0);
             stack(0);
-            arglist[index]            = (int)sp();
+            arglist[index]            = (uintptr_t)sp();
             *(double *)arglist[index] = ltemp->r;
             break;
 
             /* these cause only part of the structure to be sent */
 
-          case ARRAY: arglist[index] = (int)ltemp->ar.data; break;
+          case ARRAY: arglist[index] = (uintptr_t)ltemp->ar.data; break;
 
           case BCD:
-            arglist[index] = (int)ltemp->bcd.start;
+            arglist[index] = (uintptr_t)ltemp->bcd.start;
             break;
 
             /* anything else should be sent directly */
 
-          default: arglist[index] = (int)ltemp; break;
+          default: arglist[index] = (uintptr_t)ltemp; break;
         }
         mynp++;
       }
@@ -164,7 +164,7 @@ lispval Ifcall(lispval a)
               mysize = ltemp->vl.vectorl[-2];
               mysize = sizeof(long) * VecTotSize(mysize);
               xbcopy(ap, ltemp, mysize);
-              ap = (long *)(mysize + (int)ap);
+              ap = (long *)(mysize + (uintptr_t)ap);
               break;
             }
           default: *ap++ = (long)ltemp;

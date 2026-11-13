@@ -63,7 +63,7 @@ lispval Lgcstat()
     case 0:
       if ((gcstat = creat("gc.out", 0644)) < 0) error("cant open gc.out", FALSE);
       hhh.version = 5;
-      hhh.lowdata = (int)beginsweep;
+      hhh.lowdata = (uintptr_t)beginsweep;
       printf("writing %d bytes \n", sizeof(hhh));
       write(gcstat, (char *)&hhh, sizeof(hhh));
       gccount = 0;
@@ -75,7 +75,7 @@ lispval Lgcstat()
       /* 0 means type table follows */
       printf("gc's %d, writing %d bytes \n", gccount, sizeof(nbytes));
       write(gcstat, (char *)&nbytes, sizeof(nbytes));
-      write(gcstat, (char *)&typetable[ATOX(beginsweep) + 1], nbytes = ((int)datalim - (int)beginsweep) >> 9);
+      write(gcstat, (char *)&typetable[ATOX(beginsweep) + 1], nbytes = ((uintptr_t)datalim - (uintptr_t)beginsweep) >> 9);
       printf("writing %d bytes \n", nbytes + sizeof(nbytes));
       write(gcstat, (char *)&nbytes, sizeof(nbytes));
       close(gcstat);

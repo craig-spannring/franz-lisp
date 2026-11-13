@@ -21,6 +21,7 @@
 #include "prototypes/error.h"
 #include "prototypes/eval.h"
 
+#include <stdint.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/times.h>
@@ -166,7 +167,7 @@ int get_more_space(struct types *type_struct, int purep)
   lispval     p;
   extern char holend[];
 
-  if ((int)datalim >= TTSIZE * LBPG + OFFSET) return (2);
+  if ((uintptr_t)datalim >= TTSIZE * LBPG + OFFSET) return (2);
 
   /*
    * If the hole is defined, then we allocate binary objects
@@ -195,19 +196,19 @@ int get_more_space(struct types *type_struct, int purep)
   type_struct->space_left = type_struct->space;
   temp = loop = (int *)start;
   for (cntr = 1; cntr < type_struct->space; cntr++)
-    loop = (int *)(*loop = (int)(loop + type_struct->type_len));
+    loop = (int *)(*loop = (uintptr_t)(loop + type_struct->type_len));
 
   /* attach new cells to either the pure space free list  or the
    * standard free list
    */
   if (purep)
   {
-    *loop                       = (int)(type_struct->next_pure_free);
+    *loop                       = (uintptr_t)(type_struct->next_pure_free);
     type_struct->next_pure_free = (char *)temp;
   }
   else
   {
-    *loop                  = (int)(type_struct->next_free);
+    *loop                  = (uintptr_t)(type_struct->next_free);
     type_struct->next_free = (char *)temp;
   }
 
@@ -632,7 +633,7 @@ void pruneb(lispval bignum)
   if (TYPE(temp) != SDOT) errorh(Vermisc, "value to pruneb not a sdot", nil, FALSE, 0);
 
   --(sdot_items->i);
-  temp->s.I          = (int)sdot_str.next_free;
+  temp->s.I          = (uintptr_t)sdot_str.next_free;
   sdot_str.next_free = (char *)temp;
 
   /* bignums are not terminated by nil on the dual,
@@ -642,7 +643,7 @@ void pruneb(lispval bignum)
   {
     if (TYPE(temp) != DTPR) errorh(Vermisc, "value to pruneb not a list", nil, FALSE, 0);
     --(dtpr_items->i);
-    temp->s.I          = (int)dtpr_str.next_free;
+    temp->s.I          = (uintptr_t)dtpr_str.next_free;
     dtpr_str.next_free = (char *)temp;
   }
 }
@@ -756,12 +757,12 @@ int gc1(void)
   /* the maximum number of bytes we can clear in one sweep is
    * 2^16 (or 1<<16 in the C lingo)
    */
-  bytestoclear = ((((int)datalim) - ((int)beginsweep)) >> 9) * 16;
+  bytestoclear = ((((uintptr_t)datalim) - ((uintptr_t)beginsweep)) >> 9) * 16;
   for (start = bitmapi + ATOLX(beginsweep); bytestoclear > 0;)
   {
-    if (bytestoclear > MAXCLEAR) blzero(iToVP((int)start), MAXCLEAR);
-    else blzero(iToVP((int)start), bytestoclear);
-    start = (int *)(MAXCLEAR + (int)start);
+    if (bytestoclear > MAXCLEAR) blzero(iToVP((uintptr_t)start), MAXCLEAR);
+    else blzero(iToVP((uintptr_t)start), bytestoclear);
+    start = (int *)(MAXCLEAR + (uintptr_t)start);
     bytestoclear -= MAXCLEAR;
   }
 
@@ -880,11 +881,11 @@ int gc1(void)
         bvalue = bitmapi[bindex++]; /* 32 bits = 16 dtprs */
         if (bvalue == 0)            /* if all are free	*/
         {
-          *point = (int)head;
+          *point = (uintptr_t)head;
           lim    = point + 32; /* 16 dtprs = 32 ints */
           for (point += 2; point < lim; point += 2)
           {
-            *point = (int)(point - 2);
+            *point = (uintptr_t)(point - 2);
           }
           head = point - 2;
           freecnt += 16;
@@ -895,7 +896,7 @@ int gc1(void)
             if (!(bvalue & 1))
             {
               freecnt++;
-              *point = (int)head;
+              *point = (uintptr_t)head;
               head   = point;
             }
 #ifdef METER
@@ -959,7 +960,7 @@ int gc1(void)
           else
           {
             /* vectors are linked at the property word */
-            *(point - 1) = (int)(s->next_free);
+            *(point - 1) = (uintptr_t)(s->next_free);
             s->next_free = (char *)(point - 1);
           }
           canjoin = TRUE;
@@ -974,7 +975,7 @@ int gc1(void)
         /* we stop sweeping only when we reach a page
            boundary since vectors can span pages
          */
-        if (((int)point & 511) == 0)
+        if (((uintptr_t)point & 511) == 0)
         {
           /* reset the counters, we cannot predict how
            * many pages we have crossed over
@@ -1017,7 +1018,7 @@ int gc1(void)
         if (!(bvalue & 1)) /* if data element is not marked */
         {
           freecnt++;
-          *point       = (int)(s->next_free);
+          *point       = (uintptr_t)(s->next_free);
           s->next_free = (char *)point;
         }
         else usedcnt++;
@@ -1130,7 +1131,7 @@ lispval csegment(int typecode, int nitems, int useholeflag)
     charadd = sbrk(nitems); TODO_FIX("need to rethink memory management.  Probably an anon mmap ");
     datalim = (lispval)(charadd + nitems);
   }
-  if ((int)charadd <= 0) error("NOT ENOUGH SPACE FOR ARRAY", FALSE);
+  if ((uintptr_t)charadd <= 0) error("NOT ENOUGH SPACE FOR ARRAY", FALSE);
   /*if(ii!=OTHER)*/ (*spaces[ii]->pages)->i += nitems / 512;
   if (ATOX(datalim) > fakettsize)
   {
@@ -1147,7 +1148,7 @@ lispval csegment(int typecode, int nitems, int useholeflag)
   {
     SETTYPE(charadd + jj, ii, 30);
   }
-  ii = (int)charadd;
+  ii = (uintptr_t)charadd;
   while (nitems > MAXCLEAR)
   {
     blzero(iToVP(ii), MAXCLEAR);
@@ -1188,7 +1189,7 @@ char *gethspace(int segsiz, int type)
 
   if (usehole)
   {
-    curhbeg = (char *)roundup(((int)curhbeg), LBPG);
+    curhbeg = (char *)roundup(((uintptr_t)curhbeg), LBPG);
     if ((holend - curhbeg) < segsiz)
     {
       usehole = FALSE;
@@ -1256,7 +1257,7 @@ void markdp(lispval p)
   mrkdpcnt++;
 #endif
 ptr_loop:
-  if (((int)p) <= ((int)nil)) return; /*  do not mark special data types or nil=0  */
+  if (((uintptr_t)p) <= ((uintptr_t)nil)) return; /*  do not mark special data types or nil=0  */
 
   switch (TYPE(p))
   {
@@ -1404,7 +1405,7 @@ char *xsbrk(int n)
   {
     xcycle = 15;
     xx     = sbrk(16 * LBPG); /*  get pages 16 at a time  */
-    if ((int)xx == -1) lispend("For sbrk from lisp: no space... Goodbye!");
+    if ((uintptr_t)xx == -1) lispend("For sbrk from lisp: no space... Goodbye!");
   }
   else xx += LBPG;
 
@@ -1425,7 +1426,7 @@ char *ysbrk(int pages, int type)
   int   i;
 
   xx = sbrk(pages * LBPG);
-  if ((int)xx == -1) error("OUT OF SPACE FOR ARRAY REQUEST", FALSE);
+  if ((uintptr_t)xx == -1) error("OUT OF SPACE FOR ARRAY REQUEST", FALSE);
 
   datalim = (lispval)(xx + pages * LBPG); /*  compute bit table limit  */
 
@@ -1548,7 +1549,7 @@ lispval LImemory()
   printf("  current hole start: %d (0x%x), end %d (0x%x)\n", curhbeg, curhbeg, holend, holend);
   printf("  hole free: %d bytes = %d pages\n\n", holend - curhbeg, (holend - curhbeg) / LBPG);
 #endif
-  nextadr    = (int)xsbrk(0); /* next space to be allocated */
+  nextadr    = (uintptr_t)xsbrk(0); /* next space to be allocated */
   pagesinuse = nextadr / LBPG;
   printf("Next allocation at addr %d (0x%x) = page %d\n", nextadr, nextadr, pagesinuse);
   printf("Free data pages: %d\n", TTSIZE - pagesinuse);
