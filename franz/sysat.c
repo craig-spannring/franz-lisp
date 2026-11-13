@@ -38,7 +38,7 @@
 /*  The following array serves as the temporary counters of the items	*/
 /*  and pages used in each space.					*/
 
-long int tint[2 * NUMSPACES];
+long int tint[2 * NUMSPACES] = {0};
 
 extern int tgcthresh;
 extern int initflag; /*  starts off TRUE to indicate unsafe to gc  */

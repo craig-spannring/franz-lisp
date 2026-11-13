@@ -17,7 +17,7 @@
 int            sigstruck;
 int            sigdelay;
 
-/*char firstalloc[NBPG] = { 'x' };	/* first thing allocated in file */
+// char firstalloc[NBPG] = { 'x' };	/// first thing allocated in file */
 lispval lispsys[SIGNIF]; /* lisp data used by system */
 
 lispval gftab[GFTABLEN]; /* global function table for interpreter */
@@ -275,7 +275,7 @@ int            gensymcounter = 0;
 
 int          hashtop = HASHTOP;
 int          xcycle  = 0; /* used by xsbrk   */
-struct atom *hasht[HASHTOP];
+struct atom *hasht[HASHTOP] = {(struct atom *)CNIL};
 lispval      datalim; /* pointer to next location to allocate */
 
 char typetable[TTSIZE + 1] = {UNBO, ATOM, PORT, INT, INT, INT, INT, INT, INT, INT, INT, INT, INT, INT, INT, INT, INT, INT, INT};

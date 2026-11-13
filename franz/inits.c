@@ -22,6 +22,8 @@
 #include <unistd.h>
 
 
+extern char **environ;
+
 /* initial
  * initializes the parts of the system that cannot be automatically
  * accomplished in the declarations.
@@ -79,8 +81,8 @@ void initial(void)
     makenv();
     return;
   }
-  for (hash = 0; hash < hashtop; hash++)
-    hasht[hash] = (struct atom *)CNIL;
+  // for (hash = 0; hash < hashtop; hash++)
+  //   hasht[hash] = (struct atom *)CNIL;
 
 #if FINISHED_PORTING
   TODO_FIX("this should have been replaced by now.");
@@ -94,10 +96,12 @@ void initial(void)
 
 static void makenv(void)
 {
-  lispval       env, temp;
-  char         *p, *q;
-  char        **envp, envstr[STRBLEN];
-  extern char **environ;
+  lispval  env;
+  lispval  temp;
+  char    *p;
+  char    *q;
+  char   **envp;
+  char     envstr[STRBLEN];  
 
   lbot      = np;
   env       = nil;
