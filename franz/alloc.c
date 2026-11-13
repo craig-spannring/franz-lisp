@@ -390,7 +390,7 @@ char *newstr(int purep)
     p->space_left = LBPG;
   }
   strcpy((save = p->next_free), strbuf);
-  /*while(atmlen & 3) ++atmlen;	/*  even up length of string  */
+  // while(atmlen & 3) ++atmlen;	//  even up length of string 
   p->next_free += atmlen;
   p->space_left -= atmlen;
   return (save);

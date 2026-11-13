@@ -40,10 +40,11 @@ extern char  PC;
 extern char *BC;
 extern char *UP;
 
-/*
-/*	This routine will initialize the termcap for the lisp programs.
-/*	If the termcap file is not found, or terminal type is undefined,
-/*	it will print out an error mesg.				*/
+/**
+ *	This routine will initialize the termcap for the lisp programs.
+ *	If the termcap file is not found, or terminal type is undefined,
+ *	it will print out an error mesg.
+ */
 
 lispval Ltci()
 {
@@ -99,13 +100,14 @@ static int show(char *option, int *line, int *colum)
   return (0);
 }
 
-/* This routine will execute any of the termcap functions used by the lisp
-/* program. If the feature is not include in the terminal defined it will
-/* ignore the call.
-/*		option	: feature to execute
-/*		line	: line if is nessery
-/*		colum	: colum if is nessaery
-/*									*/
+/**
+ * This routine will execute any of the termcap functions used by the lisp
+ * program. If the feature is not include in the terminal defined it will
+ * ignore the call.
+ *		option	: feature to execute
+ *		line	: line if is nessery
+ *		colum	: colum if is nessaery
+ */
 lispval Ltcx()
 {
   struct argent *mylbot = lbot;

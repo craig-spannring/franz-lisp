@@ -521,7 +521,7 @@ lispval Ifuncal(lispval fcn)
   extern lispval end[];
   Savestack(3);
 
-  /*if(nargs()==1)			/* function I am evaling.    */
+  // if(nargs()==1)			// function I am evaling.
   a = fcncalled = fcn;
   /*else { a = fcncalled = lbot->val; lbot++; }*/
 
