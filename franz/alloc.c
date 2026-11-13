@@ -1127,7 +1127,7 @@ lispval csegment(int typecode, int nitems, int useholeflag)
   else
 #endif
   {
-    charadd = sbrk(nitems); TODO_FIX("need to rethink memory management");
+    charadd = sbrk(nitems); TODO_FIX("need to rethink memory management.  Probably an anon mmap ");
     datalim = (lispval)(charadd + nitems);
   }
   if ((int)charadd <= 0) error("NOT ENOUGH SPACE FOR ARRAY", FALSE);
