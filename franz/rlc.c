@@ -12,6 +12,7 @@ static char *rcsid = "$Header: rlc.c,v 1.5 87/12/14 17:19:20 sklower Exp $";
 #define TRUE 1
 #include "h/global.h"
 #include "config.h"
+#include "stubs.h"
 
 #include <unistd.h>
 
@@ -24,6 +25,8 @@ int rlc(void)
 {
   char *cp, *dp;
 
+  TODO_FIX("need to rethink memory allocation");   
+#if FINISHED_PORTING
   brk(end);
   dp = holend;
   cp = dp - HOLE;
@@ -31,4 +34,5 @@ int rlc(void)
     *dp++ = *cp++;
   curhbeg = holend - HOLE; /* set up the hole */
   usehole = TRUE;
+#endif   
 }

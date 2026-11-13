@@ -18,6 +18,9 @@ static char *rcsid = "$Header: data.c,v 1.8 85/03/24 11:02:24 sklower Exp $";
 
 #include <stdio.h>
 
+int            sigstruck;
+int            sigdelay;
+
 /*char firstalloc[NBPG] = { 'x' };	/* first thing allocated in file */
 lispval lispsys[SIGNIF]; /* lisp data used by system */
 

@@ -4,6 +4,8 @@
 #include "global.h"
 #include "frame.h"
 
+#include "prototypes/error.h"
+
 
 #include <assert.h>
 
@@ -255,3 +257,27 @@ void *iToVP(int i)
 }
 
 
+int pagerand(void)
+{
+  TODO_FIX("Not implemented yet.");
+  // Was orignially
+  //    vadvise(VA_ANOM);
+}
+int pageseql(void)
+{
+  TODO_FIX("Not implemented yet.");
+  // Was orignially
+  //    vadvise(VA_SEQL);
+}
+int pagenorm(void)
+{
+  TODO_FIX("Not implemented yet.");
+  // Was orignially
+  //  vadvise(VA_NORM);
+}
+
+
+double myfrexp(double value, double *exp, double *hi, double *lo)
+{
+  error("myfrexp called", FALSE);
+  }  
