@@ -11,9 +11,11 @@ static char *rcsid = "$Header: rlc.c,v 1.5 87/12/14 17:19:20 sklower Exp $";
 
 #define TRUE 1
 #include "h/global.h"
-#if vax_4_2 | vax_4_3 | tahoe_4_3
-#define brk(p) syscall(17, p)
-#endif
+#include "config.h"
+
+#include <unistd.h>
+
+
 extern char  holend[], end[];
 extern int   usehole;
 extern char *curhbeg;

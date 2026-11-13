@@ -9,9 +9,22 @@ static char *rcsid = "$Header: lam4.c,v 1.5 83/12/28 16:21:08 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam4.h"
+
 #include "global.h"
-lispval adbig(), subbig(), mulbig();
-double  Ifloat();
+#include "stubs.h"
+
+#include "prototypes/lam5.h"
+#include "prototypes/error.h"
+#include "prototypes/divbig.h"
+#include "prototypes/error.h"
+
+#include <unistd.h>
+#include <signal.h>
+
+// lispval adbig(), subbig(), mulbig();
+// double  Ifloat();
+
 lispval Ladd()
 {
   lispval        work;
@@ -115,7 +128,7 @@ lispval Ladd()
   switch (restype)
   {
     case DOUB: break;
-    case INT:  work = inewint(lo); break;
+    case INT:  work = inewint(lToVP(lo)); break;
     case SDOT:
       if (prunep)
       {
@@ -160,7 +173,12 @@ lispval Lsub()
 {
   lispval        work;
   struct argent *result, *mynp, *oldnp;
-  long           prunep, restype, hi, lo = 0;
+  long           prunep;
+  long           restype;
+  long           hi;
+  long           lo = 0;
+  
+  
   struct sdot    dummybig;
   double         flacc;
   lispval        Lminus();
@@ -348,7 +366,7 @@ out:
   switch (restype)
   {
     case DOUB: break;
-    case INT:  work = inewint(lo); break;
+    case INT:  work = inewint(lToVP(lo)); break;
     case SDOT:
       if (prunep)
       {
@@ -469,7 +487,7 @@ lispval Ltimes()
   switch (restype)
   {
     case DOUB: break;
-    case INT:  work = inewint(lo); break;
+    case INT:  work = inewint(lToVP(lo)); break;
     case SDOT:
       if (prunep)
       {
@@ -634,7 +652,7 @@ out:
   {
     case SDOT:
     case DOUB: break;
-    case INT:  work = inewint(dummybig.I); break;
+    case INT:  work = inewint(iToVP(dummybig.I)); break;
     default:
     urk:
       errorh1(Vermisc, "Internal quotient error #5: ", nil, FALSE, 0, work);
@@ -651,7 +669,7 @@ lispval Lfp()
   for (argp = lbot; argp < np; argp++)
     if (TYPE(argp->val) != INT) errorh1(Vermisc, "+: non fixnum argument ", nil, FALSE, 0, argp->val);
     else temp += argp->val->i;
-  return (inewint(temp));
+  return (inewint(iToVP(temp)));
 }
 
 lispval Lfm()
@@ -662,11 +680,11 @@ lispval Lfm()
   if (lbot == np) return (inewint(0));
   if (TYPE(lbot->val) != INT) errorh1(Vermisc, "-: non fixnum argument ", nil, FALSE, 0, lbot->val);
   else temp = lbot->val->i;
-  if (lbot + 1 == np) return (inewint(-temp));
+  if (lbot + 1 == np) return (inewint(iToVP(-temp)));
   for (argp = lbot + 1; argp < np; argp++)
     if (TYPE(argp->val) != INT) errorh1(Vermisc, "-: non fixnum argument ", nil, FALSE, 0, argp->val);
     else temp -= argp->val->i;
-  return (inewint(temp));
+  return (inewint(iToVP(temp)));
 }
 
 lispval Lft()
@@ -677,7 +695,7 @@ lispval Lft()
   for (argp = lbot; argp < np; argp++)
     if (TYPE(argp->val) != INT) errorh1(Vermisc, "*: non fixnum argument ", nil, FALSE, 0, argp->val);
     else temp *= argp->val->i;
-  return (inewint(temp));
+  return (inewint(iToVP(temp)));
 }
 
 lispval Lflessp()
@@ -704,21 +722,21 @@ lispval Lfd()
   int            temp = 0;
   struct argent *argp;
 
-  if (lbot == np) return (inewint(1));
+  if (lbot == np) return (inewint(iToVP(1)));
   if (TYPE(lbot->val) != INT) errorh1(Vermisc, "/: non fixnum argument ", nil, FALSE, 0, lbot->val);
   temp = lbot->val->i;
-  if (lbot + 1 == np) return (inewint(1 / temp));
+  if (lbot + 1 == np) return (inewint(iToVP(1 / temp)));
   for (argp = lbot + 1; argp < np; argp++)
     if (TYPE(argp->val) != INT) errorh1(Vermisc, "/: non fixnum argument ", nil, FALSE, 0, argp->val);
     else temp /= argp->val->i;
-  return (inewint(temp));
+  return (inewint(lToVP(temp)));
 }
 
 lispval Lfadd1()
 {
   chkarg(1, "1+");
   if (TYPE(lbot->val) != INT) errorh1(Vermisc, "1+: non fixnum argument ", nil, FALSE, 0, lbot->val);
-  return (inewint(lbot->val->i + 1));
+  return (inewint(lToVP(lbot->val->i + 1)));
 }
 
 /*
@@ -734,7 +752,14 @@ lispval Lfexpt()
 
   chkarg(2, "^");
   if ((TYPE(lbot[0].val) != INT) || (TYPE(lbot[1].val) != INT))
-    errorh2(Vermisc, "^: non fixnum arguments", nil, 0, lbot[0].val, lbot[1].val);
+    errorh2(Vermisc,                   // type
+            "^: non fixnum arguments", // message
+            nil,                       // valret
+            0,                         // contuab
+            998,                       // uniqid
+            lbot[0].val,               // arg1
+            lbot[1].val);              // arg2
+  TODO_FIX("need to figure out how to create uniquid for the above call.");
 
   base = lbot[0].val->i;
   exp  = lbot[1].val->i;
@@ -744,7 +769,7 @@ lispval Lfexpt()
     /* 0^0 == 1,  0 to any other power (even negative powers)
      *  is zero (according to Maclisp)
      */
-    if (exp == 0) return (inewint(1));
+    if (exp == 0) return (inewint(iToVP(1)));
     else return (inewint(0));
   }
   else if (base == 1)
@@ -756,14 +781,14 @@ lispval Lfexpt()
     /*
      * anything to the zero power is 1
      */
-    return (inewint(1));
+    return (inewint(iToVP(1)));
   else if (base == -1)
   {
     /*
      * -1 to an even power is 1, to an odd is -1
      */
     if (exp & 1) return (lbot[0].val);
-    else return (inewint(1));
+    else return (inewint(iToVP(1)));
   }
   else if (exp < 0)
     /*
@@ -790,14 +815,14 @@ lispval Lfexpt()
       exp  = exp / 2;
     }
   }
-  return (inewint(res));
+  return (inewint(iToVP(res)));
 }
 
 lispval Lfsub1()
 {
   chkarg(1, "1-");
   if (TYPE(lbot->val) != INT) errorh1(Vermisc, "1-: non fixnum argument ", nil, FALSE, 0, lbot->val);
-  return (inewint(lbot->val->i - 1));
+  return (inewint(lToVP(lbot->val->i - 1)));
 }
 
 lispval Ldbtofl()
@@ -807,7 +832,7 @@ lispval Ldbtofl()
 
   if (TYPE(lbot->val) != DOUB) errorh1(Vermisc, "double-to-float: non flonum argument ", nil, FALSE, 0, lbot->val);
   x = lbot->val->r;
-  return (inewint(*(long *)&x));
+  return (inewint(lToVP(*(long *)&x)));
 }
 
 lispval Lfltodb()

@@ -1,13 +1,5 @@
 include(CheckIncludeFile)
 
-
-check_include_file("a.out.h" HAVE_A_OUT_H)
-if(NOT HAVE_A_OUT_H)
-  set(HAVE_A_OUT_H 0)
-endif()
-
-
-
 cmake_host_system_information(RESULT NUMBER_OF_LOGICAL_CORES   QUERY  NUMBER_OF_LOGICAL_CORES)
 cmake_host_system_information(RESULT NUMBER_OF_PHYSICAL_CORES  QUERY  NUMBER_OF_PHYSICAL_CORES)
 cmake_host_system_information(RESULT HOSTNAME                  QUERY  HOSTNAME)
@@ -65,4 +57,23 @@ cmake_host_system_information(RESULT OS_PLATFORM               QUERY  OS_PLATFOR
 # message("OS_VERSION:                 ${OS_VERSION}")
 # message("OS_PLATFORM:                ${OS_PLATFORM}")
 
+
+set(FL_MACHO_OBJ_FMT 0)
+set(FL_ELF64_OBJ_FMT 0)
+set(FL_ELF32_OBJ_FMT 0)
+set(FL_COFF_OBJ_FMT  0)
+set(FL_AOUT_OBJ_FMT  0)  # I don't think we'll ever support a.out format 
+if (("${OS_NAME}" STREQUAL "NetBSD") OR ("${OS_NAME}" STREQUAL "Linux"))
+  if (IS_64BIT)
+    set(FL_ELF64_OBJ_FMT 1)
+  else()
+    set(FL_ELF32_OBJ_FMT 1)
+  endif()
+elseif (("${OS_NAME}" STREQUAL "Darwin") OR ("${OS_NAME}" STREQUAL "macOS"))
+  set(FL_MACHO_OBJ_FMT 1)
+elseif(${OS_NAME} STREQUAL "Windows")
+  set(FL_COFF_OBJ_FMT  1)
+else()
+  message(FATAL_ERROR "Object file format for ${OS_NAME} is not supported (yet).")
+endif()
 

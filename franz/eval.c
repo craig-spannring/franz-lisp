@@ -9,9 +9,20 @@ static char *rcsid = "$Header: eval.c,v 1.6 83/09/07 17:54:42 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/eval.h" 
+
 #include "global.h"
-#include <signal.h>
 #include "frame.h"
+#include "lfuncs.h"
+#include "stubs.h"
+
+#include "prototypes/inits.h"
+#include "prototypes/error.h"
+#include "prototypes/eval2.h" 
+#include "prototypes/io.h" 
+
+#include <signal.h>
+#include <stdarg.h>
 
 /*
  *	eval
@@ -19,8 +30,7 @@ static char *rcsid = "$Header: eval.c,v 1.6 83/09/07 17:54:42 sklower Exp $";
  *
  */
 
-lispval eval(actarg)
-lispval actarg;
+lispval eval(lispval actarg)
 {
 #define argptr handy
   lispval        a = actarg;
@@ -30,7 +40,8 @@ lispval actarg;
   struct nament *oldbnp     = bnp;
   int            dopopframe = FALSE;
   int            type, shortcircuit = TRUE;
-  lispval        Ifcall(), Iarray();
+
+  TODO_FIX("see what kind of stack madness is here.");  
   Savestack(4);
 
   /*debugging
@@ -52,7 +63,7 @@ lispval actarg;
 
   if (rsetsw && rsetatom->a.clb != nil) /* if (*rset t) has been done */
   {
-    pbuf pb;
+    struct pframe pb;
     shortcircuit = FALSE;
     if (evalhsw != nil && evalhatom->a.clb != nil)
     {
@@ -236,7 +247,7 @@ lispval actarg;
               handy->d.cdr = (lispval)np;
               PUSHDOWN(lexpr_atom, handy);
               lbot        = np;
-              (np++)->val = inewint(((lispval *)handy->d.cdr) - (lispval *)handy->d.car);
+              (np++)->val = inewint(lToVP(((lispval *)handy->d.cdr) - (lispval *)handy->d.car)); TODO_FIX("remove lToVP");
             }
             else break; /* something is wrong - this isn't a proper function */
 
@@ -311,8 +322,7 @@ lispval actarg;
  * knows about the special cases.  bnp is returned pointing to the
  * same place as the argument passed.
  */
-lispval        popnames(llimit)
-struct nament *llimit;
+lispval popnames(struct nament *llimit)
 {
   struct nament *rnp;
 
@@ -341,11 +351,11 @@ int dumpnamestack(void)
   printf("end namestack dump\n");
 }
 
-lispval Lapply()
+lispval Lapply(void)
 {
   lispval        a;
   lispval        handy;
-  lispval        vtemp, Ifclosure();
+  lispval        vtemp;
   struct nament *oldbnp  = bnp;
   struct argent *oldlbot = lbot; /* Bottom of my frame! */
   struct argent *oldnp   = np;   /* First free on stack */
@@ -353,7 +363,15 @@ lispval Lapply()
 
   a      = lbot->val;
   argptr = lbot[1].val;
-  if (np - lbot != 2) errorh2(Vermisc, "Apply: Wrong number of args.", nil, FALSE, 999, a, argptr);
+  if (np - lbot != 2)
+    errorh2(Vermisc,                        // type    
+            "Apply: Wrong number of args.", // message 
+            nil,                            // valret  
+            FALSE,                          // contuab 
+            999,                            // uniqid  
+            a,                              // arg1    
+            argptr);                        // arg2    
+  
   if (TYPE(argptr) != DTPR && argptr != nil) argptr = errorh1(Vermisc, "Apply: non-list of args", nil, TRUE, 998, argptr);
   (np++)->val = a; /* push form on namestack */
   TNP;
@@ -416,7 +434,7 @@ lispval Lapply()
           handy->d.cdr = (lispval)np;
           PUSHDOWN(lexpr_atom, handy);
           lbot        = np;
-          (np++)->val = inewint(((lispval *)handy->d.cdr) - (lispval *)handy->d.car);
+          (np++)->val = inewint(lToVP(((lispval *)handy->d.cdr) - (lispval *)handy->d.car)); TODO_FIX("remove lToVP");
         }
         else break; /* something is wrong - this isnt a proper function */
         rebind(a->d.cdr->d.car, lbot);
@@ -463,12 +481,13 @@ lispval Lapply()
   /*NOT REACHED*/
 }
 
-/*
- * Rebind -- rebind formal names
+/**
+ * rebind formal names
+ *
+ * @param argptr  argptr points to list of atoms
+ * @param workp)  workp points to position on stack where evaluated args begin 
  */
-rebind(argptr, workp) lispval argptr; /* argptr points to list of atoms */
-struct argent *workp;                 /* workp points to position on stack
-                               where evaluated args begin */
+void rebind(lispval argptr, struct argent *workp)  
 {
   struct nament *namptr = bnp;
 
@@ -494,14 +513,13 @@ struct argent *workp;                 /* workp points to position on stack
  * the name of the function to call and lbot points to the first arg.
  * if it is not given, then lbot points to the function to call
  */
-lispval Ifuncal(fcn)
-lispval fcn;
+lispval Ifuncal(lispval fcn)
 {
   lispval        a;
   lispval        handy;
   struct nament *oldbnp = bnp; /* MUST be first local for evalframe */
   lispval        fcncalled;
-  lispval        Ifcall(), Llist(), Iarray(), Ifclosure();
+//   lispval        Ifcall(), Llist(), Iarray(), Ifclosure();
   lispval        vtemp;
   int            typ, dopopframe = FALSE, extrapush;
   extern lispval end[];
@@ -530,7 +548,7 @@ lispval fcn;
 
   if (rsetsw && rsetatom->a.clb != nil) /* if (*rset t) has been done */
   {
-    pbuf pb;
+    struct pframe pb;
     if (evalhsw != nil && funhatom->a.clb != nil)
     {
       /*if (sstatus evalhook t)
@@ -627,7 +645,7 @@ lispval fcn;
           handy->d.cdr = (lispval)np;
           PUSHDOWN(lexpr_atom, handy);
           lbot        = np;
-          (np++)->val = inewint(((lispval *)handy->d.cdr) - (lispval *)handy->d.car);
+          (np++)->val = inewint(lToVP(((lispval *)handy->d.cdr) - (lispval *)handy->d.car));  TODO_FIX("remove lToVP");
         }
         else break; /* something is wrong - this isn't a proper function */
         rebind(a->d.cdr->d.car, lbot);
@@ -739,8 +757,7 @@ lispval Llexfun()
 /* protect
  * pushes the first argument onto namestack, thereby protecting from gc
  */
-lispval protect(a)
-lispval a;
+lispval protect(lispval a)
 {
   (np++)->val = a;
   if (np >= nplim) namerr();
@@ -764,8 +781,7 @@ lispval linterp()
     function from compiled code, we print out a message and
     will continue only if returned a symbol (ATOM in C parlance).
 */
-lispval Undeff(atmn)
-lispval atmn;
+lispval Undeff(lispval atmn)
 {
   do
   {
@@ -775,8 +791,22 @@ lispval atmn;
 }
 
 /* VARARGS1 */
-bindfix(firstarg) lispval firstarg;
+void bindfix(lispval firstarg, ...)
 {
+#if STILL_PORTING
+  TODO_FIX("need to convert to stdarg.h");
+  // probably should look something like
+  // 
+  //  va_list args;
+  //  int current_arg = firstarg;
+  //  va_start(args, firstarg);
+  //  while (current_arg != 0)
+  //  {
+  //      process(current_arg);
+  //      current_arg = va_arg(args, lispval);
+  //  }
+  //  va_end(args);
+#else  
   lispval       *argp  = &firstarg;
   struct nament *mybnp = bnp;
   while (*argp != nil)
@@ -786,4 +816,5 @@ bindfix(firstarg) lispval firstarg;
     mybnp->atm->a.clb = *argp++;
     bnp               = mybnp++;
   }
+#endif 
 }

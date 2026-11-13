@@ -9,7 +9,7 @@
 #ifndef FRAME_19a7ba4737962a3137ad78dc829c1583_h
 #define FRAME_19a7ba4737962a3137ad78dc829c1583_h
 
-
+#include "global.h"
 
 /* classes of frames: */
 #define F_PROG 1
@@ -37,23 +37,36 @@
 
 struct frame
 {
-  struct argent *svlbot, *svnp;
+  struct argent *svlbot;
+  struct argent *svnp;  
   struct nament *svbnp;
   struct frame  *olderrp;
   lispval        retaddr;
-  long class;
-  lispval larg1; /* optional */
-  lispval larg2; /* optional */
+  long           class;
+  lispval        larg1; /* optional */
+  lispval        larg2; /* optional */
 };
 
-extern struct frame *errp, *Pushframe(), *Ipushf();
+struct pframe
+{
+  long         regs[16];
+  struct frame f;
+};
+
+
+
+
+extern struct frame *errp;
+extern struct frame *Pushframe();
+extern struct frame *Ipushf(int, lispval, lispval, struct pframe *);
+
 
 /* stuff for IBM, RIDGE, DEC-VMS CC, maybe Bellmac-32
  *
  * The non obvious requirement is that any new function
  * requiring a Pushframe must declare
  *
- * 	pbuf pb;
+ * 	struct pframe pb;
  *
  * as well.
  */
@@ -62,10 +75,8 @@ extern struct frame *errp, *Pushframe(), *Ipushf();
 #define Pushframe(a, b, c) Ipushf(a, b, c, &pb)
 #endif
 
-typedef struct pframe
-{
-  long         regs[16];
-  struct frame f;
-} pbuf;
+extern void Inonlocalgo(int frameclass, lispval arg1, lispval arg2); 
+
+extern int Iretfromfr(struct frame *fram);
 
 #endif

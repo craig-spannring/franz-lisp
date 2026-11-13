@@ -10,9 +10,19 @@ static char *rcsid = "$Header: fex2.c,v 1.3 83/09/07 17:55:38 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/fex2.h"
+
 #include "global.h"
-#define NDOVARS 30
+
+#include "prototypes/eval.h"
+#include "prototypes/error.h" 
+
+
 #include "frame.h"
+
+
+#define NDOVARS 30
+
 
 /*
  * Ndo  maclisp do function.
@@ -27,7 +37,7 @@ lispval Ndo()
   struct nament       *savedbnp = bnp;
   int                  count, repeatdo, index;
   extern struct frame *errp;
-  pbuf                 pb;
+  struct pframe                 pb;
   Savestack(3);
 
   current  = lbot->val;
@@ -310,10 +320,7 @@ lispval Nprog2()
   np--;
   return (result);
 }
-lispval typred(typ, ptr)
-int     typ;
-lispval ptr;
-
+lispval typred(int typ, lispval ptr)
 {
   int tx;
   if ((tx = TYPE(ptr)) == typ) return (tatom);

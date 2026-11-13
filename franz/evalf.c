@@ -2,17 +2,27 @@
 static char *sccsid = "%W% %G%";
 #endif
 
+#include "prototypes/evalf.h"
+
 #include "global.h"
 #include "frame.h"
+#include "prototypes/frame.h"
+#include "prototypes/sysat.h"
+
+#include "prototypes/error.h"
+
+#include "stubs.h"
+
 
 lispval Levalf()
 {
   struct frame *myfp;
   lispval       handy, result;
-  struct frame *searchforpdl();
   int           evaltype;
   Savestack(3);
 
+  TODO_FIX("hello here fix");
+  
   if (lbot == np) handy = nil;
   else if ((np - lbot) == 1) handy = lbot->val;
   else argerr("evalf");
@@ -96,14 +106,14 @@ lispval Levalf()
   handy        = handy->d.cdr;
   /* Next is index into bindstack lisp pseudo-array, for maximum
       usefulness */
-  handy->d.car = inewint(myfp->svbnp - orgbnp);
+  handy->d.car = inewint(lToVP(myfp->svbnp - orgbnp));
   handy->d.cdr = newdot();
   handy        = handy->d.cdr;
 
-  handy->d.car = inewint(myfp->svnp - orgnp); /* index of np in namestack*/
+  handy->d.car = inewint(lToVP(myfp->svnp - orgnp)); /* index of np in namestack*/
   handy->d.cdr = newdot();
   handy        = handy->d.cdr;
-  handy->d.car = inewint(myfp->svlbot - orgnp); /* index of lbot in namestack*/
+  handy->d.car = inewint(lToVP(myfp->svlbot - orgnp)); /* index of lbot in namestack*/
   Restorestack();
   return (result);
 }
@@ -127,7 +137,7 @@ struct frame *searchforpdl(struct frame *myfp)
  * vfypdlp :: verify pdl pointer as existing,  do not return unless
  * it is valid
  */
-int vfypdlp(struct frame *curfp)
+void vfypdlp(struct frame *curfp)
 {
   struct frame *myfp;
 

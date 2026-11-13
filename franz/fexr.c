@@ -9,7 +9,14 @@ static char *rcsid = "$Header: /na/franz/franz/RCS/fexr.c,v 1.1 83/01/29 12:48:4
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/fexr.h"
+
 #include "global.h"
+
+#include "prototypes/error.h"
+#include "prototypes/eval.h"
+#include "prototypes/fex2.h"
+
 
 /* Ngcafter *************************************************************/
 /*									*/
@@ -45,8 +52,7 @@ lispval Nopval()
 /*  Since this routine may call newdot() if the second argument is not	*/
 /*  CNIL, the arguments should be protected somehow in that case.	*/
 
-lispval copval(option, value)
-lispval option, value;
+lispval copval(lispval option, lispval value)
 {
   struct dtpr fake;
   lispval     rval;

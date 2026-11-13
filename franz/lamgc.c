@@ -9,8 +9,16 @@ static char *rcsid = "$Header: lamgc.c,v 1.5 84/03/31 22:34:28 layer Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lamgc.h"
+
 #include "global.h"
 #include "gc.h"
+#include "stubs.h"
+
+#include "prototypes/error.h"
+
+#include <fcntl.h>
+#include <unistd.h>
 #include <sys/types.h>
 #ifdef METER
 #include <sys/vtimes.h>
@@ -76,7 +84,7 @@ lispval Lgcstat()
       write(gcstat, (char *)&nbytes, sizeof(nbytes));
       close(gcstat);
       gcstat = 0;
-      return (inewint(nbytes));
+      return (inewint(iToVP(nbytes)));
     default: error("Bad value to gcstat ", TRUE);
   }
   /* NOTREACHED */
@@ -87,7 +95,9 @@ char      *bitmapc = (char *)bitmapi;
    only if gcstat is non zero */
 int gcdump(void)
 {
-#ifdef
+#if FINISHED_PORTING
+  TODO_FIX("Do we need to do anything special here?");
+  
   extern struct vtimes premark, presweep, alldone;
   int                  nbytes, recsize;
   /* 16 bytes/page in the bitmap */

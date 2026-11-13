@@ -12,7 +12,7 @@
 #include "global.h"
 
 /*
- * this file contains auxiliary structure definitions which are used by
+ * this section contains auxiliary structure definitions which are used by
  * just a few files.
  */
 
@@ -20,9 +20,15 @@
 
 #define TRENTS 510
 
+extern lispval foofunc(int);
+
 struct trent
 {
-  lispval (*fcn)(); /* function to call 			*/
+  union
+  {      
+   lispval (*fcn)();                       /* function to call */
+   lispval (*fcn_qlinker)(lispval, int *); /* qlinker          */ 
+  };
   lispval name;     /* symbol which is the function to call */
 };
 
@@ -53,5 +59,6 @@ struct str_x
   char *next_free;
   int   space_left;
 };
+
 
 #endif

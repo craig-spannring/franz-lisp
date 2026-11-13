@@ -9,16 +9,25 @@ static char *rcsid = "$Header: lam8.c,v 1.17 87/12/14 18:48:09 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam8.h"
+
 #include "global.h"
+#include "frame.h"
+#include "stubs.h"
+
+#include "prototypes/alloc.h"
+#include "prototypes/error.h"
+#include "prototypes/ffasl.h"
+
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "frame.h"
+#include <math.h>
 
 /* various functions from the c math library */
-double     sin(), cos(), asin(), acos(), atan2(), sqrt(), log(), exp();
 extern int current;
 
-lispval Imath(func) double (*func)();
+lispval Imath(double (*func)(double))
 {
   lispval handy;
   double  res;
@@ -108,15 +117,15 @@ lispval Latan()
 lispval Lrandom()
 {
   int   curval;
-  float pow();
+//   float pow();
 
   curval = rand(); /* get numb from 0 to 2**31-1 */
 
-  if (np == lbot) return (inewint(curval - (int)pow((double)2, (double)30)));
+  if (np == lbot) return (inewint(iToVP(curval - (int)pow((double)2, (double)30))));
 
   if ((TYPE(lbot->val) != INT) || (lbot->val->i <= 0)) errorh1(Vermisc, "random: non fixnum arg:", nil, FALSE, 0, lbot->val);
 
-  return (inewint(curval % lbot->val->i));
+  return (inewint(iToVP(curval % lbot->val->i)));
 }
 lispval Lmakunb()
 {
@@ -149,7 +158,7 @@ lispval Lfseek()
 
   if (fseek(f, offset, (int)whence) == -1) error("fseek: Illegal parameters.", FALSE);
 
-  retp = inewint(ftell(f));
+  retp = inewint(iToVP(ftell(f)));
 
   return ((lispval)retp);
 }
@@ -173,7 +182,7 @@ lispval Lhashst()
       ;
     cur->d.cdr = newdot();
     cur        = cur->d.cdr;
-    cur->d.car = inewint(cnt);
+    cur->d.car = inewint(iToVP(cnt));
   }
   cur->d.cdr = nil;
   Restorestack();
@@ -364,7 +373,7 @@ lispval Lhunksize()
         break;
       }
     }
-    return (inewint(size));
+    return (inewint(iToVP(size)));
   }
   else error("hunksize: First argument must me a hunk", FALSE);
   /* NOTREACHED */
@@ -450,7 +459,7 @@ lispval Lfileopen()
  * It is used in vaxima as a speed enhancement.
  */
 
-static lispval Ibalmod(invmodp)
+static lispval Ibalmod(int invmodp)
 {
   long mod_div_2, number, modulus;
 
@@ -469,7 +478,7 @@ static lispval Ibalmod(invmodp)
     {
       if (number > mod_div_2) number -= modulus;
     }
-    return (inewint(number));
+    return (inewint(iToVP(number)));
   }
   else error("*mod: Arguments must be fixnums", FALSE);
   /* NOTREACHED */
@@ -533,9 +542,9 @@ lispval Llsh()
        instruction, so we must zero out the ones which
        will propogate from the sign position
     */
-    return (inewint(val & ~(0x80000000 >> -(shift + 1))));
+    return (inewint(iToVP(val & ~(0x80000000 >> -(shift + 1)))));
   }
-  else return (inewint(val));
+  else return (inewint(iToVP(val)));
 }
 
 /* very temporary function to test the validity of the bind stack */
@@ -545,7 +554,7 @@ int bndchk(void)
   struct nament *npt;
   lispval        in2;
 
-  in2 = inewint(200);
+  in2 = inewint(iToVP(200));
   for (npt = orgbnp; npt < bnp; npt++)
   {
     if ((int)npt->atm < (int)in2) abort();
@@ -630,7 +639,7 @@ lispval Lsprintf()
         default: error("sprintf: Bad data type to sprintf", FALSE);
       }
     }
-    sprintf(sbuf);
+    sprintf(sbuf, "");
     for (j = 0; j < np - lbot; j++)
       unstack();
   }
@@ -732,7 +741,7 @@ lispval Lsstrn()
   if (ind < 0) ind = len + 1 + ind;
   if (ind < 1 || ind > len) return (nil);
 
-  if (reallen == 0) return ((lispval)inewint(*(name + ind - 1)));
+  if (reallen == 0) return ((lispval)inewint(iToVP(*(name + ind - 1))));
   else
   {
     char   *pnt  = name + ind - 1;
@@ -740,12 +749,12 @@ lispval Lsstrn()
     lispval cur, start;
 
     protect(cur = start = newdot());
-    cur->d.car = inewint(*pnt);
+    cur->d.car = inewint(iToVP(*pnt));
     while (++pnt <= last && --reallen != 0)
     {
       cur->d.cdr = newdot();
       cur        = cur->d.cdr;
-      cur->d.car = inewint(*pnt);
+      cur->d.car = inewint(iToVP(*pnt));
     }
     Restorestack();
     return (start);
@@ -782,10 +791,10 @@ lispval Lcharindex()
 
   if ((str2 = (char *)index(string, ch)) == 0) return (nil); /* not there */
   /* return 1-based index of character */
-  return (inewint(str2 - string + 1));
+  return (inewint(iToVP(str2 - string + 1)));
 }
 
-lispval Ipurcopy();
+lispval Ipurcopy(lispval handy);
 
 lispval Lpurcopy()
 {
@@ -793,8 +802,8 @@ lispval Lpurcopy()
   return (Ipurcopy(lbot[0].val));
 }
 
-lispval Ipurcopy(handy)
-lispval handy;
+lispval Ipurcopy(lispval handy)
+// lispval handy;
 {
   extern int *beginsweep;
   lispval     retv, curv, lv;
@@ -900,14 +909,9 @@ lispval handy;
  */
 lispval Lpurep()
 {
-  lispval Ipurep();
-
   chkarg(1, "purep");
   return (Ipurep(lbot->val));
 }
-
-/* vector functions */
-lispval newvec(), nveci(), Inewvector();
 
 /* vector creation and initialization functions */
 lispval Lnvec()
@@ -937,7 +941,7 @@ lispval Lnvecl()
  *       = 2: long /
  *	 = 3: long
  */
-lispval Inewvector(class)
+lispval Inewvector(int class)
 {
   int      i;
   lispval  handy;
@@ -1036,13 +1040,13 @@ lispval LIvref()
   class = lbot[2].val->i;
   switch (class)
   {
-    case 0: return (inewint(vect->vb.vectorb[index]));
-    case 1: return (inewint(vect->vw.vectorw[index]));
-    case 2: return (inewint(vect->vl.vectorl[index]));
+    case 0: return (inewint(iToVP(vect->vb.vectorb[index])));
+    case 1: return (inewint(iToVP(vect->vw.vectorw[index])));
+    case 2: return (inewint(iToVP(vect->vl.vectorl[index])));
     case 3: return (vect->v.vector[index]);
-    case 4: return (inewint(*(char *)(vect->i + index)));
-    case 5: return (inewint(*(short *)(vect->i + index)));
-    case 6: return (inewint(*(long *)(vect->i + index)));
+    case 4: return (inewint(iToVP(*(char *)(vect->i + index))));
+    case 5: return (inewint(iToVP(*(short *)(vect->i + index))));
+    case 6: return (inewint(iToVP(*(long *)(vect->i + index))));
     case 7:
       value   = *(float *)(vect->i + index);
       vect    = newdoub();
@@ -1098,7 +1102,7 @@ lispval LIvsize()
   int typ;
 
   chkarg(2, "int:vsize");
-  return (inewint((lbot[0].val->vl.vectorl[VSizeOff]) >> lbot[1].val->i));
+  return (inewint(iToVP((lbot[0].val->vl.vectorl[VSizeOff]) >> lbot[1].val->i)));
 }
 
 lispval Lvprop()
@@ -1131,7 +1135,7 @@ lispval Lvsp()
  *  this is called by equal which has already checked that
  *  the arguments are vector
  */
-vecequal(v, w) lispval v, w;
+int vecequal(lispval v, lispval w)
 {
   int            i;
   lispval        vv, ww, ret;
@@ -1171,7 +1175,7 @@ vecequal(v, w) lispval v, w;
  *  comparisons as possible and then did byte comparisons.
  *  or if we used pointers instead of indexing.
  */
-veciequal(v, w) lispval v, w;
+int veciequal(lispval v, lispval w)
 {
   char vv, ww;
   int  i;

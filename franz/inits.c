@@ -1,3 +1,4 @@
+#include "stubs.h"
 #ifndef lint
 static char *rcsid = "$Header: inits.c,v 1.7 85/03/24 11:03:12 sklower Exp $";
 #endif
@@ -9,24 +10,40 @@ static char *rcsid = "$Header: inits.c,v 1.7 85/03/24 11:03:12 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/inits.h"
+
 #include "global.h"
-#include <signal.h>
 #include "frame.h"
+#include "lfuncs.h"
+#include "stubs.h"
+
+#include "prototypes/fex4.h"
+#include "prototypes/data.h"
+#include "prototypes/error.h"
+#include "prototypes/sysat.h"
+#include "prototypes/fasl.h"
+
+#include <signal.h>
+#include <unistd.h>
+
 
 /* initial
  * initializes the parts of the system that cannot be automatically
  * accomplished in the declarations.
  */
 
-int          reborn = 0; /*  flag to tell whether we are in fast-load version  */
+lispval reborn = 0; /*  flag to tell whether we are in fast-load version  */
+
 extern char *stabf;
 extern int   fvirgin;
 extern int   keywait;
-extern sigstruck, sigdelay;
-int initial(void)
+
+static void makenv(void);
+
+void initial(void)
 {
-  int        sigalrmh(), sigfpeh(), sginth();
-  lispval    Isstatus(), Istsrch();
+//  int        sigalrmh(), sigfpeh(), sginth();
+//  lispval    Isstatus(), Istsrch();
   extern int hashtop;
 
   /* clear any memory of pending SIGINT's */
@@ -77,7 +94,7 @@ int initial(void)
   makenv();
 }
 
-static makenv(void)
+static void makenv(void)
 {
   lispval       env, temp;
   char         *p, *q;
@@ -109,7 +126,9 @@ static makenv(void)
   np--;
 }
 
-int sginth(int signo)
+static void re_enable(int signo, void (*handler)(int));
+
+void sginth(int signo)
 {
   re_enable(signo, sginth);
   sigstruck |= (1 << signo);
@@ -164,7 +183,7 @@ int sigcall(int which)
 
   if (sigacts[which] != ((lispval)0))
   {
-    pbuf pb;
+    struct pframe pb;
     int  mustpop = 0;
     if (errp && errp->class == F_TO_FORT)
     {
@@ -175,7 +194,7 @@ int sigcall(int which)
     lbot    = np;
     np->val = sigacts[which];
     INRNP;
-    np->val = inewint((long)which);
+    np->val = inewint(lToVP((long)which));
     INRNP;
     {
       lispval temp;
@@ -207,7 +226,7 @@ int dosig(void)
       if (sigstruck & i) sigcall(which);
     }
 }
-int badmr(int number)
+void badmr(int number)
 {
   signal(number, badmr);
   fflush(stdout);
@@ -215,7 +234,7 @@ int badmr(int number)
 }
 
 #define mask(s) (1 << ((s) - 1))
-static re_enable(int signo, int (*handler)(void))
+static void re_enable(int signo, void (*handler)(int))
 {
 #if (os_4_2 | os_4_3)
   sigsetmask(sigblock(0) & ~mask(signo));

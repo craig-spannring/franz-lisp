@@ -1,3 +1,4 @@
+#include "stubs.h"
 #ifndef lint
 static char *rcsid = "$Header: lam7.c,v 1.9 87/12/14 18:48:02 sklower Exp $";
 #endif
@@ -9,8 +10,21 @@ static char *rcsid = "$Header: lam7.c,v 1.9 87/12/14 18:48:02 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam7.h"
+
 #include "global.h"
+
+#include "prototypes/error.h"
+#include "prototypes/ffasl.h"
+#include "prototypes/fpipe.h"
+#include "prototypes/lisp.h"
+#include "prototypes/io.h"
+#include "prototypes/eval.h"
+
 #include <signal.h>
+#include <unistd.h>
+#include <time.h>
+#include <string.h>
 
 lispval Lfork()
 {
@@ -19,7 +33,7 @@ lispval Lfork()
   chkarg(0, "fork");
   if ((pid = fork()))
   {
-    return (inewint(pid));
+    return (inewint(iToVP(pid)));
   }
   else return (nil);
 }
@@ -34,9 +48,9 @@ lispval Lwait()
   pid = wait(&status);
   ret = newdot();
   protect(ret);
-  temp       = inewint(pid);
+  temp       = inewint(iToVP(pid));
   ret->d.car = temp;
-  temp       = inewint(status);
+  temp       = inewint(iToVP(status));
   ret->d.cdr = temp;
   Restorestack();
   return (ret);
@@ -54,9 +68,9 @@ lispval Lpipe()
   pipe(pipes);
   ret = newdot();
   protect(ret);
-  temp       = inewint(pipes[0]);
+  temp       = inewint(iToVP(pipes[0]));
   ret->d.car = temp;
-  temp       = inewint(pipes[1]);
+  temp       = inewint(iToVP(pipes[1]));
   ret->d.cdr = temp;
   Restorestack();
   return (ret);
@@ -119,7 +133,7 @@ lispval Lexece()
   }
   *argsp = 0;
 
-  return (inewint(execve(fname->a.pname, args, envs)));
+  return (inewint(iToVP(execve(fname->a.pname, args, envs))));
 }
 
 /* Lprocess -
@@ -140,14 +154,16 @@ lispval Lexece()
 
 lispval Lprocess()
 {
-  int     wflag, childsi, childso, child;
-  lispval handy;
-  char   *command, *p;
-  int     writep, readp;
-  int     itemp;
-  int (*handler)(), (*signal())();
-  FILE *bufs[2], *obufs[2], *fpipe();
-  Savestack(0);
+  int      wflag, childsi, childso, child;
+  lispval  handy;
+  char    *command, *p;
+  int      writep, readp;
+  int      itemp;
+  void    (*handler)(int);
+  
+  FILE *bufs[2], *obufs[2];
+  
+  Savestack(0); TODO_FIX("do we have to play silly stack games?"); 
 
   writep = readp = FALSE;
   wflag          = TRUE;
@@ -237,7 +253,7 @@ lispval Lprocess()
     signal(2, handler); /* restore the interrupt handler */
     itemp = status >> 8;
     Restorestack();
-    return (inewint(itemp)); /* return its status */
+    return (inewint(iToVP(itemp))); /* return its status */
   }
   /* we are not waiting for the childs death
    * build a list containing the write and read ports
@@ -255,8 +271,9 @@ lispval Lprocess()
     handy->d.cdr->d.car = P(bufs[1]);
     ioname[PN(bufs[1])] = (lispval)inewstr((char *)"to-process");
   }
-  handy->d.cdr->d.cdr->d.car = (lispval)inewint(child);
+  handy->d.cdr->d.cdr->d.car = (lispval)inewint(iToVP(child));
   signal(SIGINT, handler);
+  TODO_FIX("do we have to play silly stack games?");  
   Restorestack();
   return (handy);
 }
@@ -281,13 +298,7 @@ lispval Lgensym()
   return ((lispval)newatom(0));
 }
 
-extern struct types
-{
-  char         *next_free;
-  int           space_left, space, type, type_len; /*  note type_len is in units of int */
-  lispval      *items, *pages, *type_name;
-  struct heads *first;
-} atom_str;
+extern struct types atom_str;
 
 lispval Lremprop()
 {
@@ -433,12 +444,11 @@ lispval Lexit()
   if (TYPE(handy) == INT) franzexit((int)handy->i);
   franzexit(-1);
 }
-lispval Iimplode(unintern)
+lispval Iimplode(int unintern)
 {
   lispval      handy, work;
   char        *cp = strbuf;
   extern int   atmlen; /* used by newatom and getatom */
-  extern char *atomtoolong();
 
   chkarg(1, "implode");
   for (handy = lbot->val; handy != nil; handy = handy->d.cdr)
@@ -560,7 +570,12 @@ lispval Ltymestr()
     case 0: time(&timevalue); break;
     case 1:
       while (TYPE(lbot[0].val) != INT)
-        lbot[0].val = errorh(Vermisc, "time-string: non fixnum argument ", nil, TRUE, 0, lbot[0].val);
+        lbot[0].val = errorh1(Vermisc,                             // type 
+                              "time-string: non fixnum argument ", // message
+                              nil,                                 // valret
+                              TRUE,                                // contuab
+                              0,                                   // uniqid 
+                              lbot[0].val);                        // 
       timevalue = lbot[0].val->i;
       break;
     default: argerr("time-string");

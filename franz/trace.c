@@ -9,7 +9,14 @@ static char *rcsid = "$Header: /na/franz/franz/RCS/trace.c,v 1.2 83/08/19 09:50:
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/trace.h"
+
 #include "global.h"
+#include "lfuncs.h"
+
+#include "prototypes/error.h"
+#include "prototypes/eval.h"
+
 lispval Leval1()
 {
   struct nament *bindptr;

@@ -9,6 +9,7 @@
 #ifndef GC_756dc0c62df68da222bd8c90d7759cea_h
 #define GC_756dc0c62df68da222bd8c90d7759cea_h
 
+#include "structs.h"
 
 
 struct gchead
@@ -18,4 +19,6 @@ struct gchead
   int dummy, dummy2, dummy3; /* to be used later	*/
 };
 
+extern lispval gc(struct types *typestr);
+    
 #endif

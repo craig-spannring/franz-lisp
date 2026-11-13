@@ -5,6 +5,9 @@
 #define LISPO_9aa4def5cedcc896ea77703be1ced44a_h
 
 
+#include "config.h"
+
+
 struct exec
 {
   long          a_magic;  /* magic number */
@@ -44,6 +47,8 @@ struct relocation_info
       : 4;                       /* nothing, yet */
 };
 
+
+#if USES_AOUT_OBJ_FMT
 /*
  * Format of a symbol table entry; this file is included by <a.out.h>
  * and should be used if you aren't interested the a.out header
@@ -61,6 +66,7 @@ struct nlist
   short         n_desc;  /* see <stab.h> */
   unsigned long n_value; /* value of this symbol (or sdb offset) */
 };
+#endif 
 #define n_hash n_desc /* used internally by ld */
 
 /*

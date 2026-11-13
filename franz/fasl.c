@@ -10,11 +10,28 @@ static char *rcsid = "$Header: fasl.c,v 1.11 87/12/14 16:49:06 sklower Exp $";
  */
 
 #include "global.h"
-#include <sys/types.h>
+#include "stubs.h"
 #include "lispo.h"
 #include "chkrtab.h"
 #include "structs.h"
 #include "frame.h"
+#include "stubs.h"
+
+#include "prototypes/lam7.h"
+#include "prototypes/lamp.h"
+#include "prototypes/fasl.h"
+#include "prototypes/error.h"
+#include "prototypes/ffasl.h"
+#include "prototypes/sysat.h"
+#include "prototypes/fpipe.h"
+#include "prototypes/fex4.h"
+#include "prototypes/io.h"
+
+#include <sys/types.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+
 
 /* fasl  -  fast loader				j.k.foderaro
  * this loader is tuned for the lisp fast loading application
@@ -74,17 +91,19 @@ static char *rcsid = "$Header: fasl.c,v 1.11 87/12/14 16:49:06 sklower Exp $";
 
 /* external functions called or referenced */
 
-lispval    qcons(), qlinker(), qget();
+lispval qcons();
+// lispval qlinker();
+lispval qget();
 int        _qf0(), _qf1(), _qf2(), _qf3(), _qf4(), _qfuncl(), svkludg(), qnewint();
-int        qnewdoub(), qoneplus(), qoneminus(), wnaerr();
-lispval    Lread(), Lcons(), Lminus(), Ladd1(), Lsub1(), Lplist(), Lputprop();
-lispval    Lprint(), Lpatom(), Lconcat(), Lget(), Lmapc(), Lmapcan();
-lispval    Llist(), Ladd(), Lgreaterp(), Lequal(), Ltimes(), Lsub(), Ipurcopy();
-lispval    Lncons(), Ibindvars(), Iunbindvars(), error();
-int        Inonlocalgo();
-lispval    Istsrch();
-int        mcount(), qpushframe();
-extern int mcnts[], mcntp, doprof;
+//  wnaerr();
+//  Lsub1(), Lplist(), Lputprop();
+// ), Lmapc(), Lmapcan();
+// (), Ltimes(), Lsub(), Ipurcopy();
+// ;
+// int        Inonlocalgo();
+// lispval    Istsrch();
+// int        mcount(), qpushframe();
+// extern int mcnts[], mcntp, doprof;
 
 extern lispval      *tynames[];
 extern struct frame *errp;
@@ -92,100 +111,147 @@ extern char          _erthrow[];
 
 extern int initflag; /* when TRUE, inhibits gc */
 
-char *alloconstack(); /* stack space allocator */
-
 /* mini symbol table, contains the only external symbols compiled code
    is allowed to reference
  */
 
-struct ssym
-{
-  char *fnam; /* pointer to string containing name */
-  int   floc; /* address of symbol */
-  int   ord;  /* ordinal number within cur sym tab */
-
-} Symbtb[] = {"trantb",
-              0,
-              -1, /* must be first */
-              "linker",
-              0,
-              -1, /* must be second */
-              "mcount",
-              (int)mcount,
-              -1,
-              "mcnts",
-              (int)mcnts,
-              -1,
-              "_wnaerr",
-              (int)wnaerr,
-              -1,
-              "_qnewint",
-              (int)qnewint,
-              -1,
-              "_qnewdoub",
-              (int)qnewdoub,
-              -1,
-              "_qcons",
-              (int)qcons,
-              -1,
-              "_qoneplus",
-              (int)qoneplus,
-              -1,
-              "_qoneminus",
-              (int)qoneminus,
-              -1,
-              "_typetable",
-              (int)typetable,
-              -1,
-              "_tynames",
-              (int)tynames,
-              -1,
-              "_qget",
-              (int)qget,
-              -1,
-              "_errp",
-              (int)&errp,
-              -1,
-              "_Inonlocalgo",
-              (int)Inonlocalgo,
-              -1,
-              "__erthrow",
-              (int)_erthrow,
-              -1,
-              "_error",
-              (int)error,
-              -1,
-              "_qpushframe",
-              (int)qpushframe,
-              -1,
-              "_retval",
-              (int)&retval,
-              -1,
-              "_lispretval",
-              (int)&lispretval,
-              -1,
+struct ssym Symbtb[] = {
+                        {                                 //
+                          "trantb",                       //
+                             0,                           //
+                            -1                            // must be first
+                        },                                //
+                        {                                 //
+                            "linker",                     //
+                            0,                            //
+                            -1,                           // must be second
+                        },                                //
+                        {                                 //
+                            "mcount",                     //
+                            (uintptr_t)mcount,            //
+                            -1                            //
+                        },                                //
+                        {                                 //
+                            "mcnts",                      //
+                            (uintptr_t)mcnts,             //
+                            -1                            //
+                        },                                //
+                        {                                 //
+                           "_wnaerr",                     //
+                           (uintptr_t)wnaerr,             //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_qnewint",                    //
+                           (uintptr_t)qnewint,            //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_qnewdoub",                   //
+                           (uintptr_t)qnewdoub,           //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_qcons",                      //
+                           (uintptr_t)qcons,              //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_qoneplus",                   //
+                           (uintptr_t)qoneplus,           //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_qoneminus",                  //
+                           (uintptr_t)qoneminus,          //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_typetable",                  //
+                           (uintptr_t)typetable,          //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_tynames",                    //
+                           (uintptr_t)tynames,            //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_qget",                       //
+                           (uintptr_t)qget,               //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_errp",                       //
+                           (uintptr_t)&errp,              //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_Inonlocalgo",                //
+                           (uintptr_t)Inonlocalgo,        //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "__erthrow",                   //
+                           (uintptr_t)_erthrow,           //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_error",                      //
+                           (uintptr_t)error,              //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_qpushframe",                 //
+                           (uintptr_t)qpushframe,         //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_retval",                     //
+                           (uintptr_t)&retval,            //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_lispretval",                 //
+                           (uintptr_t)&lispretval,        //
+                           -1                             //
+                        },                                //
 #ifndef NPINREG
-              "_np",
-              (int)&np,
-              -1,
-              "_lbot",
-              (int)&lbot,
-              -1,
+                        {                                 //
+                           "_np",                         //
+                           (uintptr_t)&np,                //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_lbot",                       //
+                           (uintptr_t)&lbot,              //
+                           -1                             //
+                        },                                //
 #endif
 #ifndef NILIS0
-              "_nilatom",
-              (int)&nilatom,
-              -1,
+                        {                                 //
+                           "_nilatom",                    //
+                           (uintptr_t)&nilatom,           //
+                           -1                             //
+                        },                                //
 #endif
-              "_bnp",
-              (int)&bnp,
-              -1,
-              "_Ibindvars",
-              (int)Ibindvars,
-              -1,
-              "_Iunbindvars",
-              (int)Iunbindvars,
-              -1};
+                        {                                 //
+                           "_bnp",                        //
+                           (uintptr_t)&bnp,               //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_Ibindvars",                  //
+                           (uintptr_t)Ibindvars,          //
+                           -1                             //
+                        },                                //
+                        {                                 //
+                           "_Iunbindvars",                //
+                           (uintptr_t)Iunbindvars,        //
+                           -1                             //
+                        }
+};
+
 
 #define SYMMAX ((sizeof Symbtb) / (sizeof(struct ssym)))
 
@@ -217,19 +283,21 @@ extern struct trtab *trhead; /* head of list of transfer tables	    */
 extern struct trent *trcur;  /* next entry to allocate		    */
 extern int           trleft; /* # of entries left in this transfer table */
 
-struct trent *gettran(); /* function to allocate entries */
+struct trent *gettran(int size); /* function to allocate entries */
 
 /* maximum number of functions */
 #define MAXFNS 2000
 
 lispval Lfasl()
 {
-  extern int             holend, usehole;
+  TODO_FIX("recode this to be portable");
+#if FINISHED_PORTING  
+  extern int             usehole;
   extern int             uctolc;
   extern char           *curhbeg;
   struct argent         *svnp;
   struct exec            exblk;                      /* stores a.out header */
-  FILE                  *filp, *p, *map, *fstopen(); /* file pointer */
+  FILE                  *filp, *p, *map;             /* file pointer */
   int                    domap, note_redef;
   lispval                handy, debugmode;
   struct relocation_info reloc;
@@ -257,9 +325,9 @@ lispval Lfasl()
       *binder_core_org,  /* beginning of binder table   */
       *string_core_org;
 
-  int              /*string_file_org,	/* location of string table in file */
-      string_size, /* number of chars in string table */
-      segsiz;      /* size of permanent incore segment */
+  int              // string_file_org,	 location of string table in file 
+      string_size, // number of chars in string table 
+      segsiz;      // size of permanent incore segment 
 
   char           *symbol_name;
   struct bindage *curbind;
@@ -269,8 +337,7 @@ lispval Lfasl()
   lispval         currtab, curibase;
   char            ch, *filnm, *nfilnm;
   char            tempfilbf[100];
-  char           *strcat();
-  long            lseek();
+
   Keepxs();
 
   switch (np - lbot)
@@ -628,7 +695,7 @@ lispval Lfasl()
 
       if (uctolc) ouctolc = TRUE; /* if changed by eval, remember */
       curibase          = ibase->a.clb;
-      ibase->a.clb      = inewint(10);
+      ibase->a.clb      = inewint(iToVP(10));
       Vreadtable->a.clb = strtab;
     }
   };
@@ -644,6 +711,7 @@ lispval Lfasl()
   fclose(filp);
   if (domap) fclose(map);
   Freexs();
+#endif   
   return (tatom);
 }
 
@@ -710,8 +778,14 @@ int clrtt(int flag)
   {
     for (tement = &temptt->trentrs[0]; tement->fcn != 0; tement++)
     {
-      if (flag == 0 || TYPE(fnb = tement->name->a.fnbnd) != BCD || TYPE(fnb->bcd.discipline) == STRNG) tement->fcn = qlinker;
-      else tement->fcn = fnb->bcd.start;
+      if (flag == 0 || TYPE(fnb = tement->name->a.fnbnd) != BCD || TYPE(fnb->bcd.discipline) == STRNG)
+      {
+        tement->fcn_qlinker = qlinker;
+      }
+      else
+      {
+        tement->fcn = fnb->bcd.start;
+      }        
     }
   }
 }

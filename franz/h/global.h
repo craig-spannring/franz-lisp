@@ -9,18 +9,28 @@
 #ifndef GLOBAL_584b15126f4905532df5ce164f77c304_h
 #define GLOBAL_584b15126f4905532df5ce164f77c304_h
 
-
-
-#include <stdio.h>
 #include "config.h"
 #include "ltypes.h"
+// #include "prototypes/alloc.h"
+
 #ifdef UNIXTS
 #include "tsfix.h"
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+
+
 #define AD 0
 
+#if STILL_PORTING
+#define peekc(p) (0)
+#else
+static_assert(0, "need to recode this in portable C");
 #define peekc(p) (p->_cnt > 0 ? *(p)->_ptr & 0377 : _filbuf(p) == -1 ? -1 : ((p)->_cnt++, *--(p)->_ptr & 0377))
+#endif 
 
 #define FALSE 0
 #define TRUE 1
@@ -125,7 +135,12 @@ extern long *sp(), stack(), unstack();
 #endif
 
 extern char typetable[]; /*  the table with types for each page  */
+#if STILL_PORTING
+#define ATOX(a1) ((((uintptr_t)(a1)) - OFFSET) >> 9)
+#else
+static_assert(0, "figure out what type a1 should be.")
 #define ATOX(a1) ((((int)(a1)) - OFFSET) >> 9)
+#endif 
 #define TYPE(a1) ((typetable + 1)[ATOX(a1)])
 #define TYPL(a1) ((typetable + 1)[ATOX(a1)])
 #define SETTYPE(a1, b, c)                         \
@@ -192,11 +207,11 @@ struct array
 
 struct bfun
 {
-  lispval (*start)(); /*  entry point to routine  */
-  lispval discipline, /*  argument-passing discipline  */
-      language,       /*  language coded in	*/
-      params,         /*  parameter list if relevant  */
-      loctab;         /*  local table  */
+    lispval (*start)(); /*  entry point to routine  */
+    lispval discipline,         /*  argument-passing discipline  */        
+    language,       /*  language coded in	*/
+    params,         /*  parameter list if relevant  */
+    loctab;         /*  local table  */
 };
 
 struct Hunk
@@ -250,7 +265,12 @@ union lispobj
 extern lispval Inewint();
 #define inewint(p) Inewint((long)(p))
 #else
-extern lispval inewint();
+#if STILL_PORTING
+extern lispval inewint(void *n);
+#else
+static_assert(0, "figure out what type n should be.")
+extern lispval inewint(struct frame *n);
+#endif 
 #endif
 
 #include "sigtab.h" /* table of all pointers to lisp data */
@@ -266,7 +286,7 @@ extern FILE *xports[]; /* page of file *'s for lisp	*/
 #define P(p) ((lispval)(xports + ((p) - _iob)))
 #define PN(p) ((int)((p) - _iob))
 #else
-extern lispval P();
+extern lispval P(FILE *p);
 extern FILE  **xports;
 #define PN(p) (((FILE **)P(p)) - xports)
 #endif
@@ -287,11 +307,15 @@ extern unsigned char *ctable;   /* Character table in current use */
 */
 #define NAMINC 25
 
-extern struct nament
+struct nament    
 {
-  lispval val, atm;
-} *bnp,      /* first free bind entry*/
-    *bnplim; /* limit of bindstack   */
+  lispval val;
+  lispval atm;
+};
+
+extern struct nament *bnp;      /* first free bind entry*/
+extern struct nament   *bnplim; /* limit of bindstack   */
+
 
 struct argent
 {
@@ -422,9 +446,8 @@ extern int     itemp;
 #define OR 18
 #define XOR 19
 
-interpt();
-handler();
-extern sigdelay, sigstruck;
+// handler();
+// extern sigdelay, sigstruck;
 
 /* limit of valid data area **************************************/
 
@@ -480,5 +503,7 @@ extern int lctrace;
 
 #define saveonly(n) asm("#save	n")
 #define snpand(n) asm("#protect	n")
+
+#include "structs.h"
 
 #endif

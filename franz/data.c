@@ -9,10 +9,13 @@ static char *rcsid = "$Header: data.c,v 1.8 85/03/24 11:02:24 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/data.h"
+
 #include "global.h"
 #include "gtabs.h"
 #include "structs.h"
 #include "frame.h"
+
 #include <stdio.h>
 
 /*char firstalloc[NBPG] = { 'x' };	/* first thing allocated in file */
@@ -111,7 +114,6 @@ int         holesize = HOLE;   /* This avoids an ifdef in dumplisp */
 lispval ftemp, vtemp, argptr, ttemp; /* temporaries: use briefly	*/
 int     itemp;
 lispval sigacts[16];         /* for catching interrupts	*/
-int     sigstruck, sigdelay; /* for catching interrupts	*/
 lispval stattab[16];         /* miscelleneous options	*/
 lispval Vprintsym;           /* value is the symbol 'print'  */
 

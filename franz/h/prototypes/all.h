@@ -35,7 +35,6 @@
 #include "prototypes/low.h"
 #include "prototypes/pbignum.h"
 #include "prototypes/rlc.h"
-#include "prototypes/stubs.h"
 #include "prototypes/subbig.h"
 #include "prototypes/sysat.h"
 #include "prototypes/trace.h"

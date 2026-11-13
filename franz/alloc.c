@@ -9,18 +9,30 @@ static char *rcsid = "$Header: alloc.c,v 1.13 87/12/11 17:27:45 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/alloc.h"
+
 #include "global.h"
 #include "structs.h"
+#include "gc.h"
+#include "dfuncs.h"
+#include "prototypes/data.h"
+#include "stubs.h"
 
+#include "prototypes/fexr.h"
+#include "prototypes/lisp.h"
+#include "prototypes/io.h"
+#include "prototypes/fex3.h"
+#include "prototypes/error.h"
+#include "prototypes/eval.h"
+
+#include <string.h>
 #include <sys/types.h>
 #include <sys/times.h>
+#include <unistd.h>
 #ifdef METER
 #include <sys/vtimes.h>
 #endif
 
-#define NUMWORDS TTSIZE * 128 /*  max number of words in P0 space  */
-#define BITQUADS TTSIZE * 2   /*  length of bit map in quad words  */
-#define BITLONGS TTSIZE * 4   /*  length of bit map in long words  */
 
 #ifdef vax
 #define ftstbit                   \
@@ -35,17 +47,13 @@ static char *rcsid = "$Header: alloc.c,v 1.13 87/12/11 17:27:45 sklower Exp $";
 #define setbit                    \
   asm("	ashl	$-2,r11,r0");     \
   asm("	bbcs	r0,_bitmapi,$0");
-#endif
-
-#if m_68k
+#elif m_68k
 #define ftstbit           \
   {                       \
     if (Itstbt()) return; \
   }
 #define setbit Itstbt()
-#endif
-
-#ifdef tahoe
+#elif defined(tahoe)
 #define ftstbit           \
   if (readbit(p)) return; \
   oksetbit;
@@ -58,6 +66,9 @@ static char *rcsid = "$Header: alloc.c,v 1.13 87/12/11 17:27:45 sklower Exp $";
   {                  \
     bitmapi[r] |= s; \
   }
+#else
+#define ftstbit                  TODO_FIX("Implement ftstbit")
+#define setbit                   TODO_FIX("Implement setbit")
 #endif
 
 /*	Unused bit macros
@@ -108,8 +119,8 @@ int bitmsk[32]
        0x1000000, 0x2000000, 0x4000000, 0x8000000, 0x10000000, 0x20000000, 0x40000000, 0x80000000};
 extern int *bind_lists; /*  lisp data for compiled code */
 
-char *xsbrk();
-char *gethspace();
+// char *xsbrk();
+// char *gethspace();
 
 extern struct types atom_str, strng_str, int_str, dtpr_str, doub_str, array_str, sdot_str, val_str, funct_str, hunk_str[], vect_str,
     vecti_str, other_str;
@@ -224,8 +235,7 @@ int get_more_space(struct types *type_struct, int purep)
  *  get_more_space
  */
 
-lispval       next_one(type_struct)
-struct types *type_struct;
+lispval next_one(struct types *type_struct)
 {
   char *temp;
 
@@ -277,8 +287,8 @@ int space_warn(int g)
 /* allocate an element of a pure structure.  Pure structures will
  * be ignored by the garbage collector.
  */
-lispval       next_pure_one(type_struct)
-struct types *type_struct;
+lispval
+next_pure_one(struct types *type_struct)
 {
   char *temp;
 
@@ -365,7 +375,7 @@ struct atom *newatom(int pure)
 
 char *newstr(int purep)
 {
-  char         *save, *strcpy();
+  char         *save;
   int           atmlen;
   struct str_x *p = str_current + purep;
 
@@ -448,8 +458,7 @@ lispval pnewval()
   return (temp);
 }
 
-lispval newhunk(hunknum)
-int     hunknum;
+lispval newhunk(int hunknum)
 {
   lispval temp;
 
@@ -457,8 +466,7 @@ int     hunknum;
   return (temp);
 }
 
-lispval pnewhunk(hunknum)
-int     hunknum;
+lispval pnewhunk(int hunknum)
 {
   lispval temp;
 
@@ -466,8 +474,7 @@ int     hunknum;
   return (temp);
 }
 
-lispval inewval(arg)
-lispval arg;
+lispval inewval(lispval arg)
 {
   lispval temp;
   temp    = next_one(&val_str);
@@ -483,24 +490,23 @@ lispval arg;
  *  N consecutive bytes
  *
  */
-lispval getvec();
 
-lispval newvec(size)
+lispval newvec(int size)
 {
   return (getvec(size, &vect_str, FALSE));
 }
 
-lispval pnewvec(size)
+lispval pnewvec(int size)
 {
   return (getvec(size, &vect_str, TRUE));
 }
 
-lispval nveci(size)
+lispval nveci(int size)
 {
   return (getvec(size, &vecti_str, FALSE));
 }
 
-lispval pnveci(size)
+lispval pnveci(int size)
 {
   return (getvec(size, &vecti_str, TRUE));
 }
@@ -514,8 +520,7 @@ lispval pnveci(size)
  * and vl.vectorl[-1] is the size field.   In other code,
  * v.vector[-1] is the prop field, and vl.vectorl[-2] is the size.
  */
-lispval       getvec(size, typestr, purep)
-struct types *typestr;
+lispval getvec(int size, struct types *typestr, int purep)
 {
   lispval back, current;
   int     sizewant, bytes, thissize, pages, pindex, triedgc = FALSE;
@@ -607,8 +612,7 @@ again:
  * Ipurep :: routine to check for pureness of a data item
  *
  */
-lispval Ipurep(element)
-lispval element;
+lispval Ipurep(lispval element)
 {
   if (purepage[ATOX(element)]) return (tatom);
   else return (nil);
@@ -625,7 +629,7 @@ lispval element;
  *  dtprs.    The dtpr list is linked by car instead of cdr so when we
  *  put it in the free list, we have to change the links.
  */
-pruneb(bignum) lispval bignum;
+void pruneb(lispval bignum)
 {
   lispval temp = bignum;
 
@@ -662,6 +666,8 @@ lispval Ngc()
   return (gc((struct types *)CNIL));
 }
 
+int printall = 0;
+
 /*
  * gc(type_struct)
  *
@@ -671,9 +677,7 @@ lispval Ngc()
  * type_struct is the type of lisp data that ran out causing this
  * garbage collection
  */
-int           printall = 0;
-lispval       gc(type_struct)
-struct types *type_struct;
+lispval gc(struct types *type_struct)
 {
   lispval    save;
   struct tms begin, finish;
@@ -728,7 +732,6 @@ int gc1(void)
   struct argent *loop2;
   struct nament *loop3;
   struct atom   *symb;
-  int            markdp();
   extern int     hashtop;
 
   pagerand();
@@ -760,8 +763,8 @@ int gc1(void)
   bytestoclear = ((((int)datalim) - ((int)beginsweep)) >> 9) * 16;
   for (start = bitmapi + ATOLX(beginsweep); bytestoclear > 0;)
   {
-    if (bytestoclear > MAXCLEAR) blzero((int)start, MAXCLEAR);
-    else blzero((int)start, bytestoclear);
+    if (bytestoclear > MAXCLEAR) blzero(iToVP((int)start), MAXCLEAR);
+    else blzero(iToVP((int)start), bytestoclear);
     start = (int *)(MAXCLEAR + (int)start);
     bytestoclear -= MAXCLEAR;
   }
@@ -1080,16 +1083,16 @@ int gc1(void)
  *
  */
 
-lispval alloc(tname, npages)
-lispval tname;
-long    npages;
+lispval alloc(lispval tname, long npages)
+// lispval tname;
+// long    npages;
 {
   long          ii, jj;
   struct types *typeptr;
 
   ii      = typenum(tname);
   typeptr = spaces[ii];
-  if (npages <= 0) return (inewint(npages));
+  if (npages <= 0) return (inewint(lToVP(npages)));
 
   if ((ATOX(datalim)) + npages > TTSIZE) error("Space request would exceed maximum memory allocation", FALSE);
   if ((ii == VECTOR) || (ii == VECTORI))
@@ -1100,12 +1103,12 @@ long    npages;
     tname->v.vector[1]   = (lispval)typeptr->next_free;
     typeptr->next_free   = (char *)&(tname->v.vector[1]);
     if (debugin) fprintf(stderr, "alloced %d vec pages\n", npages);
-    return (inewint(npages));
+    return (inewint(lToVP(npages)));
   }
 
   for (jj = 0; jj < npages; ++jj)
     if (get_more_space(spaces[ii], FALSE)) break;
-  return (inewint(jj));
+  return (inewint(lToVP(jj)));
 }
 
 /*
@@ -1114,7 +1117,7 @@ long    npages;
  * allocate in the hole if there is room.  This routine doesn't look
  * in the free lists, it always allocates space.
  */
-lispval csegment(typecode, nitems, useholeflag)
+lispval csegment(int typecode, int nitems, int useholeflag)
 {
   int   ii, jj;
   char *charadd;
@@ -1128,7 +1131,7 @@ lispval csegment(typecode, nitems, useholeflag)
   else
 #endif
   {
-    charadd = sbrk(nitems);
+    charadd = sbrk(nitems); TODO_FIX("need to rethink memory management");
     datalim = (lispval)(charadd + nitems);
   }
   if ((int)charadd <= 0) error("NOT ENOUGH SPACE FOR ARRAY", FALSE);
@@ -1151,22 +1154,21 @@ lispval csegment(typecode, nitems, useholeflag)
   ii = (int)charadd;
   while (nitems > MAXCLEAR)
   {
-    blzero(ii, MAXCLEAR);
+    blzero(iToVP(ii), MAXCLEAR);
     nitems -= MAXCLEAR;
     ii += MAXCLEAR;
   }
-  blzero(ii, nitems);
+  blzero(iToVP(ii), nitems);  
   return ((lispval)charadd);
 }
 
-int     csizeof(tname)
-lispval tname;
+int     csizeof(lispval tname)
+// lispval tname;
 {
   return (spaces[typenum(tname)]->type_len * 4);
 }
 
-int     typenum(tname)
-lispval tname;
+int typenum(lispval tname)
 {
   int ii;
 
@@ -1183,7 +1185,7 @@ chek:
 }
 char *gethspace(int segsiz, int type)
 {
-  extern usehole;
+  extern int usehole;
   extern char  holend[];
   extern char *curhbeg;
   char        *value;
@@ -1229,10 +1231,11 @@ int gcrebear(void)
 #endif
 }
 
-/** markit(p) ***********************************************************/
-/*  just calls markdp							*/
-
-markit(p) lispval *p;
+/** markit(
+ * just calls markdp
+ * @todo doesn't seem to be used anywhere. 
+ */
+void markit(lispval *p) 
 {
   markdp(*p);
 }
@@ -1245,7 +1248,7 @@ markit(p) lispval *p;
  *  An iterative method is used to mark list structure, to avoid
  *  excessive recursion.
  */
-markdp(p) lispval p;
+void markdp(lispval p)
 {
 #ifdef tahoe
   int r, s; /* (goes with non-asm readbit, oksetbit) */
@@ -1446,7 +1449,7 @@ char *ysbrk(int pages, int type)
  * if the atom does not already exist, regurgitates a new one and
  * returns it.
  */
-lispval getatom(purep)
+lispval getatom(int purep)
 {
   lispval aptr;
   char   *name, *endname;
@@ -1506,8 +1509,7 @@ lispval getatom(purep)
  * to be used as the print name.  It doesn't do the automagic
  * creation of things of the form c[ad]*r.
  */
-lispval inewatom(name)
-char   *name;
+lispval inewatom(char *name)
 {
   struct atom        *aptr;
   int                 hash;

@@ -9,11 +9,22 @@ static char *rcsid = "$Header: fex4.c,v 1.5 85/03/13 17:19:04 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/fex4.h"
+
 #include "global.h"
 #include "lfuncs.h"
 #include "chkrtab.h"
+#include "stubs.h"
+
+#include "prototypes/sysat.h"
+#include "prototypes/sysat.h"
+#include "prototypes/fasl.h"
+#include "prototypes/inits.h"
+
 #include <signal.h>
 #include <sys/types.h>
+#include <unistd.h>
+
 
 #if (os_4_2 || os_4_3)
 #include <sys/time.h>
@@ -31,7 +42,6 @@ lispval Lsyscall()
   lispval        temp;
   struct argent *aptr;
   int            acount = 1;
-  extern syscall();
   int args[50];
   Savestack(3);
 
@@ -67,7 +77,12 @@ lispval Lsyscall()
 
   Restorestack();
   args[0] = acount - 1;
-  return (inewint(callg_(syscall, args)));
+  TODO_FIX("Not sure how we replace syscall with something that returns a lispval");
+#if STILL_PORTING
+  return NULL;
+#else   
+  return (inewint(iToVP(callg_(syscall, args))));
+#endif  
 }
 
 /* eval-when: this has the form (eval-when <list> <form1> <form2> ...)
@@ -150,12 +165,10 @@ lispval Nstatus()
   int                   indx, ctim;
   int                   typ;
   char                 *cp;
-  char                 *ctime();
-  struct tm            *lctime, *localtime();
+  struct tm            *lctime;
   extern unsigned char *ctable;
   extern int            dmpmode;
   extern lispval        chktt();
-  lispval               Istsrch();
   Savestack(3);
 
   if (lbot->val == nil) return (nil);
@@ -206,12 +219,12 @@ lispval Nstatus()
 
       if (valarg->a.pname[1] != '\0') error("status: only one character atom allowed", FALSE);
 
-      handy = inewint((long)ctable[indx]);
+      handy = inewint(lToVP((long)ctable[indx]));
       return (handy);
 
     case ST_RINTB: return (stattab[curitm->d.cdr->d.cdr->d.cdr->i]);
 
-    case ST_DMPR: return (inewint(dmpmode));
+    case ST_DMPR: return (inewint(iToVP(dmpmode)));
 
     case ST_CTIM:
       ctim   = time((time_t *)0);
@@ -222,24 +235,24 @@ lispval Nstatus()
     case ST_LOCT:
       ctim                      = time((time_t *)0);
       lctime                    = localtime(&ctim);
-      (handy = newdot())->d.car = inewint(lctime->tm_sec);
+      (handy = newdot())->d.car = inewint(iToVP(lctime->tm_sec));
       protect(handy);
       handy->d.cdr  = (valarg = newdot());
-      valarg->d.car = inewint(lctime->tm_min);
+      valarg->d.car = inewint(iToVP(lctime->tm_min));
       valarg->d.cdr = (curitm = newdot());
-      curitm->d.car = inewint(lctime->tm_hour);
+      curitm->d.car = inewint(iToVP(lctime->tm_hour));
       curitm->d.cdr = (valarg = newdot());
-      valarg->d.car = inewint(lctime->tm_mday);
+      valarg->d.car = inewint(iToVP(lctime->tm_mday));
       valarg->d.cdr = (curitm = newdot());
-      curitm->d.car = inewint(lctime->tm_mon);
+      curitm->d.car = inewint(iToVP(lctime->tm_mon));
       curitm->d.cdr = (valarg = newdot());
-      valarg->d.car = inewint(lctime->tm_year);
+      valarg->d.car = inewint(iToVP(lctime->tm_year));
       valarg->d.cdr = (curitm = newdot());
-      curitm->d.car = inewint(lctime->tm_wday);
+      curitm->d.car = inewint(iToVP(lctime->tm_wday));
       curitm->d.cdr = (valarg = newdot());
-      valarg->d.car = inewint(lctime->tm_yday);
+      valarg->d.car = inewint(iToVP(lctime->tm_yday));
       valarg->d.cdr = (curitm = newdot());
-      curitm->d.car = inewint(lctime->tm_isdst);
+      curitm->d.car = inewint(iToVP(lctime->tm_isdst));
       Restorestack();
       return (handy);
 
@@ -253,7 +266,7 @@ lispval Nstatus()
 lispval Nsstatus()
 {
   lispval handy;
-  lispval Isstatus();
+//  lispval Isstatus();
 
   handy = lbot->val;
 
@@ -264,12 +277,9 @@ lispval Nsstatus()
 }
 
 /* Isstatus - internal routine to do a set status.	*/
-lispval Isstatus(curnam, curval)
-lispval curnam, curval;
+lispval Isstatus(lispval curnam, lispval curval)
 {
   lispval    curitm, head;
-  lispval    Istsrch(), Iaddstat();
-  int        badmr(), clrtt();
   extern int uctolc, dmpmode, bcdtrsw, gcstrings;
 
   curitm = Istsrch(curnam);
@@ -307,7 +317,7 @@ lispval curnam, curval;
     case ST_CORE:
       if (curval == nil)
       {
-        signal(SIGBUS, badmr);  /* catch bus errors */
+        signal(SIGBUS,  badmr);  /* catch bus errors */
         signal(SIGSEGV, badmr); /* and segmentation viols */
       }
       else
@@ -365,8 +375,7 @@ setit: /* store value in status list */
    we return nil
  */
 
-lispval Istsrch(nam)
-lispval nam;
+lispval Istsrch(lispval nam)
 {
   lispval handy;
 
@@ -379,9 +388,9 @@ lispval nam;
 /* Iaddstat - add a status entry to the status list	*/
 /*	return new entry in status list */
 
-lispval Iaddstat(name, readcode, setcode, valu)
-lispval name, valu;
-int     readcode, setcode;
+lispval Iaddstat(lispval name, int readcode, int setcode, lispval valu)
+// lispval name, valu;
+// int     readcode, setcode;
 {
   lispval handy, handy2;
   Savestack(2);

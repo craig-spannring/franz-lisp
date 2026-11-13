@@ -9,10 +9,24 @@ static char *rcsid = "$Header: lam5.c,v 1.8 87/12/14 18:47:45 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam5.h"
+
 #include "global.h"
 #include "chkrtab.h"
+#include "dfuncs.h"
+#include "chars.h"
+#include "stubs.h"
+
+#include "prototypes/ffasl.h"
+#include "prototypes/io.h"
+#include "prototypes/fpipe.h"
+#include "prototypes/divbig.h"
+
 #include <ctype.h>
-char *strcpy();
+#include <unistd.h>
+#include <signal.h>
+#include <math.h>
+
 
 /*===========================================
 -
@@ -22,16 +36,15 @@ char *strcpy();
 -
 -===========================================*/
 
-#include "chars.h"
-lispval Lexpldx(kind, slashify)
-int     kind, slashify; /* kind = 0 => explode to characters
-                                = 1 => explode to fixnums (aexploden)
-                           slashify = 0 => do not quote bizarre characters
-                                    = 1 => quote bizarre characters
-                        */
+lispval Lexpldx(int kind, int slashify)
+// int     kind, slashify; /* kind = 0 => explode to characters
+//                                 = 1 => explode to fixnums (aexploden)
+//                            slashify = 0 => do not quote bizarre characters
+//                                     = 1 => quote bizarre characters
+//                         */
 {
   int        typ, i;
-  char       ch, *strb, strbb[BUFSIZ], *alloconstack(); /* temporary string buffer */
+  char       ch, *strb, strbb[BUFSIZ]; /* temporary string buffer */
   lispval    last, handy;
   extern int uctolc;
   char      *cp;
@@ -127,6 +140,8 @@ int     kind, slashify; /* kind = 0 => explode to characters
       break;
     case SDOT:
     {
+      TODO_FIX("Figure out how to do this portably.");
+#if FINISHED_PORTING
       struct _iobuf _strbuf;
       int           count;
       for ((handy = lbot->val), count = 12; handy->s.CDR != (lispval)0; (handy = handy->s.CDR), count += 12)
@@ -138,6 +153,7 @@ int     kind, slashify; /* kind = 0 => explode to characters
       _strbuf._cnt  = count;
       pbignum(lbot->val, &_strbuf);
       putc(0, &_strbuf);
+#endif 
       break;
     }
     default:
@@ -164,7 +180,7 @@ int     kind, slashify; /* kind = 0 => explode to characters
           last->d.car      = (lispval)getatom(TRUE); /* look in oblist */
           break;
 
-        case 1: last->d.car = inewint(ch); break;
+        case 1: last->d.car = inewint(iToVP(ch)); break;
       }
 
       /* advance pointers */
@@ -238,7 +254,7 @@ lispval Largv()
   }
   else
   {
-    return (inewint(Xargc));
+    return inewint(iToVP(Xargc));
   }
 }
 /*
@@ -299,7 +315,8 @@ lispval Lascii()
  */
 lispval Lboole()
 {
-  x, y;
+  int x;
+  int y; 
   struct argent *mynp;
   int            k;
 
@@ -330,7 +347,7 @@ lispval Lboole()
       case 15: x = -1;
     }
   }
-  return (inewint(x));
+  return inewint(iToVP(x));
 }
 lispval Lfact()
 {
@@ -354,7 +371,7 @@ to calculate fact of > 2^30 We will be here till doomsday!.",
     Restorestack();
     return (result);
   }
-  handy = inewint(result->s.I);
+  handy = inewint(iToVP(result->s.I));
   pruneb(result);
   Restorestack();
   return (handy);
@@ -367,7 +384,6 @@ to calculate fact of > 2^30 We will be here till doomsday!.",
 lispval Lfix()
 {
   lispval handy;
-  double  floor();
 
   chkarg(1, "fix");
   handy = lbot->val;
@@ -376,7 +392,7 @@ lispval Lfix()
     default:   error("innaproriate arg to fix.", FALSE);
     case INT:
     case SDOT: return (handy);
-    case DOUB: return (inewint((int)floor(handy->r)));
+    case DOUB: return (inewint(iToVP((int)floor(handy->r))));
   }
 }
 /*
@@ -408,7 +424,7 @@ lispval Lfrexp()
   }
   result = handy = newdot();
   protect(handy);
-  handy->d.car = inewint(exp);
+  handy->d.car = inewint(iToVP(exp));
   if (hi == 0 && lo == 0)
   {
     handy->d.cdr = inewint(0);
@@ -463,8 +479,7 @@ lispval Lfloat()
       /* NOTREACHED */
   }
 }
-double  Ifloat(handy)
-lispval handy;
+double  Ifloat(lispval handy)
 {
   double sum   = 0.0;
   int    count = 0;
@@ -528,7 +543,7 @@ lispval LDivide()
   }
   divbig(arg1, arg2, &quo, &rem);
   protect(quo);
-  if (rem == ((lispval)&dummy)) rem = inewint(dummy.I);
+  if (rem == ((lispval)&dummy)) rem = inewint(iToVP(dummy.I));
   protect(rem);
   protect(result = work = newdot());
   work->d.car                     = quo;
@@ -551,9 +566,9 @@ lispval LEmuldiv()
 
   Imuldiv(mynp[0].val->i, mynp[1].val->i, mynp[2].val->i, mynp[3].val->i, &quo, &rem);
   protect(result = newdot());
-  (result->d.car = inewint(quo));
+  (result->d.car = inewint(iToVP(quo)));
   work = result->d.cdr = newdot();
-  (work->d.car = inewint(rem));
+  (work->d.car = inewint(iToVP(rem)));
   Restorestack();
   return (result);
 }

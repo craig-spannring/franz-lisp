@@ -9,7 +9,7 @@
 #include <sys/types.h>
 #endif
 
-#if !HAVE_A_OUT_H
+#ifndef HAVE_A_OUT_H
 int main()
 {
   printf("TODO- implement this.\n");

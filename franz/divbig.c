@@ -9,19 +9,27 @@ static char *rcsid = "$Header: divbig.c,v 1.4 83/11/26 12:10:16 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/divbig.h"
+
 #include "global.h"
+#include "stubs.h"
+
+#include "prototypes/error.h"
+#include "prototypes/fpipe.h"
+
+
 
 #define b 0x40000000
 #define toint(p) ((int)(p))
 
-divbig(dividend, divisor, quotient, remainder) lispval dividend, divisor, *quotient, *remainder;
+void divbig(lispval dividend, lispval divisor, lispval *quotient, lispval *remainder)
+//     lispval dividend, divisor, *quotient, *remainder;
 {
   int    *ujp, *vip;
-  int    *alloconstack(), d, negflag = 0, m, n, carry, rem, qhat, j;
+  int     d, negflag = 0, m, n, carry, rem, qhat, j;
   int     borrow, negrem = 0;
   long   *utop = sp(), *ubot, *vbot, *qbot;
   lispval work;
-  lispval export();
   Keepxs();
 
   /* copy dividend */
@@ -59,7 +67,7 @@ divbig(dividend, divisor, quotient, remainder) lispval dividend, divisor, *quoti
     rem = dsdiv(utop - 1, ubot, *vbot);
     if (negrem) rem = -rem;
     if (negflag) dsmult(utop - 1, ubot, -1);
-    if (remainder) *remainder = inewint(rem);
+    if (remainder) *remainder = inewint(iToVP(rem));
     if (quotient) *quotient = export(utop, ubot);
     Freexs();
     return;
@@ -181,8 +189,7 @@ asm("	acbl	8(ap),$-4,r11,loop5");
 asm("	movl	r1,4(r11)");
 }
 */
-lispval export(top, bot)
-long   *top, *bot;
+lispval export(long *top, long *bot)    
 {
   lispval p;
   lispval result;
@@ -195,7 +202,7 @@ long   *top, *bot;
     else if (*bot == -1) *++bot |= 0xc0000000;
     else break;
   }
-  if (bot == top) return (inewint(*bot));
+  if (bot == top) return (inewint(lToVP(*bot)));
   result = p = newsdot();
   protect(p);
   p->s.I = *top--;
@@ -240,7 +247,7 @@ top:
       break;
     default: handy = errorh1(Vermisc, "Haulong: bad argument", nil, TRUE, 997, handy); goto top;
   }
-  return (inewint(count));
+  return (inewint(iToVP(count)));
 }
 lispval Lhaipar()
 {
@@ -307,15 +314,14 @@ done:
 }
 #define STICKY 1
 #define TOEVEN 2
-lispval Ibiglsh(bignum, count, mode)
-lispval bignum, count;
+lispval Ibiglsh(lispval bignum, lispval count, int mode)
+// lispval bignum, count;
 {
   lispval work;
   int     n;
   int    *top = sp() - 1;
   int    *bot;
   int     mylen, guard = 0, sticky = 0, round = 0;
-  lispval export();
 
   /* get second argument		  */
   work = count;

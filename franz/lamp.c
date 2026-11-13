@@ -9,11 +9,17 @@ static char *rcsid = "$Header: lamp.c,v 1.3 83/12/09 16:51:36 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lamp.h"
+
 #include "global.h"
+
+#include "prototypes/error.h"
+
+#include <stdint.h>
+
 
 #ifdef PROF
 
-#define PBUFSZ 500000
 short pbuf[PBUFSZ];
 
 /* data space for fasl to put counters */
@@ -51,7 +57,7 @@ short pbuf[8];
 
 /* data space for fasl to put counters */
 int mcnts[1];
-int mcntp  = (int)mcnts;
+uintptr_t mcntp  = (uintptr_t)mcnts;
 int doprof = FALSE;
 
 int Lmonitor(void)

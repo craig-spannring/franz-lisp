@@ -9,7 +9,15 @@ static char *rcsid = "$Header: lamr.c,v 1.6 84/04/06 23:14:05 layer Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lamr.h"
+
 #include "global.h"
+#include "stubs.h"
+
+#include "prototypes/error.h"
+#include "prototypes/alloc.h"
+#include "prototypes/io.h"
+#include "prototypes/fexr.h"
 
 /*
  *
@@ -33,14 +41,14 @@ lispval Lalloc()
 lispval Lsizeof()
 {
   chkarg(1, "sizeof");
-  return (inewint(csizeof(lbot->val)));
+  return (inewint(iToVP(csizeof(lbot->val)))); TODO_FIX("need to fix (aka remove) this cast");
 }
 
 lispval Lsegment()
 {
   chkarg(2, "segment");
 chek:
-  while (TYPE(np[-1].val) != INT)
+  while (TYPE((np[-1].val)) != INT)
     np[-1].val = error("LENGTH ARG TO SEGMENT MUST BE INTEGER", TRUE);
   if (np[-1].val->i < 0)
   {
@@ -321,9 +329,10 @@ lispval Lvaluep()
   else return (nil);
 }
 
+/// @brief Doesn't seem to be used anywhere 
 int CNTTYP(void)
 {
-  return; /* HI! COUNT ONE TYPE CALL! */
+  return 1; /* HI! COUNT ONE TYPE CALL! */
 }
 
 lispval Lod()
@@ -355,7 +364,7 @@ lispval Lfake()
 lispval Lmaknum()
 {
   chkarg(1, "maknum");
-  return (inewint((int)(lbot->val)));
+  return (inewint(iToVP((int)(lbot->val)))); TODO_FIX("need to remove this cast. "); 
 }
 lispval Lderef()
 {
@@ -363,7 +372,7 @@ lispval Lderef()
 
   if (TYPE(lbot->val) != INT) error("arg to deref must be integer", TRUE);
 
-  return (inewint(*(int *)(lbot->val->i)));
+  return (inewint(iToVP(*(int *)(lbot->val->i)))); TODO_FIX("this cast is wrong"); 
 }
 
 lispval Lpname()
@@ -411,7 +420,7 @@ lispval Llctrace()
 
 lispval Lslevel()
 {
-  return (inewint(np - orgnp - 2));
+  return (inewint(lToVP(np - orgnp - 2)));
 }
 
 lispval Lsimpld()

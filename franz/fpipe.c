@@ -9,11 +9,16 @@ static char *rcsid = "$Header: fpipe.c,v 1.3 85/05/22 07:53:41 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/fpipe.h"
 #include "global.h"
+#include "stubs.h"
+
+#include "prototypes/error.h"
+
+#include <unistd.h>
 #include <signal.h>
 
-FILE *fpipe(info)
-FILE *info[2];
+FILE *fpipe(FILE *info[2])
 {
   FILE *p;
   int   fd[2];
@@ -37,8 +42,15 @@ FILE *info[2];
 
   return ((FILE *)2); /*indicate sucess*/
 }
-/* Nioreset *************************************************************/
 
+static lispval NiorUtil(FILE *p);
+
+static int NiorUtil_wrapper(FILE *p)
+{
+  return (int)NiorUtil(p);
+}  
+
+/* Nioreset *************************************************************/
 lispval Nioreset()
 {
 #ifndef RTPORTS
@@ -48,19 +60,16 @@ lispval Nioreset()
   {
     if (p->_flag & (_IOWRT | _IOREAD)) fclose(p);
   }
-#else RTPORTS
-  lispval NiorUtil();
-
-  _fwalk(NiorUtil);
-#endif RTPORTS
+#else
+  _fwalk(NiorUtil_wrapper);
+#endif
   return (nil);
 }
 
 #ifdef RTPORTS
 FILE FILEdummy;
 
-static lispval NiorUtil(p)
-FILE          *p;
+static lispval NiorUtil(FILE *p)
 {
   lispval handy;
   if (p == stdin || p == stdout || p == stderr) return (0);
@@ -75,8 +84,7 @@ FILE          *p;
 FILE **xports;
 
 #define LOTS (LBPG / (sizeof(FILE *)))
-lispval P(p)
-FILE   *p;
+lispval P(FILE *p)
 {
   FILE     **q;
   extern int fakettsize;
@@ -106,16 +114,18 @@ FILE   *p;
 
 #endif RTPORTS
 
-FILE *fstopen(base, count, flag)
-char *base;
-char *flag;
+FILE *fstopen(char *base, int count, char *flag)
 {
   FILE *p = fdopen(0, flag);
-
+#if STILL_PORTING
+  TODO_FIX("rewrite original code in modern portable C");
+#else
+  TODO_FIX("The following needs rewrite.");
   p->_flag |= _IOSTRG;
   p->_cnt = count;
   p->_ptr = p->_base = base;
   p->_file           = -1;
+#endif   
   return (p);
 }
 

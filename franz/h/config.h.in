@@ -12,7 +12,16 @@
 #define INC_config_d1b2f18af280f183a493e2257dd8e7b5_h
 
 #if 1
+
+#define OS      "${OS_NAME}"
+
 #define MACHINE "${OS_NAME} ${PROCESSOR_NAME}"
+
+#define USES_MACHO_OBJ_FMT  ${FL_MACHO_OBJ_FMT}
+#define USES_ELF64_OBJ_FMT  ${FL_ELF64_OBJ_FMT}
+#define USES_ELF32_OBJ_FMT  ${FL_ELF32_OBJ_FMT}
+#define USES_COFF_OBJ_FMT   ${FL_COFF_OBJ_FMT}
+#define USES_AOUT_OBJ_FMT   ${FL_AOUT_OBJ_FMT}
 
 /**
  * @brief SITE
@@ -75,7 +84,7 @@
  * more) in order to cause page faults if you 
  * reference through a null pointer. 
  */
-#if FL_NILIS0
+#if ${FL_NILIS0}
 #define NILIS0 1
 #else
 #undef NILIS0
@@ -88,12 +97,30 @@
  * It is not normally set because in typical applications the expense
  * of collecting strings is not worth the amount of space retrieved
  */
-#if FL_GCSTRINGS
+#if ${FL_GCSTRINGS}
 #define GCSTRINGS 1
 #else  
 #undef GCSTRINGS
 #endif
 
+
+/**
+ * @brief HOLE Size of hole between text and data segments.
+ *
+ * If the hole is defined, then we allocate binary objects
+ * and strings in the hole.  However we don't put strings in
+ * the hole if strings are gc'ed.
+ *
+ * @note Do modern machines even allow access to memory between the
+ * .text and .data sections?  Is there any guarantee that the linker
+ * will even leave a hole there?  This seems like a compiler specific
+ * assumption.
+ */
+#if ${FL_USE_HOLE}
+#define HOLE ${FL_HOLE}
+#else
+#undef HOLE
+#endif 
 
 
 /**
@@ -110,16 +137,16 @@
  */
 #define RTPORTS 1
 
-/**
- * Do system provide an a.out.h  file?
- *
- * The tackon program works only with a.out file formats.
- */
-#if ${HAVE_A_OUT_H}
-#define HAVE_A_OUT_H 1
-#else
-#undef HAVE_A_OUT_H
-#endif
+// /**
+//  * Do system provide an a.out.h  file?
+//  *
+//  * The tackon program works only with a.out file formats.
+//  */
+// #if ${HAVE_A_OUT_H}
+// #define HAVE_A_OUT_H 1
+// #else
+// #undef HAVE_A_OUT_H
+// #endif
 
 
 /**
@@ -129,7 +156,7 @@
  *      registers.  On the 68000, there is a special `hacked' version
  *      of the C compiler that is needed to do this.
  */
-#if FL_NPINREG
+#if ${FL_NPINREG}
 #define NPINREG 1
 #else
 #undef NPINREG

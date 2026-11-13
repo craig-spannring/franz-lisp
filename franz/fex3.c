@@ -8,7 +8,18 @@ static char *rcsid = "$Header: fex3.c,v 1.15 85/03/13 17:18:29 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/fex3.h"
+
 #include "global.h"
+#include "stubs.h"
+
+#include "prototypes/error.h"
+#include "prototypes/ffasl.h"
+
+#include <unistd.h>
+#include <fcntl.h>
+
+
 extern char *gstab();
 static int   pagsiz, pagrnd;
 
@@ -16,10 +27,12 @@ static int   pagsiz, pagrnd;
  *Ndumplisp -- create executable version of current state of this lisp.
  */
 #ifndef os_vms
-#include "aout.h"
 
 lispval Ndumplisp()
 {
+  TODO_FIX("Implement this for modern systems.");
+#if FINISHED_PORTING
+  static_assert(0 "Don't think any of this will work in a modern world."); 
   struct exec *workp;
   lispval      argptr, temp;
   char        *fname;
@@ -30,9 +43,8 @@ lispval Ndumplisp()
   int          descrip, des2, ax, mode;
   extern int   holesize;
   char         tbuf[BUFSIZ];
-  long         count, lseek();
+  long         count;
 
-  pageseql();
   pagsiz = Igtpgsz();
   pagrnd = pagsiz - 1;
 
@@ -134,7 +146,7 @@ lispval Ndumplisp()
   reborn = 0;
 
   pagenorm();
-
+#endif
   return (nil);
 }
 
@@ -476,12 +488,13 @@ int pagenorm(void) {}
 
 lispval Lgetaddress()
 {
+  TODO_FIX("Implement this for modern architectures.");   
+#if FINISHED_PORTING  
   struct argent *mlbot = lbot;
   lispval        work;
   int            numberofargs, i;
   char           ostabf[128];
   struct nlist   NTABLE[100];
-  lispval        dispget();
 
   Savestack(4);
 
@@ -518,6 +531,7 @@ lispval Lgetaddress()
     };
   Restorestack();
   return (lbot[1].val->a.fnbnd);
+#endif   
 };
 
 int Igtpgsz(void)

@@ -9,13 +9,22 @@ static char *rcsid = "$Header: pbignum.c,v 1.3 83/09/12 14:17:59 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
-#include "global.h"
+#include "prototypes/pbignum.h"
 
-pbignum(current, useport) lispval current;
-FILE *useport;
+#include "global.h"
+#include "stubs.h"
+
+#include "prototypes/error.h"
+#include "prototypes/alloc.h"
+#include "prototypes/fpipe.h"
+
+
+
+void pbignum(lispval current, FILE *useport)
+// lispval current;
+// FILE *useport;
 {
   long *top, *bot, *work, negflag = 0;
-  char *alloconstack();
   int  *digitp;
   Keepxs();
 

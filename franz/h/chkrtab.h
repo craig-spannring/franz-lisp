@@ -9,6 +9,7 @@
 #ifndef CHKRTAB_00475ab3e9e61ffdd8069ae2a75de4c3_h
 #define CHKRTAB_00475ab3e9e61ffdd8069ae2a75de4c3_h
 
+#include "prototypes/error.h"
 
 
 #define chkrtab(p)                                              \

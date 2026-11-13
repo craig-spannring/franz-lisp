@@ -9,7 +9,16 @@ static char *rcsid = "$Header: lam9.c,v 1.7 85/03/13 17:19:15 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam9.h"
+
 #include "global.h"
+#include "stubs.h"
+
+#include "prototypes/error.h"
+#include "prototypes/alloc.h"
+#include "prototypes/ffasl.h" 
+
+
 /*
  * These routines writen in C will allow use of the termcap file
  * by any lisp program. They are very basic routines which initialize
@@ -21,13 +30,12 @@ static char *rcsid = "$Header: lam9.c,v 1.7 85/03/13 17:19:15 sklower Exp $";
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <pwd.h>
+#include <curses.h>
+#include <term.h>
+#include <unistd.h>
+
 
 #undef putchar
-int   putchar(); /* functions used from the termlib */
-int   tgetflag();
-char *getenv();
-char *tgoto();
-char *tgetstr();
 
 char         bpbuf[1024];
 char         tstrbuf[100];
@@ -67,28 +75,8 @@ lispval Ltci()
   if (pc) PC = *pc;
   return (nil);
 }
-/* This routine will execute any of the termcap functions used by the lisp
-/* program. If the feature is not include in the terminal defined it will
-/* ignore the call.
-/*		option	: feature to execute
-/*		line	: line if is nessery
-/*		colum	: colum if is nessaery
-/*									*/
-lispval Ltcx()
-{
-  struct argent *mylbot = lbot;
-  int            line, column;
 
-  switch (np - lbot)
-  {
-    case 1: line = column = 0; break;
-    case 2: error("Wrong number of Arguments to Termcapexecute", FALSE); break;
-    case 3: line = mylbot[1].val->i; column = mylbot[2].val->i;
-  }
-  return (inewint(show((char *)mylbot->val, &line, &column)));
-}
-
-static show(char *option, int *line, int *colum)
+static int show(char *option, int *line, int *colum)
 {
   int   found;
   char  clbuf[20];
@@ -113,6 +101,27 @@ static show(char *option, int *line, int *colum)
   if (clear) /* execute the feature */
     tputs(clear, 0, putchar);
   return (0);
+}
+
+/* This routine will execute any of the termcap functions used by the lisp
+/* program. If the feature is not include in the terminal defined it will
+/* ignore the call.
+/*		option	: feature to execute
+/*		line	: line if is nessery
+/*		colum	: colum if is nessaery
+/*									*/
+lispval Ltcx()
+{
+  struct argent *mylbot = lbot;
+  int            line, column;
+
+  switch (np - lbot)
+  {
+    case 1: line = column = 0; break;
+    case 2: error("Wrong number of Arguments to Termcapexecute", FALSE); break;
+    case 3: line = mylbot[1].val->i; column = mylbot[2].val->i;
+  }
+  return (inewint(iToVP(show((char *)mylbot->val, &line, &column))));
 }
 
 /*
@@ -158,8 +167,7 @@ lispval LIfranzcall()
        * or nil if doesn't exist.
        */
       {
-        struct passwd *pw, *getpwnam();
-        lispval        newvec(), inewint();
+        struct passwd *pw;
         struct argent *oldnp;
 
         pw = getpwnam(verify(lbot[1].val, "int:franz-call: invalid name"));
@@ -169,24 +177,24 @@ lispval LIfranzcall()
           oldnp = np;
           protect(handy);
           handy->v.vector[0] = (lispval)inewstr(pw->pw_name);
-          handy->v.vector[1] = inewint(pw->pw_uid);
-          handy->v.vector[2] = inewint(pw->pw_gid);
+          handy->v.vector[1] = inewint(iToVP(pw->pw_uid));
+          handy->v.vector[2] = inewint(iToVP(pw->pw_gid));
           handy->v.vector[3] = (lispval)inewstr(pw->pw_dir);
           np                 = oldnp;
           return (handy);
         }
         return (nil);
       }
-    case fc_access: return (inewint(access(verify(lbot[1].val, "i:fc,access: non string"), lbot[2].val->i)));
-    case fc_chdir:  return (inewint(chdir(verify(lbot[1].val, "i:fc,chdir: non string"))));
+    case fc_access: return (inewint(iToVP(access(verify(lbot[1].val, "i:fc,access: non string"), lbot[2].val->i))));
+    case fc_chdir:  return (inewint(iToVP(chdir(verify(lbot[1].val, "i:fc,chdir: non string")))));
 
-    case fc_unlink: return (inewint(unlink(verify(lbot[1].val, "i:fc,unlink: non string"))));
+    case fc_unlink: return (inewint(iToVP(unlink(verify(lbot[1].val, "i:fc,unlink: non string")))));
 
-    case fc_time: return (inewint(time(0)));
+    case fc_time: return (inewint(iToVP(time(0))));
 
-    case fc_chmod: return (inewint(chmod(verify(lbot[1].val, "i:fc,chmod: non string"), lbot[2].val->i)));
+    case fc_chmod: return (inewint(iToVP(chmod(verify(lbot[1].val, "i:fc,chmod: non string"), lbot[2].val->i))));
 
-    case fc_getpid: return (inewint(getpid()));
+    case fc_getpid: return (inewint(iToVP(getpid())));
 
     case fc_stat:
     {
@@ -197,18 +205,18 @@ lispval LIfranzcall()
       handy = newvec(12 * sizeof(long));
       oldnp = np;
       protect(handy);
-      handy->v.vector[0]  = inewint(statbuf.st_mode & 07777);
-      handy->v.vector[1]  = inewint((statbuf.st_mode & S_IFMT) >> 12);
-      handy->v.vector[2]  = inewint(statbuf.st_nlink);
-      handy->v.vector[3]  = inewint(statbuf.st_uid);
-      handy->v.vector[4]  = inewint(statbuf.st_gid);
-      handy->v.vector[5]  = inewint(statbuf.st_size);
-      handy->v.vector[6]  = inewint(statbuf.st_atime);
-      handy->v.vector[7]  = inewint(statbuf.st_mtime);
-      handy->v.vector[8]  = inewint(statbuf.st_ctime);
-      handy->v.vector[9]  = inewint(statbuf.st_dev);
-      handy->v.vector[10] = inewint(statbuf.st_rdev);
-      handy->v.vector[11] = inewint(statbuf.st_ino);
+      handy->v.vector[0]  = inewint(iToVP(statbuf.st_mode & 07777));
+      handy->v.vector[1]  = inewint(iToVP((statbuf.st_mode & S_IFMT) >> 12));
+      handy->v.vector[2]  = inewint(iToVP(statbuf.st_nlink));
+      handy->v.vector[3]  = inewint(iToVP(statbuf.st_uid));
+      handy->v.vector[4]  = inewint(iToVP(statbuf.st_gid));
+      handy->v.vector[5]  = inewint(iToVP(statbuf.st_size));
+      handy->v.vector[6]  = inewint(iToVP(statbuf.st_atime));
+      handy->v.vector[7]  = inewint(iToVP(statbuf.st_mtime));
+      handy->v.vector[8]  = inewint(iToVP(statbuf.st_ctime));
+      handy->v.vector[9]  = inewint(iToVP(statbuf.st_dev));
+      handy->v.vector[10] = inewint(iToVP(statbuf.st_rdev));
+      handy->v.vector[11] = inewint(iToVP(statbuf.st_ino));
       np                  = oldnp;
       return (handy);
     }
@@ -223,13 +231,13 @@ lispval LIfranzcall()
 #endif
     }
     case fc_link:
-      return (inewint(link(verify(lbot[1].val, "i:fc,link: non string"), verify(lbot[2].val, "i:fc,link: non string"))));
+      return (inewint(iToVP(link(verify(lbot[1].val, "i:fc,link: non string"), verify(lbot[2].val, "i:fc,link: non string")))));
 
     /* sleep for the given number of seconds */
-    case fc_sleep: return (inewint(sleep(lbot[1].val->i)));
+    case fc_sleep: return (inewint(iToVP(sleep(lbot[1].val->i))));
 
-    case fc_nice: return (inewint(nice(lbot[1].val->i)));
+    case fc_nice: return (inewint(iToVP(nice(lbot[1].val->i))));
 
-    default: return (inewint(-1));
+    default: return (inewint(iToVP(-1)));
   } /* end of switch */
 }

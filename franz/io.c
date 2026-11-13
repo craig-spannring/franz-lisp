@@ -9,10 +9,22 @@ static char *rcsid = "$Header: io.c,v 1.12 87/12/14 18:36:58 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/io.h"
+
 #include "global.h"
-#include <ctype.h>
+#include "stubs.h"
 #include "chars.h"
 #include "chkrtab.h"
+#include "lfuncs.h"
+
+#include "prototypes/eval.h"
+#include "prototypes/alloc.h"
+#include "prototypes/sysat.h"
+#include "prototypes/fex4.h"
+#include "prototypes/io.h"
+#include "prototypes/pbignum.h"
+
+#include <ctype.h>
 
 struct readtable
 {
@@ -56,10 +68,10 @@ struct readtable
 extern unsigned char *ctable;
 lispval               atomval; /* external varaible containing atom returned
                                   from internal atom reading routine */
-lispval        readrx();
-lispval        readr();
-lispval        readry();
-char          *atomtoolong();
+// lispval        readrx();
+// lispval        readr(FILE *useport);
+// lispval        readry();
+// char          *atomtoolong();
 int            keywait;
 int            plevel  = -1; /* contains maximum list recursion count	*/
 int            plength = -1; /* maximum number of list elements printed	*/
@@ -74,8 +86,8 @@ static char baddot2[] = "Bad reader construction: (<something> . <something> not
 /* readr ****************************************************************/
 /* returns a s-expression read in from the port specified as the first	*/
 /* argument.  Handles superbrackets, reader macros.			*/
-lispval readr(useport)
-FILE   *useport;
+lispval readr(FILE *useport)
+// FILE   *useport;
 {
   lispval handy = Vreadtable->a.clb;
 
@@ -93,14 +105,12 @@ FILE   *useport;
 /* passed in the first	*/
 /* argument.  Does the actual work for readr, including list, dotted	*/
 /* pair, and quoted atom detection					*/
-lispval readrx(code)
-int     code;
+lispval readrx(int code)
 {
   lispval        work;
   lispval       *current;
   struct argent *result;
   int            inlbkt = FALSE;
-  lispval        errorh();
   Savestack(4); /* ???not necessary because np explicitly restored if
     changed */
 
@@ -175,9 +185,11 @@ top:
           if (inlbkt) rbktf = FALSE;
           goto out;
         }
-      }
-    case TSCA: Restorestack(); return (atomval);
-    case TEOF: Restorestack(); return (eofa);
+      }      
+    case TSCA: Restorestack(); return (atomval); TODO_FIX("need to make sure this isn't doing funky stuff with the stak return");
+
+    case TEOF: Restorestack(); return (eofa); TODO_FIX("need to make sure this isn't doing funky stuff with the stak return");
+
     case TMAC:
       macrox();
       Restorestack();
@@ -223,7 +235,7 @@ top:
     case TPERD:  Restorestack(); return (errorh(Vermisc, "read: read a period when expecting an s-expression", nil, FALSE, 0));
 
     /* should never get here, we should have covered all cases above */
-    default: Restorestack(); return (errorh1(Vermisc, "Readlist error,  code ", nil, FALSE, 0, inewint((long)code)));
+    default: Restorestack(); return (errorh1(Vermisc, "Readlist error,  code ", nil, FALSE, 0, inewint(lToVP((long)code))));
   }
 out:
   work = result->val;
@@ -231,7 +243,8 @@ out:
   Restorestack();
   return (work);
 }
-int macrox(void)
+
+void macrox(void)
 {
   FILE   *svport;
   lispval handy, Lapply();
@@ -251,13 +264,15 @@ int macrox(void)
                                */
   rdrport = svport;           /* restore old value */
   Restorestack();
+  TODO_FIX("need to make sure this isn't doing funky stuff with the stak return");   
   return;
 }
-imacrox(current, inlist) lispval current;
+
+void imacrox(lispval current, int inlist)
 {
   FILE   *svport;
   lispval work;
-  lispval Lapply(), handy;
+  lispval handy;
 
   Savestack(2);
   svport = rdrport; /* save from possible changing */
@@ -280,14 +295,14 @@ imacrox(current, inlist) lispval current;
                                */
   rdrport = svport;           /* restore old value */
   Restorestack();
+  TODO_FIX("need to make sure this isn't doing funky stuff with the stak return");   
   return;
 }
 
 /* ratomr ***************************************************************/
 /* this routine returns a pointer to an atom read in from the port given*/
 /* by the first argument						*/
-lispval ratomr(useport)
-FILE   *useport;
+lispval ratomr(FILE *useport)
 {
   rdrport = useport;
   switch (Iratom())
@@ -310,8 +325,7 @@ FILE   *useport;
 int Iratom(void)
 {
   FILE          *useport = rdrport;
-  char           c, marker, *name;
-  extern lispval finatom(), calcnum(), getnum();
+  char           c, marker, *name;  
   int            code, cc;
   int            strflag = FALSE;
 
@@ -431,8 +445,7 @@ again:
   }
 }
 
-lispval getnum(name)
-char   *name;
+lispval getnum(char *name)
 {
   unsigned char  c;
   lispval        result;
@@ -441,7 +454,7 @@ char   *name;
   int            sawdigit = 0, saweof = 0, cc;
   char          *exploc = (char *)0;
   double         realno;
-  extern lispval finatom(), calcnum(), newdoub(), dopow();
+  extern lispval newdoub();
 
   if (mantisfl)
   {
@@ -573,8 +586,7 @@ verylast:
   return (result);
 }
 
-lispval dopow(part2, base)
-char   *part2;
+lispval dopow(char *part2, int base)
 {
   char         *name    = part2;
   FILE         *useport = rdrport;
@@ -599,7 +611,7 @@ char   *part2;
     return (finatom(name));
   }
   lbot      = np;
-  np++->val = inewint(base);
+  np++->val = inewint(iToVP(base));
   /* calculate "mantissa"*/
   if (*end1 == '.') np++->val = calcnum(strbuf, end1 - 1, 10);
   else np++->val = calcnum(strbuf, end1, (int)ibase->a.clb->i);
@@ -611,12 +623,13 @@ char   *part2;
     lbot[1].val = Ltimes();
   work = lbot[1].val;
   Restorestack();
+  TODO_FIX("need to make sure this isn't doing funky stuff with the stak return");   
   return (work);
 }
 
-lispval calcnum(strbuf, name, base)
-char   *name;
-char   *strbuf;
+lispval calcnum(char *strbuf, char *name, int base)
+// char   *name;
+// char   *strbuf;
 {
   char   *p;
   lispval result, temp;
@@ -640,14 +653,13 @@ char   *strbuf;
 
   if (temp->s.CDR == 0)
   {
-    result = inewint(temp->i);
+    result = inewint(lToVP(temp->i));
     pruneb(np[-1].val);
   }
   np--;
   return (result);
 }
-lispval finatom(name)
-char   *name;
+lispval finatom(char *name)
 {
   FILE         *useport = rdrport;
   unsigned char c, stats;
@@ -675,7 +687,6 @@ char *atomtoolong(char *copyto)
   int     size;
   char   *oldp = strbuf;
   char   *newp;
-  lispval nveci();
   /*
    * the string buffer contains an string which is too long
    * so we get a bigger buffer.
@@ -698,16 +709,15 @@ char *atomtoolong(char *copyto)
  * Last modified Mar 21, 1980 for hunks
  */
 
-printr(a, useport) lispval a;
-FILE *useport;
+void printr(lispval a, FILE *useport) 
 {
-  hsize, i;
-  char    strflag = 0;
+  int     hsize;
+  int     i;
+  char    strflag = 0;  
   char    Idqc    = 0;
   char   *chstr;
   int     curplength = plength;
   int     quot;
-  lispval Istsrch();
   lispval debugmode;
 
 val_loop:
@@ -947,8 +957,7 @@ val_loop:
  * to have the standard printing done
  */
 
-vectorpr(vec, port) lispval vec;
-FILE *port;
+int vectorpr(lispval vec, FILE *port)
 {
   lispval handy;
   int     svplevel  = plevel; /* save these global values */
@@ -974,8 +983,8 @@ FILE *port;
   return (FALSE); /* nothing printed */
 }
 
-int lfltpr(/* lisp floating point printer */
-           char  *buf,
+/* lisp floating point printer */
+void lfltpr(char  *buf,
            double val)
 {
   char *cp1;
@@ -996,7 +1005,7 @@ int lfltpr(/* lisp floating point printer */
 /* dmpport ****************************************************************/
 /* outputs buffer indicated by first argument whether full or not	*/
 
-dmpport(useport) FILE *useport;
+void dmpport(FILE *useport)
 {
   fflush(useport);
 }

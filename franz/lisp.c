@@ -11,6 +11,17 @@ static char *rcsid = "$Header: lisp.c,v 1.3 83/11/26 12:00:58 sklower Exp $";
 
 #include "global.h"
 #include "frame.h"
+#include "dfuncs.h"
+#include "prototypes/eval.h"
+#include "prototypes/fex4.h"
+#include "prototypes/io.h"
+#include "prototypes/fpipe.h"
+
+#include "prototypes/inits.h"
+#include "stubs.h"
+#include "prototypes/sysat.h"
+
+#include <unistd.h>
 
 /* main *****************************************************************/
 /* Execution of the lisp system begins here.  This is the top level	*/
@@ -26,11 +37,11 @@ extern char  **environ;
 
 int main(int argc, char **argv, char **arge)
 {
-  lispval              matom(), Lapply();
+//   lispval              matom(), Lapply();
   extern struct frame *errp;
-  extern int           holbeg, holend, usehole;
+  // extern int           holbeg, holend, usehole;
   extern int          *curhbeg;
-  pbuf                 pb;
+  struct pframe        pb;
 
   environ = arge;
 #if sun_4_2 || sun_4_2beta
@@ -69,7 +80,7 @@ int main(int argc, char **argv, char **arge)
 
 lispval Ntpl()
 {
-  lispval Lread(), Istsrch();
+  lispval Lread();
 
   if (virgin == 0)
   {

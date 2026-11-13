@@ -9,25 +9,43 @@ static char *rcsid = "$Header: lam2.c,v 1.6 87/12/14 18:48:13 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam2.h"
+
 #include "global.h"
-#include <signal.h>
-#include "structs.h"
 #include "chars.h"
+#include "structs.h"
 #include "chkrtab.h"
+#include "lfuncs.h"
+#include "gc.h"
+
+#include "stubs.h"
+
+#include "prototypes/lam1.h"
+#include "prototypes/io.h"
+#include "prototypes/fexr.h"
+#include "prototypes/inits.h"
+#include "prototypes/eval.h"
+#include "prototypes/data.h"
+#include "prototypes/error.h"
+
+#include <signal.h>
+#include <string.h>
+
+
 /*
  * (flatc 'thing ['max]) returns the smaller of max and the number of chars
  * required to print thing linearly.
  * if max argument is not given, we assume the second arg is infinity
  */
-static flen; /*Internal to this module, used as a running counter of flatsize*/
-static fmax; /*used for maximum for quick reference */
-char *strcpy();
+static int flen; /*Internal to this module, used as a running counter of flatsize*/
+static int fmax; /*used for maximum for quick reference */
 
 lispval Lflatsi()
 {
   lispval current;
   Savestack(1); /* fixup entry mask */
 
+  TODO_FIX("Not sure fmax is an int.  Should use something out of limits.h");  
   fmax = 0x7fffffff; /* biggest integer by default */
   switch (np - lbot)
   {
@@ -45,12 +63,12 @@ lispval Lflatsi()
   protect(nil); /*create space for argument to pntlen*/
   Iflatsi(current);
   Restorestack();
-  return (inewint(flen));
+  return (inewint(iToVP(flen)));
 }
 /*
  * Iflatsi does the real work of the calculation for flatc
  */
-Iflatsi(current) lispval current;
+void Iflatsi(lispval current) 
 {
   if (flen > fmax) return;
   switch (TYPE(current))
@@ -106,8 +124,7 @@ extern unsigned char *ctable;
 /* r *********************************************************************/
 /* this function maps the desired read 	function into the system-defined */
 /* reading functions after testing for a legal port.			 */
-lispval r(op)
-int     op;
+lispval r(int op)
 {
   unsigned char  c;
   lispval        result;
@@ -248,13 +265,12 @@ lispval Lload()
 - the arguments may be atoms, integers or real numbers.
 -
 - *********************************************************/
-lispval Iconcat(unintern)
+lispval Iconcat(int unintern)
 {
   struct argent *temnp;
   char          *cp = strbuf;
   lispval        cur;
   int            n;
-  char          *atomtoolong();
   lispval        Lhau();
 
   *cp = NULL_CHAR;
@@ -297,6 +313,8 @@ lispval Iconcat(unintern)
 
       case SDOT:
       {
+        TODO_FIX("convert this to use standard C");         
+#if FINISHED_PORTING        
         struct _iobuf _myiob;
         lispval       handy = cur;
 
@@ -313,6 +331,7 @@ lispval Iconcat(unintern)
         pbignum(cur, &_myiob);
         cp  = _myiob._ptr;
         *cp = 0;
+#endif        
         break;
       }
 
@@ -336,7 +355,6 @@ lispval Luconcat()
 
 lispval Lputprop()
 {
-  lispval Iputprop();
   chkarg(3, "putprop");
   return (Iputprop(lbot->val, lbot[1].val, lbot[2].val));
 }
@@ -346,13 +364,12 @@ lispval Lputprop()
  *  note: prop and ind are lisp values but are not protected (by this
  * function) from gc.  The caller should protect them!!
  */
-lispval Iputprop(atm, prop, ind)
-lispval prop, ind, atm;
+lispval Iputprop(lispval atm, lispval prop, lispval ind)
+// lispval prop, ind, atm;
 {
   lispval  pptr;
   lispval *tack; /* place to begin property list */
   lispval  pptr2;
-  lispval  errorh();
   Savestack(4);
 
 top:
@@ -411,7 +428,6 @@ lispval Lget()
 {
   lispval ind, atm;
   lispval dum1;
-  lispval Igetplist();
 
   chkarg(2, "get");
   ind = lbot[1].val;
@@ -454,11 +470,8 @@ top:
  * Iget - the first arg must be a symbol.
  */
 
-lispval Iget(atm, ind)
-lispval atm, ind;
+lispval Iget(lispval atm, lispval ind)
 {
-  lispval Igetplist();
-
   if (atm == nil) atm = nilplist;
   else atm = atm->a.plist;
   return (Igetplist(atm, ind));
@@ -470,8 +483,8 @@ lispval atm, ind;
  * ind is the indicator
  */
 
-lispval Igetplist(pptr, ind)
-lispval pptr, ind;
+lispval Igetplist(lispval pptr, lispval ind)
+// lispval pptr, ind;
 {
   while (pptr != nil)
   {
@@ -507,9 +520,9 @@ lispval Lputd()
 - maplist applies the given function to successive sublists
 - ===========================================================*/
 
-lispval Lmapcrx(maptyp, join)
-int     maptyp; /* 0 = mapcar,  1 = maplist  */
-int     join;   /* 0 = the above, 1 = s/car/can/ */
+lispval Lmapcrx(int maptyp, int join)
+// int     maptyp; /* 0 = mapcar,  1 = maplist  */
+// int     join;   /* 0 = the above, 1 = s/car/can/ */
 {
   struct argent *namptr;
   int            index;
@@ -596,17 +609,17 @@ lispval Lmaplist()
 - mapc and map
 - ===================================================*/
 
-lispval Lmapcx(maptyp)
-int     maptyp; /* 0= mapc   , 1= map  */
+lispval Lmapcx(int maptyp)
+// int     maptyp; /* 0= mapc   , 1= map  */
 {
   struct argent *namptr;
-  index;
+  int index;
   lispval temp;
   lispval result;
 
   int            count;
   struct argent *first;
-  lispval        lists[25], errorh();
+  lispval        lists[25];
   Savestack(4);
 
   namptr = lbot + 1;
@@ -667,14 +680,10 @@ lispval Lmap()
 
 lispval Lmapcan()
 {
-  lispval Lmapcrx();
-
   return (Lmapcrx(0, 1));
 }
 
 lispval Lmapcon()
 {
-  lispval Lmapcrx();
-
   return (Lmapcrx(1, 1));
 }

@@ -9,9 +9,20 @@ static char *rcsid = "$Header: error.c,v 1.6 87/12/14 14:40:57 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/error.h"
+
 #include "global.h"
 #include "frame.h"
 #include "catchfram.h"
+#include "lfuncs.h"
+#include "stubs.h"
+
+#include "prototypes/io.h"
+#include "prototypes/lisp.h"
+#include "prototypes/frame.h"
+#include "prototypes/eval.h"
+#include "prototypes/eval2.h"
+#include "prototypes/sysat.h"
 
 static lispval IEargs[5];
 static int     IElimit;
@@ -31,11 +42,9 @@ static int     IElimit;
  *
  */
 
-lispval error(mesg, contvl)
-char   *mesg;
-int     contvl;
+lispval error(char *mesg, int contvl)
 {
-  lispval errorh();
+//   lispval errorh();
 
   return (errorh(Vermisc, mesg, nil, contvl, 0));
 }
@@ -51,21 +60,21 @@ int     contvl;
  */
 
 /* VARARGS5 */
-static lispval Ierrorh(type, message, valret, contuab, uniqid)
-lispval        type, valret;
-int            uniqid, contuab;
-char          *message;
+static lispval Ierrorh(lispval type, char *message, lispval valret, int contuab, int uniqid)
+// lispval        type, valret;
+// int            uniqid, contuab;
+// char          *message;
 {
   struct frame        *curp, *uwpframe = (struct frame *)0;
   lispval              handy;
   lispval             *work  = IEargs;
   int                  limit = IElimit;
   int                  pass, curdepth;
-  lispval              Lread(), calhan();
+  lispval              Lread();
   lispval              contatm;
   lispval              handy2;
   extern struct frame *errp;
-  pbuf                 pb;
+  struct pframe                 pb;
   Savestack(2);
 
   contatm = (contuab == TRUE ? tatom : nil);
@@ -137,9 +146,9 @@ ps2:
           handy = handy->d.cdr = newdot();
           handy->d.car         = valret;
           handy = handy->d.cdr = newdot();
-          handy->d.car         = inewint(uniqid);
+          handy->d.car         = inewint(iToVP(uniqid));
           handy = handy->d.cdr = newdot();
-          handy->d.car         = inewint(contuab);
+          handy->d.car         = inewint(iToVP(contuab));
           while (limit-- > 0) /* put in optional args */
           {
             handy = handy->d.cdr = newdot();
@@ -147,6 +156,7 @@ ps2:
           }
           lispretval = handy2; /* return this as value */
           retval     = C_THROW;
+          TODO_FIX("need to deal with funky stuff with the stack return");          
           Iretfromfr(uwpframe);
           /* NOTREACHED */
         }
@@ -167,7 +177,8 @@ ps2:
         }
 
         lispretval = valret;
-        retval     = C_THROW; /* looks like a throw */
+        retval     = C_THROW; /* looks like a throw */ 
+        TODO_FIX("need to deal with funky stuff with the stack return");                 
         Iretfromfr(curp);
       }
     }
@@ -224,7 +235,7 @@ ps2:
     curdepth = 1;
   }
   else curdepth = 1 + Verdepth->a.clb->i;
-  PUSHDOWN(Verdepth, inewint(curdepth));
+  PUSHDOWN(Verdepth, inewint(iToVP(curdepth)));
 
   switch (retval)
   {
@@ -263,48 +274,45 @@ ps2:
     if (vtemp == eofa) franzexit(0);
     printr(eval(vtemp), stdout);
   }
+  TODO_FIX("figure out what kind of stack trickery is going on here.");  
   /* NOTREACHED */
 }
 
-lispval errorh(type, message, valret, contuab, uniqid)
-lispval type, valret;
-int     uniqid, contuab;
-char   *message;
+lispval errorh(lispval type, char *message, lispval valret, int contuab, int uniqid)
 {
   IElimit = 0;
   Ierrorh(type, message, valret, contuab, uniqid);
   /* NOTREACHED */
 }
 
-lispval errorh1(type, message, valret, contuab, uniqid, arg1)
-lispval type, valret, arg1;
-int     uniqid, contuab;
-char   *message;
+lispval errorh1(lispval type, char *message, lispval valret, int contuab, int uniqid, lispval arg1)
 {
   IElimit   = 1;
   IEargs[0] = arg1;
   Ierrorh(type, message, valret, contuab, uniqid);
+  TODO_FIX("figure out what kind of stack trickery is going on here.");
   /* NOTREACHED */
 }
 
-lispval errorh2(type, message, valret, contuab, uniqid, arg1, arg2)
-lispval type, valret, arg1, arg2;
-int     uniqid, contuab;
-char   *message;
+lispval errorh2(lispval type, char *message, lispval valret, int contuab, int uniqid, lispval arg1, lispval arg2)
+// lispval type, valret, arg1, arg2;
+// int     uniqid, contuab;
+// char   *message;
 {
   IElimit   = 2;
   IEargs[0] = arg1;
   IEargs[1] = arg2;
   Ierrorh(type, message, valret, contuab, uniqid);
+  TODO_FIX("figure out what kind of stack trickery is going on here.");
   /* NOTREACHED */
 }
 
-lispval  calhan(limit, work, type, uniqid, contuab, message, handler)
-lispval *work;
-lispval  handler, type, contuab;
-int      limit;
-char    *message;
-int      uniqid;
+lispval  calhan(int limit, lispval *work, lispval type, int uniqid, lispval contuab, char *message, lispval handler)
+// int      limit;
+// lispval *work;
+// lispval  handler, type, contuab;
+// char    *message;
+// int      uniqid;
 {
   lispval handy;
   Savestack(4);
@@ -313,7 +321,7 @@ int      uniqid;
   protect(handy = newdot()); /* with a list consisting of */
   handy->d.car = type;       /* type, */
   handy        = (handy->d.cdr = newdot());
-  handy->d.car = inewint(uniqid); /* identifying number, */
+  handy->d.car = inewint(iToVP(uniqid)); /* identifying number, */
   handy        = (handy->d.cdr = newdot());
   handy->d.car = contuab;
   handy        = (handy->d.cdr = newdot());
@@ -384,6 +392,7 @@ int badmem(int n)
   error(errbuf, FALSE);
   /* NOT REACHED */
 }
+
 int argerr(char *msg)
 {
   errorh1(Vermisc, "incorrect number of args to", nil, FALSE, 0, matom(msg));
@@ -401,7 +410,8 @@ lispval Vinterrfcn = nil;
  * maximum.
  *
  */
-wnaerr(fcn, wantargs) lispval fcn;
+
+void wnaerr(lispval fcn, int wantargs)
 {
   if (Vinterrfcn == nil)
   {
@@ -410,11 +420,12 @@ wnaerr(fcn, wantargs) lispval fcn;
   if (Vinterrfcn->a.fnbnd != nil)
   {
     protect(fcn);
-    protect(inewint(wantargs / 1000));       /* min */
-    protect(inewint((wantargs % 1000) - 1)); /* max */
+    protect(inewint(iToVP((wantargs / 1000))));              /* min */
+    protect(inewint(iToVP((wantargs % 1000) - 1)));         /* max */            
     Ifuncal(Vinterrfcn);
     error("wrong number of args function should never return ", FALSE);
   }
 
+  TODO_FIX("need to figure out what kind of stack trickery is going on here.");           
   errorh1(Vermisc, "wrong number of arguments to ", nil, FALSE, 0, fcn);
 }

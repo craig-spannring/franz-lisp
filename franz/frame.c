@@ -9,8 +9,13 @@ static char *rcsid = "$Header: frame.c,v 1.3 87/12/14 16:51:52 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
-#include "global.h"
 #include "frame.h"
+#include "prototypes/frame.h"
+
+#include "global.h"
+#include "stubs.h"
+
+#include "prototypes/io.h"
 
 /*
  * This is a collection of routines for manipulating evaluation frames.
@@ -23,8 +28,8 @@ static char *rcsid = "$Header: frame.c,v 1.3 87/12/14 16:51:52 sklower Exp $";
  * first (newest) frame on the stack.
  * The standard way to create a frame is to say
  *
- *   errp = Pushframe(class,arg1,arg2);	 /* create and link in new
- *   					    frame of give class * /
+ *   errp = Pushframe(class,arg1,arg2);	 // create and link in new
+ *   					 // frame of give class 
  *
  * poping the frame must be done explicity if the routine was not exited by
  * a non-local goto.  This is done by
@@ -61,22 +66,27 @@ static char *rcsid = "$Header: frame.c,v 1.3 87/12/14 16:51:52 sklower Exp $";
  * This routine never returns.
  */
 
-Inonlocalgo(class, arg1, arg2) lispval arg1, arg2;
+
+void Inonlocalgo(int frameclass, lispval arg1, lispval arg2)
 {
+#if STILL_PORTING
+  TODO_FIX("probably need to rethink the error handling");
+#else
+  TODO_FIX("probably need to rethink the error handling");
   struct frame *uwpframe, *Inlthrow();
   lispval       handy;
 
   /*
-   * scan for something to match 'class', return if nothing found, or
+   * scan for something to match 'frameclass', return if nothing found, or
    * if we must first handle an unwind protect.
    */
-  while (uwpframe = Inlthrow(class, arg1, arg2))
+  while (uwpframe = Inlthrow(frameclass, arg1, arg2))
   {
     /* build error frame description to be use to continue this throw */
     protect(lispretval = handy = newdot());
     handy->d.car = Veruwpt;
     handy = handy->d.cdr = newdot();
-    handy->d.car         = inewint(class); /* remember type */
+    handy->d.car         = inewint(frameclass); /* remember type */
     handy = handy->d.cdr = newdot();
     handy->d.car         = arg1;
     handy = handy->d.cdr = newdot();
@@ -90,7 +100,7 @@ Inonlocalgo(class, arg1, arg2) lispval arg1, arg2;
    * nothing to go to, signal the appropriate error
    */
 
-  switch (class)
+  switch (frameclass)
   {
     case C_GO:
       errorh1(Vermisc, "No prog to go to with this tag ", nil, FALSE, 0, arg1);
@@ -107,6 +117,7 @@ Inonlocalgo(class, arg1, arg2) lispval arg1, arg2;
       error("Internal  Inonlocalgoto error", FALSE);
       /* NOT REACHED */
   }
+#endif 
 }
 
 /*
@@ -116,9 +127,11 @@ Inonlocalgo(class, arg1, arg2) lispval arg1, arg2;
  * first.  If there is nothing to catch this throw, we return 0.
  */
 
-struct frame *Inlthrow(class, arg1, arg2)
-lispval       arg1, arg2;
+struct frame *Inlthrow(int class, lispval arg1, lispval arg2)
 {
+#if STILL_PORTING
+  TODO_FIX("redo the error handling to be portable");
+#else  
   struct frame *uwpframe = (struct frame *)0;
   struct frame *curp;
   int           pass = 1;
@@ -176,22 +189,27 @@ restart:
         break;
     }
   }
+#endif   
   return ((struct frame *)0); /* nobody wants it */
 }
 
 #ifndef tahoe
 int Iretfromfr(struct frame *fram)
 {
+#if STILL_PORTING
+  TODO_FIX("Figure out how to do this in a portable manner");
+#else
   xpopnames(fram->svbnp);
   qretfromfr(); /* modified in sed script to point to real function */
                 /* NOT REACHED */
+#endif
 }
 #endif
 
 /* matchtags :: return TRUE if there is any atom in common between the
  * two tags.  Either tag may be an atom or an list of atoms.
  */
-matchtags(tag1, tag2) lispval tag1, tag2;
+int matchtags(lispval tag1, lispval tag2)
 {
   int     repeat1 = FALSE;
   int     repeat2 = FALSE;

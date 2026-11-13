@@ -9,17 +9,29 @@ static char *rcsid = "$Header: eval2.c,v 1.8 85/03/24 11:03:02 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/eval2.h"
+
 #include "global.h"
 #include "frame.h"
+#include "lfuncs.h"
+#include "stubs.h"
 
-/* Iarray - handle array call.
- *  fun - array object
- *  args - arguments to the array call , most likely subscripts.
- *  evalp - flag, if TRUE then the arguments should be evaluated when they
- *	are stacked.
+#include "prototypes/alloc.h"
+#include "prototypes/fpipe.h"
+#include "prototypes/error.h"
+
+#include "prototypes/eval.h"
+
+/**
+ * @brief handle array call
+ *
+ * @param fun   - array object
+ * @param args  - arguments to the array call , most likely subscripts.
+ * @param evalp - flag, if TRUE then the arguments should be evaluated when they
+ *	          are stacked.
  */
-lispval Iarray(fun, args, evalp)
-lispval fun, args;
+lispval Iarray(lispval fun, lispval args, int evalp)
+// lispval fun, args;
 {
   Savestack(2);
 
@@ -56,17 +68,18 @@ int dumpmydata(int thing)
  * When the foreign function returns, we may have to box the result,
  * depending on the type of foreign function.
  */
-lispval Ifcall(a)
-lispval a;
+lispval Ifcall(lispval a)
 {
-  char          *alloconstack();
-  long           callg_();
   int           *arglist;
   int            index;
   struct argent *mynp;
   lispval        ltemp;
-  pbuf           pb;
-  int            nargs = np - lbot, kind, mysize, *ap;
+  struct pframe  pb;
+  int            nargs = np - lbot;
+  int            kind;
+  int            mysize;
+  long          *ap;
+  
   Keepxs();
 
   /* put a frame on the stack which will save np and lbot in a
@@ -164,12 +177,13 @@ lispval a;
   switch (kind)
   {
     case 'i': /* integer-function */
-    case 'c': /* C-function */ ltemp = inewint(callg_(a->bcd.start, arglist)); break;
+    case 'c': /* C-function */ ltemp = inewint(iToVP(callg_(a->bcd.start, arglist))); break;
 
     case 'r': /* real-function*/
     case 'd': /* C function declared returning double */
     {
-      double result = (*((double (*)())callg_))(a->bcd.start, arglist);
+      double result = (*((double (*)(lispval (*)(), int*))callg_))(a->bcd.start, arglist);
+      // double result = (*((double (*)( lispval(*)()))callg_))(a->bcd.start, arglist);
       ltemp         = newdoub();
       ltemp->r      = result;
     }
@@ -193,22 +207,24 @@ lispval a;
   return (ltemp);
 }
 
-int xbcopy(char *to, char *from, int size)
+int xbcopy(void *to_, void *from_, int size)
 {
+  uint8_t *to;   
+  uint8_t *from;
   while (--size >= 0)
     *to++ = *from++;
 }
 
-lispval ftolsp_(arg1)
-lispval arg1;
+lispval ftolsp_(lispval arg1)
 {
   int      count;
   lispval *ap = &arg1;
   lispval  save;
-  pbuf     pb;
+  struct pframe     pb;
   Savestack(1);
 
-  if ((count = nargs()) == 0) return;
+  TODO_FIX("See if we need to recode this to remove stack shenanigans");
+  if ((count = nargs()) == 0) return NULL;
   ;
 
   if (errp->class == F_TO_FORT) np = errp->svnp;
@@ -218,17 +234,18 @@ lispval arg1;
     np++->val = *ap++;
   save = Lfuncal();
   errp = Popframe();
+  TODO_FIX("See if we need to recode this to remove stack shenanigans");
   Restorestack();
   return (save);
 }
 
-lispval ftlspn_(func, arglist)
-lispval func;
-long   *arglist;
+lispval ftlspn_(lispval func, long *arglist)
+// lispval func;
+// long   *arglist;
 {
   int     count;
   lispval save;
-  pbuf    pb;
+  struct pframe    pb;
   Savestack(1);
 
   if (errp->class == F_TO_FORT) np = errp->svnp;
@@ -310,14 +327,15 @@ long   *arglist;
 #define Case_B 1
 #define Case_C 2
 
-lispval Ifclosure(clos, funcallp)
-lispval clos;
+lispval Ifclosure(lispval clos, int funcallp)
+// lispval clos;
 {
-  struct nament *oldbnp = bnp, *lbnp, *locatevar();
+  struct nament *oldbnp = bnp, *lbnp;
   int            i;
   lispval        vect;
   int            numvars, vlength, tcase, foundc;
-  lispval        handy, atm_dtpr, value_dtpr, Ifuncal(), Lapply();
+  lispval        handy, atm_dtpr, value_dtpr;
+  // lispval    Ifuncal(), Lapply();
   Savestack(3);
 
   /* bind variables to their values given in the fclosure */
@@ -443,10 +461,9 @@ int xpopnames(struct nament *llimit)
   bnp = llimit;
 }
 
-struct nament *locatevar(clos, foundc, rnp)
-struct nament *rnp;
-lispval        clos;
-int           *foundc;
+struct nament *locatevar(lispval        clos,   // clos,
+                         int           *foundc, // foundc
+                         struct nament *rnp)    // rnp)
 {
   struct nament *retbnp;
   lispval        symb;

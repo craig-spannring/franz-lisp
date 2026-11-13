@@ -9,17 +9,31 @@ static char *rcsid = "$Header: ffasl.c,v 1.11 87/12/14 18:48:06 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/ffasl.h"
+
 #include "global.h"
+#include "stubs.h"
+
+#include "prototypes/error.h"
+#include "prototypes/fpipe.h"
+
+
+#include <fcntl.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <aout.h>
+#include <unistd.h>
+#include <unistd.h>
+
+
 #define round(x, s) ((((x) - 1) & ~((s) - 1)) + (s))
 
-char      *stabf = 0, *strcpy(), *Ilibdir();
-extern int fvirgin;
-static seed = 0, mypid = 0;
+char       *stabf = 0;
+char       *Ilibdir(void);
+extern int  fvirgin;
+static int  seed = 0;
+static int  mypid = 0;
 static char myname[100];
-lispval     verify();
 
 /* dispget - get discipline of function
  * this is used to handle the tricky defaulting of the discipline
@@ -32,9 +46,7 @@ lispval     verify();
  * is used.
  */
 
-lispval dispget(given, messg, defult)
-lispval given, defult;
-char   *messg;
+lispval dispget(lispval given, char *messg, lispval defult)
 {
   int typ;
 
@@ -52,14 +64,15 @@ char   *messg;
   }
 }
 
-lispval Lcfasl()
+lispval Lcfasl(void)
 {
+  TODO_FIX("implement this for modern computers");
+#if FINISHED_PORTING  
   struct argent *mlbot = lbot;
   lispval        work;
   int            fildes, totsize;
   int            readsize;
-  lispval        csegment();
-  char          *sbrk(), *currend, *tfile, cbuf[6000], *mytemp(), *gstab();
+  char          *currend, *tfile, cbuf[6000], *mytemp(), *gstab();
   char           ostabf[128];
   struct exec    header;
   char          *largs;
@@ -214,6 +227,7 @@ lispval Lcfasl()
     }
   }
 #endif
+#endif   
 }
 #ifdef os_vms
 #define M 4
@@ -224,7 +238,6 @@ lispval Lcfasl()
 char *gstab(void)
 {
   char         *cp, *cp2;
-  char         *getenv();
   struct stat   stbuf;
   extern char **Xargv;
 
@@ -316,9 +329,7 @@ int ungstab(void)
     fvirgin = 1;
   }
 }
-lispval verify(in, error)
-lispval in;
-char   *error;
+lispval verify(lispval in, char *error)
 {
   for (EVER)
   {
@@ -343,8 +354,7 @@ char   *error;
  */
 
 /* copy a block of data from one file to another of size size */
-copyblock(f1, f2, size) FILE *f1, *f2;
-long size;
+void copyblock(FILE *f1, FILE *f2, long size)
 {
   char block[BUFSIZ];
 
@@ -369,9 +379,10 @@ long size;
  *		so that later cfasl'd files can have these label names.
  *
  */
-
 lispval Lrmadd()
 {
+  TODO_FIX("Implement for modern architecture."); 
+#if FINISHED_PORTING
   struct argent *mlbot = lbot;
   struct nlist  *q;
   int            i;
@@ -379,7 +390,7 @@ lispval Lrmadd()
   char          *gstab();
   char           ostabf[128];
   char          *nstabf, *mytemp();
-  char          *strtbl, *alloconstack();
+  char          *strtbl;
   int            i2, n, m, nargleft, savem;
   FILE          *f, *fa;
   FILE          *fnew;
@@ -590,6 +601,7 @@ alldone:
     Freexs();
     return (tatom);
   }
+#endif   
 }
 char *Ilibdir(void)
 {

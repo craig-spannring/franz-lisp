@@ -3,10 +3,18 @@
 #define EVAL2_8ced8cce9db368047b8efb8f9cbabe01_h
 
 
-extern int   dumpmydata(int thing);
-extern int   xbcopy(char *to, char *from, int size);
-extern long *arglist;
-extern int   xpopnames(struct nament *llimit);
-extern int  *foundc;
+#include "global.h"
+extern int    *foundc;
+extern long   *arglist;
+
+
+extern int             dumpmydata(int thing);
+extern int             xbcopy(void *to, void *from, int size);
+extern int             xpopnames(struct nament *llimit);
+extern struct  nament *locatevar(lispval clos, int *foundc, struct nament *rnp);
+extern lispval         Ifcall(lispval a);
+extern lispval         Iarray(lispval fun, lispval args, int evalp);
+extern lispval         Ifclosure(lispval clos, int funcallp);
+
 
 #endif

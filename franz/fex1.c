@@ -9,8 +9,16 @@ static char *rcsid = "$Header: fex1.c,v 1.5 85/03/24 11:03:51 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/fex1.h"
+
 #include "global.h"
 #include "frame.h"
+
+#include "prototypes/error.h"
+#include "prototypes/eval.h"
+#include "prototypes/eval2.h"
+#include "prototypes/io.h"
+
 
 /* Nprog ****************************************************************/
 /* This first sets the local variables to nil while saving their old	*/
@@ -24,7 +32,7 @@ lispval Nprog()
   lispval              where, temp;
   struct nament       *savedbnp = bnp;
   extern struct frame *errp;
-  pbuf                 pb;
+  struct pframe                 pb;
   extern int           retval;
   extern lispval       lispretval;
 
@@ -107,7 +115,7 @@ lispval globtag;
 lispval Ncatch()
 {
   lispval tag;
-  pbuf    pb;
+  struct pframe    pb;
   Savestack(3); /* save stack pointers */
 
   if ((TYPE(lbot->val)) != DTPR) return (nil);
@@ -144,7 +152,7 @@ lispval Ncatch()
 lispval Nerrset()
 {
   lispval temp, flag;
-  pbuf    pb;
+  struct pframe    pb;
   Savestack(0);
 
   if (TYPE(lbot->val) != DTPR) return (nil); /* no form */

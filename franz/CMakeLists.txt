@@ -99,7 +99,7 @@ set(Headers
   ${CMAKE_CURRENT_LIST_DIR}/h/README.txt.h
 
   ${CMAKE_CURRENT_LIST_DIR}/h/68kframe.h
-  ${CMAKE_CURRENT_LIST_DIR}/h/aout.h
+  #   ${CMAKE_CURRENT_LIST_DIR}/h/aout.h
   ${CMAKE_CURRENT_LIST_DIR}/h/catchfram.h
   ${CMAKE_CURRENT_LIST_DIR}/h/chars.h
   ${CMAKE_CURRENT_LIST_DIR}/h/chkrtab.h
@@ -154,7 +154,9 @@ set(FL_MACHINE "${CMAKE_SYSTEM_NAME} ${CMAKE_HOST_SYSTEM_PROCESSOR}")
 set(FL_NILIS0    0)
 set(FL_NPINREG   0)
 set(FL_GCSTRINGS 0) 
-set(FL_TTSIZE    10216) 
+set(FL_TTSIZE    10216)
+set(FL_USE_HOLE  1)         # set to 0 or 1
+set(FL_HOLE	 2097152) 
 configure_file(
   ${CMAKE_CURRENT_LIST_DIR}/h/config.h.in
   ${CMAKE_CURRENT_BINARY_DIR}/config.h
@@ -193,3 +195,4 @@ if(Doxygen_FOUND)
 else()
   message(STATUS "Doxygen not found, API documentation will not be generated")
 endif()
+

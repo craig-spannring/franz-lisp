@@ -9,9 +9,20 @@ static char *rcsid = "$Header: lam3.c,v 1.4 84/04/06 23:08:13 layer Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam3.h"
+
 #include "global.h"
 #include "chars.h"
 #include "chkrtab.h"
+#include "lfuncs.h"
+#include "stubs.h"
+
+#include "prototypes/ffasl.h"
+#include "prototypes/divbig.h"
+#include "prototypes/io.h"
+#include "prototypes/error.h"
+#include "prototypes/lam2.h"
+
 
 lispval Lalfalp()
 {
@@ -66,7 +77,7 @@ lispval Lonep()
   return (nil);
 }
 
-lispval cmpx(lssp)
+lispval cmpx(int lssp)
 {
   struct argent *argp;
   struct argent *outarg;
@@ -148,7 +159,7 @@ lispval Ldiff()
     handy = arg1->i - arg2->i;
   }
   else error("non-numeric argument", FALSE);
-  return (inewint(handy));
+  return (inewint(iToVP(handy)));
 }
 
 lispval Lmod()
@@ -182,7 +193,7 @@ lispval Lmod()
           fake1.I = arg1->i;
           arg1    = (lispval)&fake1;
           break;
-        case INT: /* both are fixnums 	  */ return (inewint((arg1->i) % (arg2->i)));
+        case INT: /* both are fixnums 	  */ return (inewint(lToVP((arg1->i) % (arg2->i))));
         default:  error("non-numeric argument", FALSE);
       }
       break;
@@ -190,8 +201,8 @@ lispval Lmod()
   }
   if (TYPE((lbot + 1)->val) == INT && lbot[1].val->i == 0) return (handy);
   divbig(arg1, arg2, (lispval *)0, &handy);
-  if (handy == ((lispval)&fake1)) handy = inewint(fake1.I);
-  if (handy == ((lispval)&fake2)) handy = inewint(fake2.I);
+  if (handy == ((lispval)&fake1)) handy = inewint(iToVP(fake1.I));
+  if (handy == ((lispval)&fake2)) handy = inewint(iToVP(fake2.I));
   return (handy);
 }
 lispval Ladd1()
@@ -205,7 +216,7 @@ lispval Ladd1()
   if ((TYPE(lbot->val) == INT) && (lbot->val->i < MaxINT))
   {
     Restorestack();
-    return (inewint(lbot->val->i + 1));
+    return (inewint(lToVP(lbot->val->i + 1)));
   }
 
   handy    = rdrint;
@@ -226,7 +237,7 @@ lispval Lsub1()
   if ((TYPE(lbot->val) == INT) && (lbot->val->i > MinINT))
   {
     Restorestack();
-    return (inewint(lbot->val->i - 1));
+    return (inewint(lToVP(lbot->val->i - 1)));
   }
 
   handy    = rdrint;
@@ -240,14 +251,13 @@ lispval Lsub1()
 lispval Lminus()
 {
   lispval arg1, handy;
-  lispval subbig();
 
   chkarg(1, "minus");
   arg1  = lbot->val;
   handy = nil;
   switch (TYPE(arg1))
   {
-    case INT: handy = inewint(0 - arg1->i); break;
+    case INT: handy = inewint(lToVP(0 - arg1->i)); break;
     case DOUB:
       handy    = newdoub();
       handy->r = -arg1->r;
@@ -515,9 +525,9 @@ lispval Lgetsyntax()
   }
   /* see if number is within range */
   if (number < 0 || number > 255)
-    errorh1(Vermisc, "int:getsyntax : character number out of range ", nil, FALSE, 0, inewint(number));
+    errorh1(Vermisc, "int:getsyntax : character number out of range ", nil, FALSE, 0, inewint(iToVP(number)));
   chkrtab(Vreadtable->a.clb); /* make sure readtable is correct */
-  return (inewint(ctable[number]));
+  return (inewint(iToVP(ctable[number])));
 }
 
 lispval Lzapline()

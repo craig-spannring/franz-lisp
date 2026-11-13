@@ -9,7 +9,13 @@ static char *rcsid = "$Header: subbig.c,v 1.2 83/09/12 14:17:31 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/subbig.h"
+
 #include "global.h"
+#include "stubs.h"
+
+#include "prototypes/error.h"
+
 
 /*
  * subbig -- subtract one bignum from another.
@@ -20,11 +26,10 @@ static char *rcsid = "$Header: subbig.c,v 1.2 83/09/12 14:17:31 sklower Exp $";
  * sentation of a bignum.  Addbig then adds it to a bignum, and produces
  * a result in canonical form.
  */
-lispval subbig(pos, neg)
-lispval pos, neg;
+lispval subbig(lispval pos, lispval neg)
+// lispval pos, neg;
 {
   lispval work;
-  lispval adbig();
   long   *mysp   = sp() - 2;
   long   *ersatz = mysp;
   Keepxs();

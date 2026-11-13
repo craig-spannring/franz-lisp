@@ -1,3 +1,4 @@
+#include "stubs.h"
 #ifndef lint
 static char *rcsid = "$Header: lam6.c,v 1.7 85/03/24 11:04:21 sklower Exp $";
 #endif
@@ -9,24 +10,35 @@ static char *rcsid = "$Header: lam6.c,v 1.7 85/03/24 11:04:21 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam6.h"
+
 #include "global.h"
 #include "frame.h"
-#include <signal.h>
-#include <sys/types.h>
-#include <sys/times.h>
 #include "chkrtab.h"
 #include "chars.h"
 
+#include "prototypes/fpipe.h"
+#include "prototypes/ffasl.h"
+#include "prototypes/lam2.h"
+#include "prototypes/inits.h"
+
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/times.h>
+#include <string.h>
+#include <unistd.h>
+#include <signal.h>
+
+
 lispval Lreadli()
 {
-  lispval work, handy;
-  FILE   *p;
-  char   *string;
-  char   *alloconstack();
-  FILE   *fstopen();
-  lispval Lread();
-  int     count;
-  pbuf    pb;
+  lispval        work, handy;
+  FILE          *p;
+  char          *string;
+  FILE          *fstopen(char *base, int count, char *flag);
+  lispval        Lread();
+  int            count;
+  struct pframe pb;
   Savestack(4);
 #ifdef SPISFP
   Keepxs();
@@ -92,7 +104,6 @@ lispval Lreadli()
 
 lispval Lgetenv()
 {
-  char *getenv(), *strcpy();
   char *res;
   chkarg(1, "getenv");
 
@@ -151,8 +162,8 @@ lispval Lsignal()
 {
   lispval handy, old, routine;
   int     i;
-  int     sginth();
-
+  void    sginth(int);
+  
   switch (np - lbot)
   {
     case 1:
@@ -203,12 +214,13 @@ lispval Lkilcopy()
 lispval Larg()
 {
   lispval handy;
-  offset, count;
-
+  int     offset;
+  int     count;
+  
   handy = lexpr_atom->a.clb;
   if (handy == CNIL || TYPE(handy) != DTPR) error("Arg: not in context of Lexpr.", FALSE);
   count = ((long *)handy->d.cdr) - 1 - (long *)handy->d.car;
-  if (np == lbot || lbot->val == nil) return (inewint(count + 1));
+  if (np == lbot || lbot->val == nil) return (inewint(iToVP(count + 1)));
   if (TYPE(lbot->val) != INT || (offset = lbot->val->i - 1) > count || offset < 0) error("Out of bounds: arg to \"Arg\"", FALSE);
   return (((struct argent *)handy->d.car)[offset].val);
 }
@@ -241,9 +253,9 @@ lispval Lptime()
   handy  = result;
   protect(result);
   result->d.cdr = newdot();
-  result->d.car = inewint(current.tms_utime);
+  result->d.car = inewint(lToVP(current.tms_utime));
   handy         = result->d.cdr;
-  handy->d.car  = inewint(lgctime);
+  handy->d.car  = inewint(iToVP(lgctime));
   handy->d.cdr  = nil;
   if (gctime == 0) gctime = 1;
   Restorestack();
@@ -260,7 +272,6 @@ lispval Lptime()
 
 lispval Lerr()
 {
-  lispval errorh();
   lispval valret = nil;
   char   *mesg;
 
@@ -305,9 +316,9 @@ lispval Ltyi()
     clearerr(port);
     if (sigintcnt > 0) sigcall(SIGINT); /* eof might mean int */
     if (eofvalgiven) return (eofval);
-    else return (inewint(-1));
+    else return (inewint(iToVP(-1)));
   }
-  return (inewint(val));
+  return (inewint(iToVP(val)));
 }
 
 /* Untyi (added by DNC Feb. '80) - (untyi number port) puts the
@@ -360,7 +371,7 @@ lispval Ltyipeek()
   val = getc(port);
   if (val == EOF) clearerr(port);
   ungetc(val, port);
-  return (inewint(val));
+  return (inewint(iToVP(val)));
 }
 
 lispval Ltyo()
@@ -387,7 +398,7 @@ lispval Ltyo()
   return (handy);
 }
 
-lispval Imkrtab(current)
+lispval Imkrtab(int current)
 {
   extern struct rtab
   {
@@ -436,8 +447,8 @@ lispval Imkrtab(current)
       }
     }
   }
-  handy->ar.delta  = inewint(4);
-  handy->ar.length = inewint(sizeof(struct rtab) / sizeof(int));
+  handy->ar.delta  = inewint(iToVP(4));
+  handy->ar.length = inewint(lToVP(sizeof(struct rtab) / sizeof(int)));
   handy->ar.accfun = handy->ar.aux = nil;
   nextfree += sizeof(struct rtab);
   Restorestack();
@@ -469,7 +480,7 @@ lispval Lcpy1()
 top:
   switch (TYPE(handy))
   {
-    case INT:   result = inewint(handy->i); break;
+    case INT:   result = inewint(iToVP(handy->i)); break;
     case VALUE: (result = newval())->l = handy->l; break;
     case DOUB:  (result = newdoub())->r = handy->r; break;
     default:    lbot->val = errorh1(Vermisc, "Bad arg to cpy1", nil, TRUE, 67, handy); goto top;

@@ -9,10 +9,22 @@ static char *rcsid = "$Header: lam1.c,v 1.8 87/12/14 18:39:12 sklower Exp $";
  * (c) copyright 1982, Regents of the University of California
  */
 
+#include "prototypes/lam1.h"
+
 #include "global.h"
-#include <sgtty.h>
 #include "chkrtab.h"
 #include "frame.h"
+#include "lfuncs.h"
+#include "stubs.h"
+
+#include "prototypes/eval.h"
+#include "prototypes/lam8.h"
+#include "prototypes/ffasl.h" 
+#include "prototypes/fex2.h" 
+#include "prototypes/error.h"
+#include "prototypes/io.h"
+
+#include <sgtty.h>
 
 lispval Leval()
 {
@@ -33,7 +45,7 @@ lispval Lxcar()
   if (((typ = TYPE(temp)) == DTPR) || (typ == ATOM) || HUNKP(temp)) return (temp->d.car);
   else if (typ == SDOT)
   {
-    result = inewint(temp->i);
+    result = inewint(lToVP(temp->i));
     return (result);
   }
   else if (Schainp != nil && typ == ATOM) return (nil);
@@ -61,12 +73,10 @@ lispval Lxcdr()
   else return (error("Bad arg to cdr", FALSE));
 }
 
-lispval cxxr(as, ds)
-int     as, ds;
+lispval cxxr(int as, int ds)
 {
   lispval temp, temp2;
   int     i, typ;
-  lispval errorh();
 
   chkarg(1, "c{ad}+r");
   temp = lbot->val;
@@ -94,7 +104,7 @@ int     as, ds;
     {
       typ = TYPE(temp);
       if ((typ == DTPR) || HUNKP(temp)) temp = temp->d.car;
-      else if (typ == SDOT) temp2 = inewint(temp->i), temp = temp2;
+      else if (typ == SDOT) temp2 = inewint(lToVP(temp->i)), temp = temp2;
       else if (Schainp != nil && typ == ATOM) return (nil);
       else return (errorh1(Vermisc, "Bad arg to car", nil, FALSE, 5, temp));
     }
@@ -103,52 +113,52 @@ int     as, ds;
   return (temp);
 }
 
-lispval Lcar()
+lispval Lcar(/* TODO- figure out the parameters and types */)
 {
   return (cxxr(1, 0));
 }
 
-lispval Lcdr()
+lispval Lcdr(/* TODO- figure out the parameters and types */)
 {
   return (cxxr(0, 1));
 }
 
-lispval Lcadr()
+lispval Lcadr(/* TODO- figure out the parameters and types */)
 {
   return (cxxr(1, 1));
 }
 
-lispval Lcaar()
+lispval Lcaar(/* TODO- figure out the parameters and types */)
 {
   return (cxxr(2, 0));
 }
 
-lispval Lc02r()
+lispval Lc02r(/* TODO- figure out the parameters and types */)
 {
   return (cxxr(0, 2));
 } /* cddr */
 
-lispval Lc12r()
+lispval Lc12r(/* TODO- figure out the parameters and types */)
 {
   return (cxxr(1, 2));
 } /* caddr */
 
-lispval Lc03r()
+lispval Lc03r(/* TODO- figure out the parameters and types */)
 {
   return (cxxr(0, 3));
 } /* cdddr */
 
-lispval Lc13r()
+lispval Lc13r(/* TODO- figure out the parameters and types */)
 {
   return (cxxr(1, 3));
 } /* cadddr */
 
-lispval Lc04r()
+lispval Lc04r(/* TODO- figure out the parameters and types */)
 {
   return (cxxr(0, 4));
 } /* cddddr */
 
-lispval Lc14r()
+lispval Lc14r(/* TODO- figure out the parameters and types */)
 {
   return (cxxr(1, 4));
 } /* caddddr */
@@ -214,7 +224,7 @@ lispval Lbigtol()
   protect(newp = newdot());
   while (handy)
   {
-    newp->d.car = inewint((long)handy->s.I);
+    newp->d.car = inewint(lToVP(((long)handy->s.I)));
     if (handy->s.CDR == (lispval)0) break;
     newp->d.cdr = newdot();
     newp        = newp->d.cdr;
@@ -238,8 +248,7 @@ lispval Lcons()
 #define CA 0
 #define CD 1
 
-lispval rpla(what)
-int     what;
+lispval rpla(int what)
 {
   struct argent *argp;
   int            typ;
@@ -419,6 +428,10 @@ lispval Ltruename()
 
 lispval Lnwritn()
 {
+#if STILL_PORTING
+  TODO_FIX("update old fashioned file handling");
+#else 
+  TODO_FIX("update old fashioned file handling");
   FILE *port;
   value;
   lispval handy;
@@ -433,10 +446,14 @@ lispval Lnwritn()
   port  = okport(handy, okport(Vpoport->a.clb, stdout));
   value = port->_ptr - port->_base;
   return (inewint(value));
+#endif
 }
 
 lispval Ldrain()
 {
+#if STILL_PORTING
+  TODO_FIX("update old fashioned file handling");
+#else  
   FILE         *port;
   int           iodes;
   lispval       handy;
@@ -460,6 +477,7 @@ lispval Ldrain()
   iodes      = fileno(port);
   if (gtty(iodes, &arg) != -1) stty(iodes, &arg);
   return (P(port));
+#endif  
 }
 
 lispval Llist()
@@ -709,7 +727,7 @@ lispval oLequal()
   else return (nil);
 }
 
-Iequal(first, second) lispval first, second;
+int Iequal(lispval first, lispval second)
 {
   int     type1, type2;
   lispval Lsub(), Lzerop();
@@ -922,7 +940,7 @@ lispval Lpatom()
 
 lispval Lpntlen()
 {
-  return (inewint((long)Ipntlen()));
+  return (inewint(lToVP((long)Ipntlen())));
 }
 int Ipntlen(void)
 {
@@ -953,9 +971,9 @@ loop:
   return (strlen(handy));
 }
 #undef okport
-FILE   *okport(arg, proper)
-lispval arg;
-FILE   *proper;
+FILE   *okport(lispval arg, FILE *proper)
+// lispval arg;
+// FILE   *proper;
 {
   if (TYPE(arg) != PORT) return (proper);
   else return (arg->p);

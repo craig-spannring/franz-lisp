@@ -2,6 +2,7 @@
 #ifndef DATA_9071de900b570f28dcd759af16b39b61_h
 #define DATA_9071de900b570f28dcd759af16b39b61_h
 
+#include "structs.h"
 
 extern int            lineleng;
 extern int            rlevel;
