@@ -8,7 +8,7 @@
 
 
 extern char    *flag;
-extern char    *alloconstack(int howmuch);
+extern char    *allocLstack(int howmuch);
 
 extern lispval  P(FILE *p);
 extern FILE    *fstopen(char *base, int count, char *flag);

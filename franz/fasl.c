@@ -409,7 +409,7 @@ lispval Lfasl()
 
   lbot = np; /* set up base for later calls */
              /* allocate space for string table on the stack */
-  string_core_org = alloconstack(string_size - 4);
+  string_core_org = allocLstack(string_size - 4);
 
   if (read(fileno(filp), string_core_org, string_size - 4) != string_size - 4) error("fasl: string table read error ", FALSE);
   /* read in symbol table and set the ordinal values */
@@ -511,7 +511,7 @@ lispval Lfasl()
 
   /* read the binder table and literals onto the stack */
 
-  binder_core_org = alloconstack(lit_end - bind_org);
+  binder_core_org = allocLstack(lit_end - bind_org);
   read(fileno(filp), binder_core_org, lit_end - bind_org);
 
   literal_core_org = binder_core_org + lit_org - bind_org;

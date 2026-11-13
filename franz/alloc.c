@@ -163,7 +163,8 @@ int get_more_space(struct types *type_struct, int purep)
 {
   int         cntr;
   char       *start;
-  int        *loop, *temp;
+  int        *loop;
+  int        *temp;  
   lispval     p;
   extern char holend[];
 

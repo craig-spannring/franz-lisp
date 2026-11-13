@@ -470,7 +470,7 @@ lispval Lrmadd()
     fread((char *)&strsize, sizeof(int), 1, f);     /* find size of string table */
     fwrite((char *)&strsize, sizeof(int), 1, fnew); /* find size of string table */
     strsize -= 4;
-    strtbl = alloconstack(strsize);
+    strtbl = allocLstack(strsize);
     fread(strtbl, strsize, 1, f);     /* read and save string table*/
     fwrite(strtbl, strsize, 1, fnew); /* copy out string table     */
 #endif
@@ -536,7 +536,7 @@ lispval Lrmadd()
       fseek(f, (long)N_STROFF(buf), 0);
       fread((char *)&strsize, sizeof(int), 1, f);
       strsize -= 4;
-      strtbl = alloconstack(strsize);
+      strtbl = allocLstack(strsize);
       fread(strtbl, strsize, 1, f);
     }
 #endif

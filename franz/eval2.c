@@ -91,7 +91,7 @@ lispval Ifcall(lispval a)
     case 'i':
     case 's':
     case 'r':
-      arglist  = (int *)alloconstack((nargs + 1) * sizeof(int));
+      arglist  = (int *)allocLstack((nargs + 1) * sizeof(int));
       *arglist = nargs;
       for (index = 1; index <= nargs; index++)
       {
@@ -145,7 +145,7 @@ lispval Ifcall(lispval a)
               nargs += -1 + VecTotSize(ltemp->vl.vectorl[-2]);
             }
         }
-      arglist  = (int *)alloconstack((nargs + 1) * sizeof(int));
+      arglist  = (int *)allocLstack((nargs + 1) * sizeof(int));
       *arglist = nargs;
       ap       = arglist + 1;
       /* make another pass over the args

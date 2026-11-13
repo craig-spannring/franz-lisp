@@ -40,7 +40,7 @@ void pbignum(lispval current, FILE *useport)
   }
 
   /* save space for printed digits*/
-  work = (int *)alloconstack((top - bot) * 2 * sizeof(int));
+  work = (int *)allocLstack((top - bot) * 2 * sizeof(int));
   if (*bot < 0)
   {
     negflag = 1;

@@ -126,7 +126,7 @@ FILE *fstopen(char *base, int count, char *flag)
 }
 
 #ifdef SPISFP
-char *alloconstack(int howmuch)
+char *allocLstack(int howmuch)
 {
   howmuch += 3;
   howmuch >>= 2;

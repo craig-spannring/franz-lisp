@@ -51,7 +51,7 @@ lispval Lreadli()
   /* compute length of list */
   for (work = lbot->val; TYPE(work) == DTPR; work = work->d.cdr)
     count++;
-  string = alloconstack(count);
+  string = allocLstack(count);
   p      = fstopen(string, count - 1, "r");
   for (work = lbot->val; TYPE(work) == DTPR; work = work->d.cdr)
   {

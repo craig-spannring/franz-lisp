@@ -78,7 +78,7 @@ void divbig(lispval dividend, lispval divisor, lispval *quotient, lispval *remai
     Freexs();
     return;
   }
-  qbot = alloconstack(toint(utop) + toint(vbot) - 2 * toint(ubot));
+  qbot = allocLstack(toint(utop) + toint(vbot) - 2 * toint(ubot));
 d1:
   d = b / (*vbot + 1);
   dsmult(utop - 1, ubot, d);

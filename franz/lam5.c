@@ -142,7 +142,7 @@ lispval Lexpldx(int kind, int slashify)
       int           count;
       for ((handy = lbot->val), count = 12; handy->s.CDR != (lispval)0; (handy = handy->s.CDR), count += 12)
         ;
-      strb = alloconstack(count);
+      strb = allocLstack(count);
 
       _strbuf._flag = _IOWRT + _IOSTRG;
       _strbuf._ptr  = strb;
