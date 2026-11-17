@@ -26,6 +26,7 @@
 #include <sys/types.h>
 #include <sys/times.h>
 #include <unistd.h>
+#include <sys/mman.h>
 #ifdef METER
 #include <sys/vtimes.h>
 #endif
@@ -197,7 +198,9 @@ int get_more_space(struct types *type_struct, int purep)
   type_struct->space_left = type_struct->space;
   temp = loop = (int *)start;
   for (cntr = 1; cntr < type_struct->space; cntr++)
+  {
     loop = (int *)(*loop = (uintptr_t)(loop + type_struct->type_len));
+  }    
 
   /* attach new cells to either the pure space free list  or the
    * standard free list
@@ -538,7 +541,7 @@ again:
     if (debugin) fprintf(stderr, "next free size %db; ", current->vl.vectorl[-1]);
     if ((thissize = VecTotSize(current->vl.vectorl[-1])) == sizewant)
     {
-      if (debugin) fprintf(stderr, "exact match of size %d at 0x%x\n", 4 * thissize, &current->v.vector[1]);
+      if (debugin) fprintf(stderr, "exact match of size %d at 0x%p\n", 4 * thissize, &current->v.vector[1]);
       back->v.vector[0]    = current->v.vector[0]; /* change free pointer*/
       current->v.vector[0] = nil;                  /* put nil in property */
       /* to the user, vector begins one after property*/
@@ -1129,7 +1132,9 @@ lispval csegment(int typecode, int nitems, int useholeflag)
   else
 #endif
   {
-    charadd = sbrk(nitems); TODO_FIX("need to rethink memory management.  Probably an anon mmap ");
+    //charadd = sbrk(nitems); TODO_FIX("need to rethink memory management.  Probably an anon mmap ");
+    charadd = mmap(NULL, nitems, PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE, -1, 0);
+    if (charadd==MAP_FAILED) {perror("mmap failed."); franzexit(1);}
     datalim = (lispval)(charadd + nitems);
   }
   if ((uintptr_t)charadd <= 0) error("NOT ENOUGH SPACE FOR ARRAY", FALSE);

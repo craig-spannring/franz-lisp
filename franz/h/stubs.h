@@ -77,8 +77,14 @@ extern void          qretfromfr(void);
 extern int           callg_(lispval (*funct)(void), int *arglist);
 extern long          adback(long *utop, long *ubot, long *vtop);
 
-extern void*         lToVP(long l); // convert long to a void*  
-extern void*         iToVP(int i);  // convert int to a void*   
+#if 1
+extern void*         lToVP(long l); // convert long to a void*
+extern void*         iToVP(int i);  // convert int to a void*
+#else
+#define iToVP(i) ((void *)i)
+#define lToVP(i) ((void *)i)
+#endif 
+
 
 #if STILL_PORTING
 #define TODO_FIX(s)  do { int todoFix; assert(!s); } while(0)

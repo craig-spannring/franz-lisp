@@ -243,18 +243,21 @@ struct frame *Ipushf(int a, lispval b, lispval c, struct pframe *d)
   return 0;
 }
 
-
+#ifndef lToVP
 void *lToVP(long l)
 {
   TODO_FIX("This function should be removed.");
   return NULL;
 }
+#endif
 
+#ifndef iToVP
 void *iToVP(int i)
 {
   TODO_FIX("This function should be removed.");
   return NULL;
 }
+#endif
 
 
 int pagerand(void)
