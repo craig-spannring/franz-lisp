@@ -64,7 +64,7 @@
  *       non-portable.  Defining it a ??? to prevent
  *       compilation of any code that uses OFFSET. 
  */ 
-#define OFFSET 0
+#define OFFSET ${FL_OFFSET}
 
 /**
  * @brief TTSIZE
