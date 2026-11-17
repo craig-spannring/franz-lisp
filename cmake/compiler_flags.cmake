@@ -15,6 +15,7 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   message("Add flags here")
   # list(APPEND fl_cc_flags "-Wno-error=implicit-function-declaration")
   list(APPEND fl_cc_flags "-Wall")
+  # list(APPEND fl_cc_flags "-Wno-format")
 endif()
 
 #
