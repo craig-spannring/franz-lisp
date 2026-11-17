@@ -155,8 +155,9 @@ set(FL_NILIS0    0)
 set(FL_NPINREG   0)
 set(FL_GCSTRINGS 0) 
 set(FL_TTSIZE    10216)
-set(FL_USE_HOLE  0)         # set to 0 or 1
-set(FL_HOLE	 2097152) 
+set(FL_USE_HOLE  0)            # set to 0 or 1
+set(FL_HOLE	 2097152)
+set(FL_OFFSET    0x100000000)  # This is the value for macOS on Apple Silicon
 configure_file(
   ${CMAKE_CURRENT_LIST_DIR}/h/config.h.in
   ${CMAKE_CURRENT_BINARY_DIR}/config.h
