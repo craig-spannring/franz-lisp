@@ -199,19 +199,20 @@ struct atom
 
 struct array
 {
-  lispval accfun,        /*  access function--may be anything  */
-      aux;               /*  slot for dimensions or auxilliary data  */
-  char   *data;          /*  pointer to first byte of array    */
-  lispval length, delta; /* length in items and length of one item */
+    lispval accfun;   /*  access function--may be anything  */
+    lispval aux;      /*  slot for dimensions or auxilliary data  */
+    char   *data;     /*  pointer to first byte of array    */
+    lispval length;   /* length in items  */
+    lispval delta;    /* length of one item */
 };
 
 struct bfun
 {
-    lispval (*start)(); /*  entry point to routine  */
-    lispval discipline,         /*  argument-passing discipline  */        
-    language,       /*  language coded in	*/
-    params,         /*  parameter list if relevant  */
-    loctab;         /*  local table  */
+    lispval (*start)();   /*  entry point to routine  */
+    lispval   discipline; /*  argument-passing discipline  */        
+    lispval   language;   /*  language coded in	*/
+    lispval   params;     /*  parameter list if relevant  */
+    lispval   loctab;     /*  local table  */
 };
 
 struct Hunk
@@ -242,13 +243,13 @@ struct Vectorl
 
 union lispobj
 {
-  struct atom a;
-  FILE       *p;
-  struct dtpr d;
-  long int    i;
-  long int   *j;
-  double      r;
-  lispval (*f)();
+  struct atom    a;
+  FILE          *p;
+  struct dtpr    d;
+  long int       i;
+  long int      *j;
+  double         r;
+  lispval      (*f)();  
   struct array   ar;
   struct sdot    s;
   char           c;
@@ -258,7 +259,7 @@ union lispobj
   struct Vector  v;
   struct Vectorb vb;
   struct Vectorw vw;
-  struct Vectorl vl;
+  struct Vectorl vl;  
 };
 
 #ifdef lint

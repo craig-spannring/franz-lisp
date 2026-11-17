@@ -1120,7 +1120,8 @@ lispval alloc(lispval tname, long npages)
  */
 lispval csegment(int typecode, int nitems, int useholeflag)
 {
-  int   ii, jj;
+  uintptr_t  ii;
+  uintptr_t  jj;
   char *charadd;
 
   ii = typecode;
