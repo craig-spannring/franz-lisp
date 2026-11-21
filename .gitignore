@@ -35,3 +35,5 @@ compile_commands.json
 franz/Doxyfile.in.bak
 franz/DoxygenLayout.xml.in.bak
 
+# Finder generated files. 
+.DS_Store
