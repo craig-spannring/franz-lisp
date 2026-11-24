@@ -1,3 +1,4 @@
+*.o
 a.out
 doc/ch0.r
 doc/ch0.rx
