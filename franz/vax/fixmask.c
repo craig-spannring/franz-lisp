@@ -18,13 +18,13 @@ main(){
 	register savesize = 0; char *cp;
 	while(fgets(mybuf,BUFSIZ,stdin)!=NULL) {
 		if(*mybuf=='#') {
-			if(strcmpn(mybuf,"#save	",6)==0){
+			if(strncmp(mybuf,"#save	",6)==0){
 				savesize = mybuf[6]-'0';
-			} else if (strcmpn(mybuf,"#protect	",9)==0){
+			} else if (strncmp(mybuf,"#protect	",9)==0){
 				savesize = '0'-1-mybuf[9];
 			}
 		}
-		if(savesize && strcmpn(mybuf,"	.set	L",7)==0) {
+		if(savesize && strncmp(mybuf,"	.set	L",7)==0) {
 			for(cp=mybuf;*cp++!=',';);
 			sprintf(cp,"0x%X\n",mask[savesize + 10]);
 			savesize = 0;
