@@ -41,22 +41,22 @@ DESTDIR =
 
 # the following lines are modifed by './lispconf', so don't modify it by hand!
 #ifdef vax
-#Mach = vax
+Mach = vax
 #endif
 #ifdef tahoe
-Mach = tahoe
+#Mach = tahoe
 #endif
 #ifdef 68k
 #Mach = 68k
 #endif
 
-RootDir = /usr/src/local/franz
+RootDir = /home/cts/franz-lisp
 #ifdef ucbstd
-#LibDir = ${DESTDIR}/usr/lib/lisp
-#ObjDir = ${DESTDIR}/usr/ucb
+LibDir = ${DESTDIR}/usr/lib/lisp
+ObjDir = ${DESTDIR}/usr/ucb
 #else
-LibDir = ${DESTDIR}${RootDir}/lisplib
-ObjDir = ${DESTDIR}${RootDir}/bin
+#LibDir = ${DESTDIR}${RootDir}/lisplib
+#ObjDir = ${DESTDIR}${RootDir}/bin
 #endif
 LispDist = /usr/src/ucb/lispdist
 CopyTo = /dev/null

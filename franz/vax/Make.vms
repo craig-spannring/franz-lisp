@@ -105,7 +105,7 @@ AllSrc = Makefile  fixmask.c fixpbig.e ${VaxSrc} ${MipSrc}
 # thus, users with low process quotas on VMS can still build lisp
 #
 .c.o :
-	@csh -cfe "echo cc -c  $*.c;\
+	@csh -cfe "echo cc -std=c90 -c  $*.c;\
 	rm -f $*.o;\
 	/lib/cpp $< -I../h > $*.tm0;\
 	/lib/ccom ${ProfFlag} $*.tm0 $*.tm1;\
@@ -130,13 +130,13 @@ bigmath.o: bigmath.c
 	/lib/unixcpp -I../h ${ProfFlag2} bigmath.c | ${AS} -o bigmath.o
 
 ../rlc.o: ../rlc.c 
-	cc -S -O -DHOLE=${HOLE} ../rlc.c
+	cc -std=c90 -S -O -DHOLE=${HOLE} ../rlc.c
 	${AS} -o rlc.o rlc.s
 	rm rlc.s
 	mv rlc.o ../rlc.o
 
 ../low.o: ../low.c
-	cc -I../h -R -S ../low.c
+	cc -std=c90 -I../h -R -S ../low.c
 	${AS} -R -o low.o low.s
 	rm low.s
 	mv low.o ../low.o
@@ -150,7 +150,7 @@ bigmath.o: bigmath.c
 	make Sdata.o; mv Sdata.o .. < /dev/null  ; rm Sdata.c
 
 fixmask: fixmask.c
-	cc -O -o fixmask fixmask.c
+	cc -std=c90 -O -o fixmask fixmask.c
 
 # rawlisp is the standard raw lisp system.
 
@@ -252,4 +252,4 @@ hole.obj: hole.unx totxtfile
 	vms macro/nolist hole.mar
 
 totxtfile: totxtfile.c
-	cc -O totxtfile.c -o totxtfile
+	cc -std=c90 -O totxtfile.c -o totxtfile

@@ -94,7 +94,7 @@ AllSrc = Makefile fixmask.c fixpbig.e ${TahoeSrc}
 # polite to use temporary files rather than pipes
 #
 .c.o :
-	@csh -cfe "echo cc -c  $*.c;\
+	@csh -cfe "echo cc -std=c90 -c  $*.c;\
 	rm -f $*.o;\
 	/lib/cpp $< -I../h |\
 	/lib/ccom ${ProfFlag} | fixmask |\
@@ -109,13 +109,13 @@ AllSrc = Makefile fixmask.c fixpbig.e ${TahoeSrc}
 #  add -DPROF if you want to profile the assembler code
 
 qfuncl.o: qfuncl.c
-	cc -I../h -E ${ProfFlag2} qfuncl.c | as -o qfuncl.o
+	cc -std=c90 -I../h -E ${ProfFlag2} qfuncl.c | as -o qfuncl.o
 
 #bigmath.o: bigmath.c
-#	cc -I../h -E ${ProfFlag2} bigmath.c | as -o bigmath.o
+#	cc -std=c90 -I../h -E ${ProfFlag2} bigmath.c | as -o bigmath.o
 
 ../io.o: ../io.c
-	@csh -cfe "echo cc -c  $*.c;\
+	@csh -cfe "echo cc -std=c90 -c  $*.c;\
 	rm -f $*.o;\
 	/lib/cpp $< -I../h |\
 	/lib/ccom ${ProfFlag} | fixmask |\
@@ -123,11 +123,11 @@ qfuncl.o: qfuncl.c
 	/lib/c2 | as -J -o $*.o"
 
 ../rlc.o: ../rlc.c 
-	cc -c -O -DHOLE=${HOLE} ../rlc.c 
+	cc -std=c90 -c -O -DHOLE=${HOLE} ../rlc.c 
 	mv rlc.o .. < /dev/null
 
 ../low.o: ../low.c
-	cc -I../h -R -c ../low.c  
+	cc -std=c90 -I../h -R -c ../low.c  
 	mv low.o .. < /dev/null
 
 ../Salloc.o: ../alloc.c
@@ -139,7 +139,7 @@ qfuncl.o: qfuncl.c
 	make Sdata.o; mv Sdata.o .. < /dev/null  ; rm Sdata.c
 
 fixmask: fixmask.c
-	cc -O -o fixmask fixmask.c
+	cc -std=c90 -O -o fixmask fixmask.c
 
 # rawlisp is the standard raw lisp system.
 

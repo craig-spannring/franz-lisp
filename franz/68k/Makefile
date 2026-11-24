@@ -121,7 +121,7 @@ N=-n
 #	/lib/cpp -I../h $*.c | /lib/xcomp |\
 #	sed -f fixregs.sed > /tmp/x.s; as -o $*.o /tmp/x.s
 #else
-	cc -c $(CFLAGS) $*.c;\
+	cc -std=c90 -c $(CFLAGS) $*.c;\
 	mv `basename $*.o` x; mv x $*.o
 #endif
 
@@ -131,7 +131,7 @@ N=-n
 
 
 ../rlc.o: ../rlc.c 
-	cc -c $(CFLAGS) -DHOLE=${HOLE} ../rlc.c 
+	cc -std=c90 -c $(CFLAGS) -DHOLE=${HOLE} ../rlc.c 
 	mv rlc.o .. < /dev/null
 
 ../Salloc.o: ../alloc.c
@@ -143,22 +143,22 @@ N=-n
 	make Sdata.o; mv Sdata.o .. < /dev/null  ; rm Sdata.c
 
 first8.out: first8.c
-	cc -I../h first8.c -o first8.out
+	cc -std=c90 -I../h first8.c -o first8.out
 
 ../low.o: ../low.c
-	cc -S $(CFLAGS) ../low.c; sed 's/data$$/text/' < low.s > Low.s
+	cc -std=c90 -S $(CFLAGS) ../low.c; sed 's/data$$/text/' < low.s > Low.s
 	as -o ../low.o Low.s; rm Low.s low.s
 
 #ifdef unisoft
 #qfuncl.o: qfuncl.c first8.out
-#	cc -E $(CFLAGS) ${ProfFlag2} qfuncl.c |\
+#	cc -std=c90 -E $(CFLAGS) ${ProfFlag2} qfuncl.c |\
 #	./first8.out | sed 's/^#/|/' > qfuncl.s
 #	as -o qfuncl.o qfuncl.s
 #	rm qfuncl.s
 #
 #else
 qfuncl.o: qfuncl.c
-	cc -I../h -E ${ProfFlag2} qfuncl.c > x.s; as -o qfuncl.o x.s; rm x.s
+	cc -std=c90 -I../h -E ${ProfFlag2} qfuncl.c > x.s; as -o qfuncl.o x.s; rm x.s
 #endif
 
 # rawlisp is the standard raw lisp system.

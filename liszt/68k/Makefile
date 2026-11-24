@@ -69,7 +69,7 @@ AllObj =  ${CTEObj} ${Obj}
 # (only for swapped based systems, right now dual/unisoft)
 #ifdef swapper
 #liszt:	liszt.c
-#	cc $(CFLAGS) -DLISZT='"${XLiszt}"' -DAS='"${LibDir}/as"'\
+#	cc -std=c90 $(CFLAGS) -DLISZT='"${XLiszt}"' -DAS='"${LibDir}/as"'\
 #	   -o liszt liszt.c
 #else
 liszt:
